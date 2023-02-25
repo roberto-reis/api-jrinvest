@@ -40,5 +40,5 @@ jobs:
     #     npm install
     #     npm run build
 
-    - name: Execute tests (Unit and Feature tests) via Pest
-      run: ./vendor/bin/pest
+    - name: Execute tests (Unit and Feature tests)
+      run: php artisan test
