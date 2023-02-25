@@ -1,0 +1,55 @@
+version: "3.7"
+
+services:
+    app:
+        container_name: my-wallet
+        build:
+            context: ./
+            dockerfile: docker/app/Dockerfile
+        restart: unless-stopped
+        working_dir: /var/www/
+        volumes:
+            - ./:/var/www
+        depends_on:
+            mysql:
+                condition: service_healthy
+        networks:
+            - rede_my_wallet
+        entrypoint: ["sh", "./docker/app/docker-entrypoint.sh"]
+
+    nginx:
+        container_name: nginx_my-wallet
+        image: nginx:alpine
+        restart: unless-stopped
+        ports:
+            - 9003:80
+        volumes:
+            - ./:/var/www
+            - ./docker/nginx/:/etc/nginx/conf.d/
+        networks:
+            - rede_my_wallet
+
+    mysql:
+        image: mysql:8.0
+        container_name: mysql_my-wallet
+        restart: unless-stopped
+        command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+        environment:
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            MYSQL_DATABASE: ${DB_DATABASE}
+        healthcheck:
+            test: "mysql --user=root --password=$${MYSQL_ROOT_PASSWORD} --execute 'SHOW DATABASES;'"
+            interval: 2s
+            timeout: 5s
+            retries: 10
+        volumes:
+            - ./.docker/mysql/dbdata:/var/lib/mysql
+        ports:
+            - 3308:3306
+        networks:
+            - rede_my_wallet
+
+networks:
+    rede_my_wallet:
+        name: rede_my_wallet
+        driver: bridge
