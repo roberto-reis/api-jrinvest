@@ -35,9 +35,10 @@ jobs:
     - name: Run Migration
       run: php artisan migrate
 
-    - name: Install NPM Packages
-      run: |
-        npm install
-        npm run build
+    # - name: Install NPM Packages
+    #   run: |
+    #     npm install
+    #     npm run build
+
     - name: Execute tests (Unit and Feature tests) via Pest
       run: ./vendor/bin/pest
