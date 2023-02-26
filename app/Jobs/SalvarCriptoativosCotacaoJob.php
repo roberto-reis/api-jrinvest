@@ -52,15 +52,15 @@ class SalvarCriptoativosCotacaoJob implements ShouldQueue
                 "Total"  => count($cotacaoCriptos['coins'])
             ]);
 
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
             send_log(
                 'Error ao tentar salvar as cotações de criptomoedas',
                 [],
-                $e,
+                $exception,
                 'error'
             );
 
-            $this->fail($e);
+            $this->fail($exception);
         }
     }
 }

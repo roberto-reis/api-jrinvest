@@ -54,15 +54,15 @@ class SalvarAcoesEFIICotacaoJob implements ShouldQueue
                 "Total"  => count($cotacaoAtivos['results'])
             ]);
 
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
             send_log(
                 'Error ao tentar salvar as cotações de ações e FIIs',
                 [],
-                $e,
+                $exception,
                 'error'
             );
 
-            $this->fail($e);
+            $this->fail($exception);
         }
 
     }
