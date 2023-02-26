@@ -47,13 +47,20 @@ class SalvarCriptoativosCotacaoJob implements ShouldQueue
                 ]);
             }
 
-            \Log::info("Cotações dos ativos: ", [
+            \Log::info("Cotações dos ativos", [
                 "ativos" => $ativosImploded,
                 "Total"  => count($cotacaoCriptos['coins'])
             ]);
 
         } catch (\Exception $e) {
-            throw $e;
+            \Log::error("Error ao tentar salvar as cotações de criptomoedas", [
+                "menssage" => $e->getMessage(),
+                "file" => $e->getFile(),
+                "line"  => $e->getLine(),
+                "code" => $e->getCode()
+            ]);
+
+            $this->fail($e);
         }
     }
 }
