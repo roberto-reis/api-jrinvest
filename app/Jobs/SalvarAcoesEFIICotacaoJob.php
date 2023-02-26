@@ -48,13 +48,20 @@ class SalvarAcoesEFIICotacaoJob implements ShouldQueue
                 ]);
             }
 
-            \Log::info("Cotações dos ativos: ", [
+            \Log::info("Cotações dos ativos", [
                 "ativos" => $ativosImpleded,
                 "Total"  => count($cotacaoAtivos['results'])
             ]);
 
         } catch (\Exception $e) {
-            throw $e;
+            \Log::error("Error ao tentar salvar as cotações de ações e FII's", [
+                "menssage" => $e->getMessage(),
+                "file" => $e->getFile(),
+                "line"  => $e->getLine(),
+                "code" => $e->getCode()
+            ]);
+
+            $this->fail($e);
         }
 
     }
