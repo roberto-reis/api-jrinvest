@@ -19,7 +19,7 @@ class ClasseAtivoController extends Controller
             ], 200);
 
         } catch (\Exception $e) {
-            send_log('Erro ao listar as classes de ativos', [], $e, 'error');
+            send_log('Erro ao listar as classes de ativos', [], 'error', $e);
             return response()->json([
                 'menssage' => 'Erro ao listar as classes de ativos',
                 'data' => []
