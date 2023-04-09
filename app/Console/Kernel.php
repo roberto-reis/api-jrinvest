@@ -13,6 +13,11 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
+
+        $schedule->command('sync:cotacao')
+                    ->weekdays()
+                    ->everyTenMinutes()
+                    ->between('10:00', '18:00');
     }
 
     /**
