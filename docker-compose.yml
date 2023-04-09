@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
     app:
-        container_name: my-wallet
+        container_name: api-jrinvest
         build:
             context: ./
             dockerfile: docker/app/Dockerfile
@@ -14,11 +14,11 @@ services:
             mysql:
                 condition: service_healthy
         networks:
-            - rede_my_wallet
+            - rede_api_jrinvest
         entrypoint: ["sh", "./docker/app/docker-entrypoint.sh"]
 
     nginx:
-        container_name: nginx_my-wallet
+        container_name: nginx_api-jrinvest
         image: nginx:alpine
         restart: unless-stopped
         ports:
@@ -27,11 +27,11 @@ services:
             - ./:/var/www
             - ./docker/nginx/:/etc/nginx/conf.d/
         networks:
-            - rede_my_wallet
+            - rede_api_jrinvest
 
     mysql:
         image: mysql:8.0
-        container_name: mysql_my-wallet
+        container_name: mysql_api-jrinvest
         restart: unless-stopped
         command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
         environment:
@@ -47,9 +47,9 @@ services:
         ports:
             - 3308:3306
         networks:
-            - rede_my_wallet
+            - rede_api_jrinvest
 
 networks:
-    rede_my_wallet:
-        name: rede_my_wallet
+    rede_api_jrinvest:
+        name: rede_api_jrinvest
         driver: bridge
