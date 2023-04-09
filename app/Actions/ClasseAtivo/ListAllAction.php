@@ -13,7 +13,7 @@ class ListAllAction
 
     public function execute(array $filters = []): array
     {
-        $classesAtivos = $this->classeAtivoRepository->getAll();
+        $classesAtivos = $this->classeAtivoRepository->getAll($filters);
         return $classesAtivos;
     }
 }
