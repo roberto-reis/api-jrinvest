@@ -2,11 +2,18 @@
 
 namespace App\Actions\ClasseAtivo;
 
+use App\Interfaces\Repositories\IClasseAtivoRepository;
+
 class ListAllAction
 {
-    public function __invoke(array $filters): array
-    {
+    public function __construct(
+        private IClasseAtivoRepository $classeAtivoRepository
+    )
+    {}
 
-        return [];
+    public function execute(array $filters = []): array
+    {
+        $classesAtivos = $this->classeAtivoRepository->getAll();
+        return $classesAtivos;
     }
 }
