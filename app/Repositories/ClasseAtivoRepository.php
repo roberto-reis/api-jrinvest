@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\DTOs\ClasseAtivo\StoreClasseAtvioDTO;
+use App\DTOs\ClasseAtivo\StoreClasseAtivoDTO;
 use App\Interfaces\Repositories\IClasseAtivoRepository;
 use App\Models\ClasseAtivo;
 
@@ -34,7 +34,7 @@ class ClasseAtivoRepository implements IClasseAtivoRepository
         return $classesQuery->paginate($filters['perPage'] ?? $this->perPage)->toArray();
     }
 
-    public function store(StoreClasseAtvioDTO $dto): array
+    public function store(StoreClasseAtivoDTO $dto): array
     {
         return $this->model::create($dto->toArray())->toArray();
     }
