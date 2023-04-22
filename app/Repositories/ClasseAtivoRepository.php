@@ -2,8 +2,10 @@
 
 namespace App\Repositories;
 
-use App\Interfaces\Repositories\IClasseAtivoRepository;
 use App\Models\ClasseAtivo;
+use App\DTOs\ClasseAtivo\ClasseAtivoDTO;
+use App\Exceptions\ClasseAtivoNaoEncontradoException;
+use App\Interfaces\Repositories\IClasseAtivoRepository;
 
 class ClasseAtivoRepository implements IClasseAtivoRepository
 {
@@ -31,5 +33,28 @@ class ClasseAtivoRepository implements IClasseAtivoRepository
         }
 
         return $classesQuery->paginate($filters['perPage'] ?? $this->perPage)->toArray();
+    }
+
+    public function store(ClasseAtivoDTO $dto): array
+    {
+        return $this->model::create($dto->toArray())->toArray();
+    }
+
+    public function exists(string $uid): bool
+    {
+        return $this->model::where('uid', $uid)->exists();
+    }
+
+    public function update(string $uid, ClasseAtivoDTO $dto): array
+    {
+        $classeAtivo = $this->model::find($uid);
+
+        if (!$classeAtivo) {
+            throw new ClasseAtivoNaoEncontradoException();
+        }
+
+        $classeAtivo->update($dto->toArray());
+
+        return $classeAtivo->toArray();
     }
 }
