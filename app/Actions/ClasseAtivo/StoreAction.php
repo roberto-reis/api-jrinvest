@@ -3,7 +3,7 @@
 namespace App\Actions\ClasseAtivo;
 
 use Illuminate\Support\Str;
-use App\DTOs\ClasseAtivo\StoreClasseAtivoDTO;
+use App\DTOs\ClasseAtivo\ClasseAtivoDTO;
 use App\Interfaces\Repositories\IClasseAtivoRepository;
 
 class StoreAction
@@ -16,7 +16,7 @@ class StoreAction
     public function execute(array $classeAtivo = []): array
     {
         $classeAtivo['nome_interno'] = Str::slug($classeAtivo['nome'], '-');
-        $classeAtivoDto = new StoreClasseAtivoDTO($classeAtivo);
+        $classeAtivoDto = new ClasseAtivoDTO($classeAtivo);
 
         return $this->classeAtivoRepository->store($classeAtivoDto);
     }
