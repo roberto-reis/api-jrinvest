@@ -3,10 +3,12 @@
 namespace App\Providers;
 
 use App\Interfaces\ICotacaoBrapi;
-use App\Interfaces\Repositories\IClasseAtivoRepository;
-use App\Repositories\ClasseAtivoRepository;
-use App\Services\Api\CotacaoBrapiService;
+use App\Repositories\AtivoRepository;
 use Illuminate\Support\ServiceProvider;
+use App\Services\Api\CotacaoBrapiService;
+use App\Repositories\ClasseAtivoRepository;
+use App\Interfaces\Repositories\IAtivoRepository;
+use App\Interfaces\Repositories\IClasseAtivoRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(ICotacaoBrapi::class, CotacaoBrapiService::class);
         $this->app->singleton(IClasseAtivoRepository::class, ClasseAtivoRepository::class);
+        $this->app->singleton(IAtivoRepository::class, AtivoRepository::class);
     }
 
     /**
