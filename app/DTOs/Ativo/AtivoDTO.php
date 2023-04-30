@@ -7,7 +7,7 @@ use App\DTOs\DataTransferObject;
 class AtivoDTO extends DataTransferObject
 {
     public ?string $codigo;
-    public ?string $classe_ativo_uid = null;
+    public ?string $classe_ativo_uid;
     public ?string $nome;
     public ?string $setor;
 

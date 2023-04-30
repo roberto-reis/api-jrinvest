@@ -3,6 +3,8 @@
 namespace App\DTOs;
 
 use Illuminate\Support\Arr;
+use ReflectionClass;
+use ReflectionProperty;
 
 abstract class DataTransferObject
 {
@@ -15,13 +17,22 @@ abstract class DataTransferObject
      * @param array $data
      * @return self
      */
-    private function fromArray(array $data): self
+    protected function fromArray(array $data): self
     {
-        foreach ($data as $key => $value) {
-            if (property_exists($this, $key) && !blank($value)) {
-                $this->{$key} = $value;
+        $reflectionClass = new ReflectionClass(static::class);
+        $attributesPublic = $reflectionClass->getProperties(ReflectionProperty::IS_PUBLIC);
+
+        foreach ($attributesPublic as $attribute) {
+            $value = Arr::get($data, $attribute->getName());
+
+            if ($this->isDTO($attribute->getType()->getName())) {
+                $className = $attribute->getType()->getName();
+                $value = new $className($value);
             }
+
+            $this->{$attribute->getName()} = $value;
         }
+
         return $this;
     }
 
@@ -44,11 +55,23 @@ abstract class DataTransferObject
     }
 
     /**
+     * @param string $attributeType
+     * @return boolean
+     */
+    protected function isDTO(string $attributeType): bool
+    {
+        return class_exists($attributeType) && new $attributeType instanceof self;
+    }
+
+    /**
      * @param array $args
      * @return array<int, DataTransferObject>
      */
     public static function arrayOf(array $args): array
     {
-        return array_map(fn ($data) => new static($data), $args);
+        return array_map(
+            fn ($data) => new static($data),
+            $args
+        );
     }
 }
