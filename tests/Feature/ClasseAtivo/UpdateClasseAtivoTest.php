@@ -1,8 +1,7 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\ClasseAtivo;
 
-use App\Exceptions\ClasseAtivoNaoEncontradoException;
 use App\Models\ClasseAtivo;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
