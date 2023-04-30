@@ -6,7 +6,7 @@ use Illuminate\Support\Arr;
 
 abstract class DataTransferObject
 {
-    public function __construct($data = [])
+    public function __construct(array $data = [])
     {
         $this->fromArray($data);
     }
@@ -15,14 +15,13 @@ abstract class DataTransferObject
      * @param array $data
      * @return self
      */
-    public function fromArray(array $data): self
+    private function fromArray(array $data): self
     {
         foreach ($data as $key => $value) {
             if (property_exists($this, $key) && !blank($value)) {
                 $this->{$key} = $value;
             }
         }
-
         return $this;
     }
 
@@ -46,7 +45,7 @@ abstract class DataTransferObject
 
     /**
      * @param array $args
-     * @return array
+     * @return array<int, DataTransferObject>
      */
     public static function arrayOf(array $args): array
     {

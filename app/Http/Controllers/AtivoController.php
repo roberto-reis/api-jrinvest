@@ -32,14 +32,14 @@ class AtivoController extends Controller
         }
     }
 
-    public function store(StoreClasseAtivoRequest $request, StoreAction $storeAction): JsonResponse
+    public function store(StoreAtivoRequest $request, StoreAction $storeAction): JsonResponse
     {
         try {
-            $classesAtivos = $storeAction->execute($request->validated());
+            $ativo = $storeAction->execute($request->validated());
 
             return response()->json([
                 'menssage' => 'Dados cadastrados com sucesso',
-                'data' => $classesAtivos
+                'data' => $ativo
             ], 201);
 
         } catch (\Exception $e) {

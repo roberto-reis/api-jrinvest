@@ -33,8 +33,8 @@ class AtivoRepository implements IAtivoRepository
             });
         }
 
-        if (isset($filters['sort']) && isset($filters['direction'])) {
-            $ativosQuery->orderBy($filters['sort'], $filters['direction']);
+        if (isset($filters['sort'])) {
+            $ativosQuery->orderBy($filters['sort'], $filters['direction'] ?? 'asc');
         }
 
         return $ativosQuery->paginate($filters['perPage'] ?? $this->perPage)->toArray();
