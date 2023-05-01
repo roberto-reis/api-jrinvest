@@ -45,9 +45,9 @@ class AtivoRepository implements IAtivoRepository
         return $this->model::create($dto->toArray())->toArray();
     }
 
-    public function exists(string $uid): bool
+    public function exists(string $value, $field = 'uid'): bool
     {
-        return $this->model::where('uid', $uid)->exists();
+        return $this->model::where($field, $value)->exists();
     }
 
     public function update(string $uid, AtivoDTO $dto): array
@@ -61,5 +61,10 @@ class AtivoRepository implements IAtivoRepository
         $ativo->update($dto->toArray());
 
         return $ativo->toArray();
+    }
+
+    public function delete(string $uid): bool
+    {
+        return $this->model::find($uid)->delete();
     }
 }

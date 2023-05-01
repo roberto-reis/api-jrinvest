@@ -8,7 +8,7 @@ use App\Interfaces\Repositories\IAtivoRepository;
 class UpdateAction
 {
     public function __construct(
-        private IAtivoRepository $classeAtivoRepository,
+        private IAtivoRepository $ativoRepository,
     )
     {}
 
@@ -16,6 +16,6 @@ class UpdateAction
     {
         $ativoDto = new AtivoDTO($ativo);
 
-        return $this->classeAtivoRepository->update($uid, $ativoDto->setCodigoStrtoupper());
+        return $this->ativoRepository->update($uid, $ativoDto->setCodigoStrtoupper());
     }
 }

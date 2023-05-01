@@ -7,5 +7,6 @@ Route::controller(AtivoController::class)->prefix('ativo')->name('ativo')->group
     Route::get('list-all', 'listAll')->name('.listAll');
     Route::post('store', 'store')->name('.store');
     Route::put('update/{uid}', 'update')->name('.update');
+    Route::delete('delete/{uid}', 'delete')->name('.delete');
 });
 

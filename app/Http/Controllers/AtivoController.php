@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use App\Actions\Ativo\StoreAction;
+use App\Actions\Ativo\DeleteAction;
 use App\Actions\Ativo\UpdateAction;
 use App\Actions\Ativo\ListAllAction;
 use App\Http\Requests\Ativo\AtivoRequest;
@@ -67,6 +68,30 @@ class AtivoController extends Controller
             ], $e->getCode());
         } catch (\Exception $e) {
             send_log('Erro ao atualizar ativo', [], 'error', $e);
+            return response()->json([
+                'menssage' => $e->getMessage(),
+                'data' => []
+            ], $e->getCode() == 0 ? 500 : $e->getCode());
+        }
+    }
+
+    public function delete(DeleteAction $deleteAction, $uid): JsonResponse
+    {
+        try {
+            $deleteAction->execute($uid);
+
+            return response()->json([
+                'menssage' => 'Dados deletado com sucesso',
+                'data' => []
+            ], 200);
+
+        } catch (AtivoNaoEncontradoException $e) {
+            return response()->json([
+                'menssage' => $e->getMessage(),
+                'data' => []
+            ], $e->getCode());
+        } catch (\Exception $e) {
+            send_log('Erro ao deletar ativo', [], 'error', $e);
             return response()->json([
                 'menssage' => $e->getMessage(),
                 'data' => []
