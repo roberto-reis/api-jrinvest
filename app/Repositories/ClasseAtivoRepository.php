@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 use App\Models\ClasseAtivo;
 use App\DTOs\ClasseAtivo\ClasseAtivoDTO;
-use App\Exceptions\ClasseAtivoNaoEncontradoException;
+use App\Exceptions\ClasseAtivoException;
 use App\Interfaces\Repositories\IClasseAtivoRepository;
 
 class ClasseAtivoRepository implements IClasseAtivoRepository
@@ -40,9 +40,9 @@ class ClasseAtivoRepository implements IClasseAtivoRepository
         return $this->model::create($dto->toArray())->toArray();
     }
 
-    public function exists(string $uid): bool
+    public function exists(string $value, string $field = 'uid'): bool
     {
-        return $this->model::where('uid', $uid)->exists();
+        return $this->model::where($field, $value)->exists();
     }
 
     public function update(string $uid, ClasseAtivoDTO $dto): array
@@ -50,11 +50,24 @@ class ClasseAtivoRepository implements IClasseAtivoRepository
         $classeAtivo = $this->model::find($uid);
 
         if (!$classeAtivo) {
-            throw new ClasseAtivoNaoEncontradoException();
+            throw new ClasseAtivoException('Classe de ativo não encontrado', 404);;
         }
 
         $classeAtivo->update($dto->toArray());
 
         return $classeAtivo->toArray();
+    }
+
+    public function delete(string $uid): bool
+    {
+        $classeAtivo = $this->model::find($uid);
+
+        if (!$classeAtivo) throw new ClasseAtivoException('Classe de ativo não encontrado', 404);
+
+        if ($classeAtivo->ativos()->exists()) {
+            throw new ClasseAtivoException('Não será possivel deletar, existe ativo ultilizando essa classe', 400);
+        }
+
+        return $classeAtivo->delete();
     }
 }

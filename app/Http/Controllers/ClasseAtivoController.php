@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use App\Actions\ClasseAtivo\StoreAction;
+use App\Exceptions\ClasseAtivoException;
+use App\Actions\ClasseAtivo\DeleteAction;
 use App\Actions\ClasseAtivo\UpdateAction;
 use App\Actions\ClasseAtivo\ListAllAction;
-use App\Exceptions\ClasseAtivoNaoEncontradoException;
 use App\Http\Requests\ClasseAtivo\ListClasseAtivoRequest;
 use App\Http\Requests\ClasseAtivo\StoreClasseAtivoRequest;
 use App\Http\Requests\ClasseAtivo\UpdateClasseAtivoRequest;
@@ -61,7 +62,7 @@ class ClasseAtivoController extends Controller
                 'data' => $classesAtivos
             ], 200);
 
-        } catch (ClasseAtivoNaoEncontradoException $e) {
+        } catch (ClasseAtivoException $e) {
             return response()->json([
                 'menssage' => $e->getMessage(),
                 'data' => []
@@ -70,6 +71,30 @@ class ClasseAtivoController extends Controller
             send_log('Erro ao atualizar a classe de ativo', [], 'error', $e);
             return response()->json([
                 'menssage' => 'Erro ao atualizar a classe de ativo',
+                'data' => []
+            ], $e->getCode() == 0 ? 500 : $e->getCode());
+        }
+    }
+
+    public function delete(DeleteAction $deleteAction, $uid): JsonResponse
+    {
+        try {
+            $deleteAction->execute($uid);
+
+            return response()->json([
+                'menssage' => 'Dados deletado com sucesso',
+                'data' => []
+            ], 200);
+
+        } catch (ClasseAtivoException $e) {
+            return response()->json([
+                'menssage' => $e->getMessage(),
+                'data' => []
+            ], $e->getCode());
+        } catch (\Exception $e) {
+            send_log('Erro ao deletar classe ativo', [], 'error', $e);
+            return response()->json([
+                'menssage' => $e->getMessage(),
                 'data' => []
             ], $e->getCode() == 0 ? 500 : $e->getCode());
         }
