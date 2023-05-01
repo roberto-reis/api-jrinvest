@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Ativo;
 use App\DTOs\Ativo\AtivoDTO;
-use App\Exceptions\AtivoNaoEncontradoException;
+use App\Exceptions\AtivoException;
 use App\Interfaces\Repositories\IAtivoRepository;
 
 class AtivoRepository implements IAtivoRepository
@@ -55,7 +55,7 @@ class AtivoRepository implements IAtivoRepository
         $ativo = $this->model::find($uid);
 
         if (!$ativo) {
-            throw new AtivoNaoEncontradoException();
+            throw new AtivoException('Ativo não encontrado', 404);
         }
 
         $ativo->update($dto->toArray());
@@ -65,6 +65,12 @@ class AtivoRepository implements IAtivoRepository
 
     public function delete(string $uid): bool
     {
-        return $this->model::find($uid)->delete();
+        $ativo = $this->model::find($uid);
+
+        if (!$ativo) {
+            throw new AtivoException('Ativo não encontrado', 404);
+        }
+
+        return $ativo->delete();
     }
 }

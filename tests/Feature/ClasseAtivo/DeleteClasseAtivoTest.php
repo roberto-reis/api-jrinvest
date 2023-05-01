@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\ClasseAtivo;
 
+use App\Models\Ativo;
 use Tests\TestCase;
 use App\Models\ClasseAtivo;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -31,5 +32,18 @@ class DeleteClasseAtivoTest extends TestCase
         $this->assertDatabaseMissing('classes_ativos', [
             'uid' => $classeAtivo->uid
         ]);
+    }
+
+    public function test_deve_nao_deletar_uma_classe_ativo_em_uso_por_ativo(): void
+    {
+        $classeAtivo = ClasseAtivo::factory()->create();
+        Ativo::factory()->create([
+            'classe_ativo_uid' => $classeAtivo->uid
+        ]);
+
+        $response = $this->delete(route('classe-ativo.delete', $classeAtivo->uid));
+
+        $response->assertJson(['menssage' => 'Não será possivel deletar, existe ativo ultilizando essa classe'])
+                ->assertStatus(400);
     }
 }
