@@ -19,6 +19,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        if ($this->app->environment('local')) {
+            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
+            $this->app->register(TelescopeServiceProvider::class);
+        }
+
         $this->app->singleton(ICotacaoBrapi::class, CotacaoBrapiService::class);
         $this->app->singleton(IClasseAtivoRepository::class, ClasseAtivoRepository::class);
         $this->app->singleton(IAtivoRepository::class, AtivoRepository::class);
