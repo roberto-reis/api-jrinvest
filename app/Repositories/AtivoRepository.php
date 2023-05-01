@@ -52,14 +52,14 @@ class AtivoRepository implements IAtivoRepository
 
     public function update(string $uid, AtivoDTO $dto): array
     {
-        $classeAtivo = $this->model::find($uid);
+        $ativo = $this->model::find($uid);
 
-        if (!$classeAtivo) {
+        if (!$ativo) {
             throw new AtivoNaoEncontradoException();
         }
 
-        $classeAtivo->update($dto->toArray());
+        $ativo->update($dto->toArray());
 
-        return $classeAtivo->toArray();
+        return $ativo->toArray();
     }
 }

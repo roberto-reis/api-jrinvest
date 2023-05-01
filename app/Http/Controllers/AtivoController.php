@@ -6,10 +6,9 @@ use Illuminate\Http\JsonResponse;
 use App\Actions\Ativo\StoreAction;
 use App\Actions\Ativo\UpdateAction;
 use App\Actions\Ativo\ListAllAction;
-use App\Exceptions\AtivoNaoEncontradoException;
+use App\Http\Requests\Ativo\AtivoRequest;
 use App\Http\Requests\Ativo\ListAtivoRequest;
-use App\Http\Requests\Ativo\StoreAtivoRequest;
-use App\Http\Requests\Ativo\UpdateClasseAtivoRequest;
+use App\Exceptions\AtivoNaoEncontradoException;
 
 class AtivoController extends Controller
 {
@@ -32,7 +31,7 @@ class AtivoController extends Controller
         }
     }
 
-    public function store(StoreAtivoRequest $request, StoreAction $storeAction): JsonResponse
+    public function store(AtivoRequest $request, StoreAction $storeAction): JsonResponse
     {
         try {
             $ativo = $storeAction->execute($request->validated());
@@ -51,7 +50,7 @@ class AtivoController extends Controller
         }
     }
 
-    public function update(UpdateClasseAtivoRequest $request, UpdateAction $updateAction, $uid): JsonResponse
+    public function update(AtivoRequest $request, UpdateAction $updateAction, $uid): JsonResponse
     {
         try {
             $classesAtivos = $updateAction->execute($uid, $request->validated());
@@ -61,15 +60,15 @@ class AtivoController extends Controller
                 'data' => $classesAtivos
             ], 200);
 
-        } catch (ClasseAtivoNaoEncontradoException $e) {
+        } catch (AtivoNaoEncontradoException $e) {
             return response()->json([
                 'menssage' => $e->getMessage(),
                 'data' => []
             ], $e->getCode());
         } catch (\Exception $e) {
-            send_log('Erro ao atualizar a classe de ativo', [], 'error', $e);
+            send_log('Erro ao atualizar ativo', [], 'error', $e);
             return response()->json([
-                'menssage' => 'Erro ao atualizar a classe de ativo',
+                'menssage' => $e->getMessage(),
                 'data' => []
             ], $e->getCode() == 0 ? 500 : $e->getCode());
         }
