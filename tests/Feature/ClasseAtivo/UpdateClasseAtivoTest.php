@@ -1,8 +1,7 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\ClasseAtivo;
 
-use App\Exceptions\ClasseAtivoNaoEncontradoException;
 use App\Models\ClasseAtivo;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
@@ -12,7 +11,7 @@ class UpdateClasseAtivoTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function test_deve_ser_obrigatorio_os_campos_nome_e_descricao_p(): void
+    public function test_deve_ser_obrigatorio_os_campos_nome_e_descricao_ao_atualizar_classe_ativo(): void
     {
         $classeAtivo = ClasseAtivo::factory()->create();
 
@@ -35,7 +34,7 @@ class UpdateClasseAtivoTest extends TestCase
                 ->assertStatus(404);
     }
 
-    public function test_deve_cadastrar_uma_classe_de_ativo(): void
+    public function test_deve_atualizar_uma_classe_de_ativo(): void
     {
         $classeAtivo = ClasseAtivo::factory()->create();
         $classeAtualizada = [
