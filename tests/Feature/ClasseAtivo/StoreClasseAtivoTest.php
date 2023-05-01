@@ -11,7 +11,7 @@ class StoreClasseAtivoTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function test_deve_ser_obrigatorio_os_campos_nome_e_descricao(): void
+    public function test_deve_ser_obrigatorio_os_campos_nome_e_descricao_ao_cadastrar_classe_ativo(): void
     {
         $response = $this->post(route('classe-ativo.store'), []);
 
