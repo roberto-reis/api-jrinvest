@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Ativo;
 use App\Models\ClasseAtivo;
 use Illuminate\Database\Seeder;
 
@@ -22,5 +23,6 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         ClasseAtivo::factory(10)->create();
+        Ativo::factory(5)->create();
     }
 }

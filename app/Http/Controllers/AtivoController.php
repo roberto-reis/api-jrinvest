@@ -3,44 +3,43 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
-use App\Actions\ClasseAtivo\StoreAction;
-use App\Exceptions\ClasseAtivoException;
-use App\Actions\ClasseAtivo\DeleteAction;
-use App\Actions\ClasseAtivo\UpdateAction;
-use App\Actions\ClasseAtivo\ListAllAction;
-use App\Http\Requests\ClasseAtivo\ListClasseAtivoRequest;
-use App\Http\Requests\ClasseAtivo\StoreClasseAtivoRequest;
-use App\Http\Requests\ClasseAtivo\UpdateClasseAtivoRequest;
+use App\Actions\Ativo\StoreAction;
+use App\Actions\Ativo\DeleteAction;
+use App\Actions\Ativo\UpdateAction;
+use App\Actions\Ativo\ListAllAction;
+use App\Http\Requests\Ativo\AtivoRequest;
+use App\Http\Requests\Ativo\ListAtivoRequest;
+use App\Exceptions\AtivoNaoEncontradoException;
 
-class ClasseAtivoController extends Controller
+class AtivoController extends Controller
 {
-    public function listAll(ListClasseAtivoRequest $request, ListAllAction $listAll): JsonResponse
+    public function listAll(ListAtivoRequest $request, ListAllAction $listAll): JsonResponse
     {
         try {
-            $classesAtivos = $listAll->execute($request->validated());
+            $ativos = $listAll->execute($request->validated());
 
             return response()->json([
                 'menssage' => 'Dados retornados com sucesso',
-                'data' => $classesAtivos
+                'data' => $ativos
             ], 200);
 
         } catch (\Exception $e) {
-            send_log('Erro ao listar as classes de ativos', [], 'error', $e);
+            send_log('Erro ao listar ativos', [], 'error', $e);
             return response()->json([
-                'menssage' => 'Erro ao listar as classes de ativos',
+                'menssage' => 'Erro ao listar ativos',
                 'data' => []
             ], $e->getCode() == 0 ? 500 : $e->getCode());
         }
     }
 
-    public function store(StoreClasseAtivoRequest $request, StoreAction $storeAction): JsonResponse
+    public function store(AtivoRequest $request, StoreAction $storeAction): JsonResponse
     {
         try {
-            $classesAtivos = $storeAction->execute($request->validated());
+            $ativo = $storeAction->execute($request->validated());
 
             return response()->json([
                 'menssage' => 'Dados cadastrados com sucesso',
-                'data' => $classesAtivos
+                'data' => $ativo
             ], 201);
 
         } catch (\Exception $e) {
@@ -52,7 +51,7 @@ class ClasseAtivoController extends Controller
         }
     }
 
-    public function update(UpdateClasseAtivoRequest $request, UpdateAction $updateAction, $uid): JsonResponse
+    public function update(AtivoRequest $request, UpdateAction $updateAction, $uid): JsonResponse
     {
         try {
             $classesAtivos = $updateAction->execute($uid, $request->validated());
@@ -62,15 +61,15 @@ class ClasseAtivoController extends Controller
                 'data' => $classesAtivos
             ], 200);
 
-        } catch (ClasseAtivoException $e) {
+        } catch (AtivoNaoEncontradoException $e) {
             return response()->json([
                 'menssage' => $e->getMessage(),
                 'data' => []
             ], $e->getCode());
         } catch (\Exception $e) {
-            send_log('Erro ao atualizar a classe de ativo', [], 'error', $e);
+            send_log('Erro ao atualizar ativo', [], 'error', $e);
             return response()->json([
-                'menssage' => 'Erro ao atualizar a classe de ativo',
+                'menssage' => $e->getMessage(),
                 'data' => []
             ], $e->getCode() == 0 ? 500 : $e->getCode());
         }
@@ -86,13 +85,13 @@ class ClasseAtivoController extends Controller
                 'data' => []
             ], 200);
 
-        } catch (ClasseAtivoException $e) {
+        } catch (AtivoNaoEncontradoException $e) {
             return response()->json([
                 'menssage' => $e->getMessage(),
                 'data' => []
             ], $e->getCode());
         } catch (\Exception $e) {
-            send_log('Erro ao deletar classe ativo', [], 'error', $e);
+            send_log('Erro ao deletar ativo', [], 'error', $e);
             return response()->json([
                 'menssage' => $e->getMessage(),
                 'data' => []
