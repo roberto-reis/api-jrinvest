@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Ativo\ShowAction;
 use Illuminate\Http\JsonResponse;
 use App\Actions\Ativo\StoreAction;
+use App\Exceptions\AtivoException;
 use App\Actions\Ativo\DeleteAction;
 use App\Actions\Ativo\UpdateAction;
 use App\Actions\Ativo\ListAllAction;
 use App\Http\Requests\Ativo\AtivoRequest;
 use App\Http\Requests\Ativo\ListAtivoRequest;
-use App\Exceptions\AtivoNaoEncontradoException;
 
 class AtivoController extends Controller
 {
@@ -27,6 +28,30 @@ class AtivoController extends Controller
             send_log('Erro ao listar ativos', [], 'error', $e);
             return response()->json([
                 'menssage' => 'Erro ao listar ativos',
+                'data' => []
+            ], $e->getCode() == 0 ? 500 : $e->getCode());
+        }
+    }
+
+    public function show(ShowAction $showAction, string $uid): JsonResponse
+    {
+        try {
+            $ativo = $showAction->execute($uid);
+
+            return response()->json([
+                'menssage' => 'Dados retornados com sucesso',
+                'data' => $ativo
+            ], 200);
+
+        } catch (AtivoException $e) {
+            return response()->json([
+                'menssage' => $e->getMessage(),
+                'data' => []
+            ], $e->getCode());
+        } catch (\Exception $e) {
+            send_log('Erro ao listar classe de ativo', [], 'error', $e);
+            return response()->json([
+                'menssage' => 'Erro ao listar classe de ativo',
                 'data' => []
             ], $e->getCode() == 0 ? 500 : $e->getCode());
         }
@@ -61,7 +86,7 @@ class AtivoController extends Controller
                 'data' => $classesAtivos
             ], 200);
 
-        } catch (AtivoNaoEncontradoException $e) {
+        } catch (AtivoException $e) {
             return response()->json([
                 'menssage' => $e->getMessage(),
                 'data' => []
@@ -85,7 +110,7 @@ class AtivoController extends Controller
                 'data' => []
             ], 200);
 
-        } catch (AtivoNaoEncontradoException $e) {
+        } catch (AtivoException $e) {
             return response()->json([
                 'menssage' => $e->getMessage(),
                 'data' => []

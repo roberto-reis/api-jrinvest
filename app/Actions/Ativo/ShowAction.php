@@ -4,16 +4,16 @@ namespace App\Actions\Ativo;
 
 use App\Interfaces\Repositories\IAtivoRepository;
 
-class ListAllAction
+class ShowAction
 {
     public function __construct(
         private IAtivoRepository $ativoRepository
     )
     {}
 
-    public function execute(array $filters = []): array
+    public function execute(string $uid): array
     {
-        $ativos = $this->ativoRepository->getAll($filters);
-        return $ativos;
+        $ativo = $this->ativoRepository->find($uid);
+        return $ativo;
     }
 }

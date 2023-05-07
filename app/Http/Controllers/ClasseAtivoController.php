@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
+use App\Actions\ClasseAtivo\ShowAction;
 use App\Actions\ClasseAtivo\StoreAction;
 use App\Exceptions\ClasseAtivoException;
 use App\Actions\ClasseAtivo\DeleteAction;
@@ -28,6 +29,30 @@ class ClasseAtivoController extends Controller
             send_log('Erro ao listar as classes de ativos', [], 'error', $e);
             return response()->json([
                 'menssage' => 'Erro ao listar as classes de ativos',
+                'data' => []
+            ], $e->getCode() == 0 ? 500 : $e->getCode());
+        }
+    }
+
+    public function show(ShowAction $showAction, string $uid): JsonResponse
+    {
+        try {
+            $classeAtivo = $showAction->execute($uid);
+
+            return response()->json([
+                'menssage' => 'Dados retornados com sucesso',
+                'data' => $classeAtivo
+            ], 200);
+
+        } catch (ClasseAtivoException $e) {
+            return response()->json([
+                'menssage' => $e->getMessage(),
+                'data' => []
+            ], $e->getCode());
+        } catch (\Exception $e) {
+            send_log('Erro ao listar classe de ativo', [], 'error', $e);
+            return response()->json([
+                'menssage' => 'Erro ao listar classe de ativo',
                 'data' => []
             ], $e->getCode() == 0 ? 500 : $e->getCode());
         }

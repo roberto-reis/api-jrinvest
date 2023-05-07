@@ -50,10 +50,19 @@ class ClasseAtivoRepository implements IClasseAtivoRepository
         $classeAtivo = $this->model::find($uid);
 
         if (!$classeAtivo) {
-            throw new ClasseAtivoException('Classe de ativo não encontrado', 404);;
+            throw new ClasseAtivoException('Classe de ativo não encontrado', 404);
         }
 
         $classeAtivo->update($dto->toArray());
+
+        return $classeAtivo->toArray();
+    }
+
+    public function find(string $uid): array
+    {
+        $classeAtivo = $this->model::find($uid);
+
+        if (!$classeAtivo) throw new ClasseAtivoException('Classe de ativo não encontrado', 404);
 
         return $classeAtivo->toArray();
     }
