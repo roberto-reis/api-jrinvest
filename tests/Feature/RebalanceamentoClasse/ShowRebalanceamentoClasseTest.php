@@ -25,8 +25,6 @@ class ShowRebalanceamentoClasseTest extends TestCase
                     "user_id",
                     "classe_ativo_uid",
                     "percentual",
-                    "created_at",
-                    "updated_at",
                     "user",
                     "classe_ativo"
                   ]
