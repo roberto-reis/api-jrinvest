@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\RebalanceamentoClasseException;
 use App\Interfaces\Repositories\IRebalanceamentoClasseRepository;
 use App\Models\RebalanceamentoClasse;
 
@@ -47,5 +48,14 @@ class RebalanceamentoClasseRepository implements IRebalanceamentoClasseRepositor
         }
 
         return $rebalanceamentoQuery->paginate($filters['perPage'] ?? $this->perPage)->toArray();
+    }
+
+    public function find(string $uid, array $with = []): array
+    {
+        $rebalanceamentoClasse = $this->model::with($with)->find($uid);
+
+        if (!$rebalanceamentoClasse) throw new RebalanceamentoClasseException('Rebalanceamento por classe não encontrado', 404);
+
+        return $rebalanceamentoClasse->toArray();
     }
 }
