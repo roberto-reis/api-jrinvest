@@ -17,14 +17,14 @@ class RebalanceamentoClasse extends Model
     protected $icrementing = false;
 
     protected $fillable = [
-        'user_id',
+        'user_uid',
         'classe_ativo_uid',
         'percentual',
     ];
 
     public function user()
     {
-        return $this->hasOne(User::class, 'id', 'user_id');
+        return $this->hasOne(User::class, 'uid', 'user_uid');
     }
 
     public function classeAtivo()

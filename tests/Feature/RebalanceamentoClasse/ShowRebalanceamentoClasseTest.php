@@ -5,7 +5,6 @@ namespace Tests\Feature\Ativo;
 use Tests\TestCase;
 
 use App\Models\RebalanceamentoClasse;
-use function PHPUnit\Framework\assertEquals;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ShowRebalanceamentoClasseTest extends TestCase
@@ -22,7 +21,7 @@ class ShowRebalanceamentoClasseTest extends TestCase
             ->assertJsonStructure([
                 "data" => [
                     "uid",
-                    "user_id",
+                    "user_uid",
                     "classe_ativo_uid",
                     "percentual",
                     "user",

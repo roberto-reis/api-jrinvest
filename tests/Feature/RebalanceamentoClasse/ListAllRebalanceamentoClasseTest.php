@@ -2,13 +2,16 @@
 
 namespace Tests\Feature\ClasseAtivo;
 
-use App\Models\RebalanceamentoClasse;
 use Tests\TestCase;
+use App\Models\RebalanceamentoClasse;
 
 use function PHPUnit\Framework\assertEquals;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ListAllRebalanceamentoClasseTest extends TestCase
 {
+    use DatabaseTransactions;
+
     public function test_deve_listar_todos_os_rebalanceamento_por_classe_de_ativo(): void
     {
         $response = $this->get(route('rebalanceamento-classes.listAll'));

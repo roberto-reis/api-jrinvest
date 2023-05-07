@@ -13,13 +13,12 @@ return new class extends Migration
     {
         Schema::create('rebalanceamento_ativos', function (Blueprint $table) {
             $table->uuid('uid')->primary();
-            $table->foreignId('user_id')->index();
+            $table->foreignUuid('user_uid')->index();
             $table->foreignUuid('ativo_uid')->index();
             $table->decimal('percentual', 10, 2);
             $table->timestamps();
-            $table->unique(['user_id', 'ativo_uid']);
 
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_uid')->references('uid')->on('users');
             $table->foreign('ativo_uid')->references('uid')->on('ativos');
         });
     }

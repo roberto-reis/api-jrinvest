@@ -22,7 +22,7 @@ class RebalanceamentoClasseFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory()->create()->id,
+            'user_uid' => User::factory()->create()->uid,
             'classe_ativo_uid' => ClasseAtivo::all()->random()->uid,
             'percentual' => fake()->randomFloat(2, 1, 100)
         ];
