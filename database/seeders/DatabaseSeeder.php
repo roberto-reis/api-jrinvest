@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use App\Models\Ativo;
 use App\Models\ClasseAtivo;
+use App\Models\RebalanceamentoClasse;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -22,7 +23,8 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        ClasseAtivo::factory(10)->create();
+        ClasseAtivo::factory(5)->create();
         Ativo::factory(5)->create();
+        RebalanceamentoClasse::factory(5)->create();
     }
 }
