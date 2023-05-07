@@ -15,8 +15,9 @@ return new class extends Migration
             $table->uuid('uid')->primary()->index();
             $table->foreignUuid('user_uid')->index();
             $table->foreignUuid('ativo_uid')->index();
-            $table->string('quantidade_saldo');
+            $table->string('quantidade');
             $table->string('preco_medio');
+            $table->string('valor_total');
             $table->timestamps();
 
             $table->foreign('user_uid')->references('uid')->on('users')->cascadeOnDelete();

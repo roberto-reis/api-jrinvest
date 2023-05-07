@@ -53,4 +53,7 @@ class RebalanceamentoClasseController extends Controller
             ], $e->getCode() == 0 ? 500 : $e->getCode());
         }
     }
+
+    // TODO: Implementar metodo Update
+    // TODO: Implementar metodo delete
 }
