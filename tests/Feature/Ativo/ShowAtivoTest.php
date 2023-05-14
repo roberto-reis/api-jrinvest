@@ -37,6 +37,6 @@ class ShowAtivoTest extends TestCase
         $response = $this->get(route('ativo.show', $uidQualquer));
 
         $response->assertStatus(404)
-            ->assertSeeText('Ativo n\u00e3o encontrado');
+            ->assertJson(['menssage' => 'Ativo não encontrado']);
     }
 }

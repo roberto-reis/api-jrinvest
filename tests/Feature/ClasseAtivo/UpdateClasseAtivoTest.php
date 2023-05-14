@@ -21,7 +21,7 @@ class UpdateClasseAtivoTest extends TestCase
                 ->assertStatus(302);
     }
 
-    public function test_retornar_classe_ativo_nao_encontrado_404(): void
+    public function test_deve_retornar_classe_ativo_nao_encontrado_404(): void
     {
         $classeAtualizada = [
             'nome' => 'Novo Nome',

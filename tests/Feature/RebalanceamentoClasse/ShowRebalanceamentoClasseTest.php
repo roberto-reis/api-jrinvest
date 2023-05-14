@@ -37,6 +37,8 @@ class ShowRebalanceamentoClasseTest extends TestCase
         $response = $this->get(route('rebalanceamento-classes.show', $uidQualquer));
 
         $response->assertStatus(404)
-            ->assertSeeText('Rebalanceamento por classe n\u00e3o encontrado');
+            ->assertJson([
+                "menssage" => "Rebalanceamento por classe não encontrado"
+            ]);
     }
 }

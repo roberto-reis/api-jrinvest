@@ -36,6 +36,6 @@ class ShowClasseAtivoTest extends TestCase
         $response = $this->get(route('classe-ativo.show', $uidQualquer));
 
         $response->assertStatus(404)
-            ->assertSeeText('Classe de ativo n\u00e3o encontrado');
+            ->assertJson(['menssage' => 'Classe de ativo não encontrado']);
     }
 }

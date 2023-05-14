@@ -12,7 +12,7 @@ class DeleteClasseAtivoTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function test_retornar_classe_ativo_nao_encontrado_404(): void
+    public function test_deve_retornar_classe_ativo_nao_encontrado_404(): void
     {
         $uidQualquer = '32c0e209-cff9-4cc3-af17-71cb6a48d01a';
 
