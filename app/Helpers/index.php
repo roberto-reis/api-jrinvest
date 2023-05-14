@@ -14,3 +14,12 @@ if (!function_exists('send_log')) {
         Log::{$tipo}($mensagem, $context);
     }
 }
+
+if (!function_exists('response_api')) {
+    function response_api(string $mensagem, array $data = [], int $statusCode = 200) {
+        return response()->json([
+            'menssage' => $mensagem,
+            'data' => $data
+        ], $statusCode);
+    }
+}
