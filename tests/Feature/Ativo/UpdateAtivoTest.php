@@ -21,7 +21,7 @@ class UpdateAtivoTest extends TestCase
                 ->assertStatus(302);
     }
 
-    public function test_retornar_ativo_nao_encontrado_404(): void
+    public function test_deve_retornar_ativo_nao_encontrado_404(): void
     {
         $ativoAtualizado = Ativo::factory()->make()->toArray();
 

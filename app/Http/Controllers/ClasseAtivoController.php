@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
+use App\Actions\ClasseAtivo\ShowAction;
 use App\Actions\ClasseAtivo\StoreAction;
 use App\Exceptions\ClasseAtivoException;
 use App\Actions\ClasseAtivo\DeleteAction;
@@ -19,17 +20,35 @@ class ClasseAtivoController extends Controller
         try {
             $classesAtivos = $listAll->execute($request->validated());
 
-            return response()->json([
-                'menssage' => 'Dados retornados com sucesso',
-                'data' => $classesAtivos
-            ], 200);
+            return response_api('Dados retornados com sucesso', $classesAtivos);
 
         } catch (\Exception $e) {
             send_log('Erro ao listar as classes de ativos', [], 'error', $e);
-            return response()->json([
-                'menssage' => 'Erro ao listar as classes de ativos',
-                'data' => []
-            ], $e->getCode() == 0 ? 500 : $e->getCode());
+            return response_api(
+                'Erro ao listar as classes de ativos',
+                [],
+                $e->getCode() == 0 ? 500 : $e->getCode()
+            );
+        }
+    }
+
+    public function show(ShowAction $showAction, string $uid): JsonResponse
+    {
+        try {
+            $classeAtivo = $showAction->execute($uid);
+
+            return response_api('Dados retornados com sucesso', $classeAtivo);
+
+        } catch (ClasseAtivoException $e) {
+            return response_api($e->getMessage(), [], $e->getCode());
+
+        } catch (\Exception $e) {
+            send_log('Erro ao listar classe de ativo', [], 'error', $e);
+            return response_api(
+                'Erro ao listar classe de ativo',
+                [],
+                $e->getCode() == 0 ? 500 : $e->getCode()
+            );
         }
     }
 
@@ -38,17 +57,15 @@ class ClasseAtivoController extends Controller
         try {
             $classesAtivos = $storeAction->execute($request->validated());
 
-            return response()->json([
-                'menssage' => 'Dados cadastrados com sucesso',
-                'data' => $classesAtivos
-            ], 201);
+            return response_api('Dados cadastrados com sucesso', $classesAtivos, 201);
 
         } catch (\Exception $e) {
             send_log('Erro ao cadastrar a classe de ativo', [], 'error', $e);
-            return response()->json([
-                'menssage' => 'Erro ao cadastrar a classe de ativo',
-                'data' => []
-            ], $e->getCode() == 0 ? 500 : $e->getCode());
+            return response_api(
+                'Erro ao cadastrar a classe de ativo',
+                [],
+                $e->getCode() == 0 ? 500 : $e->getCode()
+            );
         }
     }
 
@@ -57,22 +74,18 @@ class ClasseAtivoController extends Controller
         try {
             $classesAtivos = $updateAction->execute($uid, $request->validated());
 
-            return response()->json([
-                'menssage' => 'Dados Atualizados com sucesso',
-                'data' => $classesAtivos
-            ], 200);
+            return response_api('Dados Atualizados com sucesso', $classesAtivos, 200);
 
         } catch (ClasseAtivoException $e) {
-            return response()->json([
-                'menssage' => $e->getMessage(),
-                'data' => []
-            ], $e->getCode());
+            return response_api( $e->getMessage(), [], $e->getCode());
+
         } catch (\Exception $e) {
             send_log('Erro ao atualizar a classe de ativo', [], 'error', $e);
-            return response()->json([
-                'menssage' => 'Erro ao atualizar a classe de ativo',
-                'data' => []
-            ], $e->getCode() == 0 ? 500 : $e->getCode());
+            return response_api(
+                'Erro ao atualizar a classe de ativo',
+                [],
+                $e->getCode() == 0 ? 500 : $e->getCode()
+            );
         }
     }
 
@@ -81,22 +94,18 @@ class ClasseAtivoController extends Controller
         try {
             $deleteAction->execute($uid);
 
-            return response()->json([
-                'menssage' => 'Dados deletado com sucesso',
-                'data' => []
-            ], 200);
+            return response_api('Dados deletado com sucesso');
 
         } catch (ClasseAtivoException $e) {
-            return response()->json([
-                'menssage' => $e->getMessage(),
-                'data' => []
-            ], $e->getCode());
+            return response_api($e->getMessage(), [], $e->getCode());
+
         } catch (\Exception $e) {
             send_log('Erro ao deletar classe ativo', [], 'error', $e);
-            return response()->json([
-                'menssage' => $e->getMessage(),
-                'data' => []
-            ], $e->getCode() == 0 ? 500 : $e->getCode());
+            return response_api(
+                'Erro ao deletar classe ativo',
+                [],
+                $e->getCode() == 0 ? 500 : $e->getCode()
+            );
         }
     }
 }

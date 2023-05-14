@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests\ClasseAtivo;
+namespace App\Http\Requests\RebalanceamentoClasse;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class StoreClasseAtivoRequest extends FormRequest
+class ListRebalanceamentoClasseRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,8 +22,11 @@ class StoreClasseAtivoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nome' => ['required', 'string', 'min:3', 'max:255', Rule::unique('classes_ativos')],
-            'descricao' => ['required', 'string', 'min:3', 'max:255']
+            'search' => ['nullable', 'string'],
+            'perPage' => ['nullable', 'integer'],
+            'with_paginate' => ['nullable', 'boolean'],
+            'sort' => ['nullable', 'string', 'in:percentual,created_at'],
+            'direction' => ['nullable', 'string', 'in:asc,desc']
         ];
     }
 }

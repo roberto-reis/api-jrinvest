@@ -63,6 +63,15 @@ class AtivoRepository implements IAtivoRepository
         return $ativo->toArray();
     }
 
+    public function find(string $uid): array
+    {
+        $ativo = $this->model::find($uid);
+
+        if (!$ativo) throw new AtivoException('Ativo não encontrado', 404);
+
+        return $ativo->toArray();
+    }
+
     public function delete(string $uid): bool
     {
         $ativo = $this->model::find($uid);
