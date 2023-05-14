@@ -4,10 +4,11 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\User;
 use App\Models\Ativo;
 use App\Models\ClasseAtivo;
-use App\Models\RebalanceamentoClasse;
 use Illuminate\Database\Seeder;
+use App\Models\RebalanceamentoClasse;
 
 class DatabaseSeeder extends Seeder
 {
@@ -23,8 +24,9 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        ClasseAtivo::factory(5)->create();
-        Ativo::factory(5)->create();
+        // User::factory(2)->create();
+        // ClasseAtivo::factory(5)->create();
+        // Ativo::factory(5)->create();
         RebalanceamentoClasse::factory(5)->create();
     }
 }

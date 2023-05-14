@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\DTOs\Rebalanceamento\RebalanceamentoClasseDTO;
 use App\Exceptions\RebalanceamentoClasseException;
 use App\Interfaces\Repositories\IRebalanceamentoClasseRepository;
 use App\Models\RebalanceamentoClasse;
@@ -57,5 +58,15 @@ class RebalanceamentoClasseRepository implements IRebalanceamentoClasseRepositor
         if (!$rebalanceamentoClasse) throw new RebalanceamentoClasseException('Rebalanceamento por classe não encontrado', 404);
 
         return $rebalanceamentoClasse->toArray();
+    }
+
+    public function somaPecentual(string $data, string $campo = 'user_uid'): float
+    {
+        return $this->model::where($campo, $data)->sum('percentual');
+    }
+
+    public function store(RebalanceamentoClasseDTO $dto): array
+    {
+        return $this->model::create($dto->toArray())->toArray();
     }
 }

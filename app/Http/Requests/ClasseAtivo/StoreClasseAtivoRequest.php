@@ -3,6 +3,7 @@
 namespace App\Http\Requests\ClasseAtivo;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreClasseAtivoRequest extends FormRequest
 {
@@ -22,7 +23,7 @@ class StoreClasseAtivoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nome' => ['required', 'string', 'min:3', 'max:255'],
+            'nome' => ['required', 'string', 'min:3', 'max:255', Rule::unique('classes_ativos')],
             'descricao' => ['required', 'string', 'min:3', 'max:255']
         ];
     }
