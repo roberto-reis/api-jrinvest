@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignUuid('ativo_uid')->index();
             $table->decimal('percentual', 10, 2);
             $table->timestamps();
+            $table->unique(['user_uid', 'ativo_uid']);
 
             $table->foreign('user_uid')->references('uid')->on('users');
             $table->foreign('ativo_uid')->references('uid')->on('ativos');

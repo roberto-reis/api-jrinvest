@@ -60,13 +60,32 @@ class RebalanceamentoClasseRepository implements IRebalanceamentoClasseRepositor
         return $rebalanceamentoClasse->toArray();
     }
 
+    public function exists(string $value, string $field = 'uid'): bool
+    {
+        return $this->model::where($field, $value)->exists();
+    }
+
     public function somaPecentual(string $data, string $campo = 'user_uid'): float
     {
         return $this->model::where($campo, $data)->sum('percentual');
     }
 
+    public function somaPecentualUpdate(string $userUid, string $uid): float
+    {
+        return $this->model::where('user_uid', $userUid)->where('uid', '<>', $uid)->sum('percentual');
+    }
+
     public function store(RebalanceamentoClasseDTO $dto): array
     {
         return $this->model::create($dto->toArray())->toArray();
+    }
+
+    public function update(string $uid, RebalanceamentoClasseDTO $dto): array
+    {
+        $rebalanceamentoClasse = $this->model::find($uid);
+
+        $rebalanceamentoClasse->update($dto->toArray());
+
+        return $rebalanceamentoClasse->toArray();
     }
 }
