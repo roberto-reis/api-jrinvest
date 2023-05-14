@@ -76,4 +76,19 @@ class UpdateRebalanceamentoClasseTest extends TestCase
                 "menssage" => "A soma dos percentuais não pode ser maior que 100.00%"
             ]);
     }
+
+    public function test_deve_retornar_rebalanceamento_por_classe_ativo_nao_encontrado_404(): void
+    {
+        $uidQualquer = '32c0e209-cff9-4cc3-af17-71cb6a48d01a';
+        $rebalanceamentoClasse = RebalanceamentoClasse::factory()->create();
+
+        $response = $this->delete(
+            route('rebalanceamento-classes.delete',
+            $uidQualquer),
+            $rebalanceamentoClasse->toArray()
+        );
+
+        $response->assertJson(['menssage' => 'Rebalanceamento por classe não encontrado'])
+                ->assertStatus(404);
+    }
 }
