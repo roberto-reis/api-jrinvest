@@ -23,7 +23,7 @@ class RebalanceamentoClasseFactory extends Factory
     {
         return [
             'user_uid' => User::factory()->create()->uid,
-            'classe_ativo_uid' => ClasseAtivo::all()->random()->uid,
+            'classe_ativo_uid' => ClasseAtivo::factory()->create()->uid,
             'percentual' => fake()->randomFloat(2, 1, 100)
         ];
     }

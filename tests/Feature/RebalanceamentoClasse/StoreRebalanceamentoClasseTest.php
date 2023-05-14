@@ -13,7 +13,7 @@ class StoreRebalanceamentoClasseTest extends TestCase
 
     public function test_deve_ser_obrigatorio_os_campos_ao_cadastrar_rebalanceamento_classe_ativo(): void
     {
-        $response = $this->post(route('rebalanceamento-classes.store', []));
+        $response = $this->post(route('rebalanceamento-classes.store'), []);
 
         $response->assertStatus(302)
                 ->assertSessionHasErrors([
@@ -27,7 +27,7 @@ class StoreRebalanceamentoClasseTest extends TestCase
     {
         $rebalanceamentoClasse = RebalanceamentoClasse::factory()->make();
 
-        $response = $this->post(route('rebalanceamento-classes.store', $rebalanceamentoClasse->toArray()));
+        $response = $this->post(route('rebalanceamento-classes.store'), $rebalanceamentoClasse->toArray());
 
         $response->assertStatus(201)
             ->assertJson([
@@ -42,11 +42,10 @@ class StoreRebalanceamentoClasseTest extends TestCase
     public function test_deve_nao_cadastrar_rebalanceamento_com_soma_percentuais_maior_que_100(): void
     {
         $rebalanceamentoClasse = RebalanceamentoClasse::factory()->create(['percentual' => 80.00]);
-        $rebalanceamento = $rebalanceamentoClasse->toArray();
 
-        $rebalanceamento['percentual'] = 30.00;
+        $rebalanceamentoClasse->percentual = 30.00;
 
-        $response = $this->post(route('rebalanceamento-classes.store', $rebalanceamento));
+        $response = $this->post(route('rebalanceamento-classes.store'), $rebalanceamentoClasse->toArray());
 
         $response->assertStatus(400)
             ->assertJson([
