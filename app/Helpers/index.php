@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 
 if (!function_exists('send_log')) {
@@ -16,7 +17,7 @@ if (!function_exists('send_log')) {
 }
 
 if (!function_exists('response_api')) {
-    function response_api(string $mensagem, array $data = [], int $statusCode = 200) {
+    function response_api(string $mensagem, array $data = [], int $statusCode = 200): JsonResponse {
         return response()->json([
             'menssage' => $mensagem,
             'data' => $data
