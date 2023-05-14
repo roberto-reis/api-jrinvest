@@ -9,7 +9,7 @@ use App\Interfaces\Repositories\IRebalanceamentoClasseRepository;
 class UpdateAction
 {
     public function __construct(
-        private IRebalanceamentoClasseRepository $rebalanceamentoClasseRepository,
+        private IRebalanceamentoClasseRepository $rebalanceamentoRepository,
     )
     {}
 
@@ -17,17 +17,17 @@ class UpdateAction
     {
         $dto = new RebalanceamentoClasseDTO($rebalanceamento);
 
-        if (!$this->rebalanceamentoClasseRepository->exists($uid)) {
+        if (!$this->rebalanceamentoRepository->exists($uid)) {
             throw new RebalanceamentoClasseException('Rebalanceamento por classe não encontrado', 404);
         }
 
         // Verificar soma do pecentual, não pode ser maior que 100.00
-        $somaPecentualClasse = $this->rebalanceamentoClasseRepository->somaPecentualUpdate($dto->user_uid, $uid);
+        $somaPecentualClasse = $this->rebalanceamentoRepository->somaPecentualUpdate($dto->user_uid, $uid);
         $somaPecentualClasse += $dto->percentual;
         if ($somaPecentualClasse > 100) {
             throw new RebalanceamentoClasseException('A soma dos percentuais não pode ser maior que 100.00%', 400);
         }
 
-        return $this->rebalanceamentoClasseRepository->update($uid, $dto);
+        return $this->rebalanceamentoRepository->update($uid, $dto);
     }
 }

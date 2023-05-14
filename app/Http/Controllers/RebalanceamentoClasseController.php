@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use App\Actions\RebalanceamentoClasse\ShowAction;
 use App\Actions\RebalanceamentoClasse\StoreAction;
 use App\Exceptions\RebalanceamentoClasseException;
+use App\Actions\RebalanceamentoClasse\DeleteAction;
 use App\Actions\RebalanceamentoClasse\UpdateAction;
 use App\Actions\RebalanceamentoClasse\ListAllAction;
 use App\Http\Requests\RebalanceamentoClasse\StoreRebalanceamentoRequest;
@@ -107,5 +108,27 @@ class RebalanceamentoClasseController extends Controller
         }
     }
 
-    // TODO: Implementar metodo delete
+    public function delete(DeleteAction $deleteAction, $uid): JsonResponse
+    {
+        try {
+            $deleteAction->execute($uid);
+
+            return response()->json([
+                'menssage' => 'Dados deletado com sucesso',
+                'data' => []
+            ], 200);
+
+        } catch (RebalanceamentoClasseException $e) {
+            return response()->json([
+                'menssage' => $e->getMessage(),
+                'data' => []
+            ], $e->getCode());
+        } catch (\Exception $e) {
+            send_log('Erro ao deletar rebalanceamento classe de ativo', [], 'error', $e);
+            return response()->json([
+                'menssage' => $e->getMessage(),
+                'data' => []
+            ], $e->getCode() == 0 ? 500 : $e->getCode());
+        }
+    }
 }

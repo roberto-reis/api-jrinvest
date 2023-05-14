@@ -88,4 +88,15 @@ class RebalanceamentoClasseRepository implements IRebalanceamentoClasseRepositor
 
         return $rebalanceamentoClasse->toArray();
     }
+
+    public function delete(string $uid): bool
+    {
+        $rebalanceamentoClasse = $this->model::find($uid);
+
+        if (!$rebalanceamentoClasse) {
+            throw new RebalanceamentoClasseException('Rebalanceamento por classe não encontrado', 404);
+        }
+
+        return $rebalanceamentoClasse->delete();
+    }
 }

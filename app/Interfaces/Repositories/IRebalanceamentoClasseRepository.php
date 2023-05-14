@@ -13,4 +13,5 @@ interface IRebalanceamentoClasseRepository
     public function somaPecentualUpdate(string $userUid, string $uid): float;
     public function update(string $uid, RebalanceamentoClasseDTO $dto): array;
     public function exists(string $value, string $field = 'uid'): bool;
+    public function delete(string $uid): bool;
 }
