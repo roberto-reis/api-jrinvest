@@ -2,13 +2,13 @@
 
 namespace App\Actions\Auth;
 
-use App\DTOs\User\RegisterUserDto;
-use App\Interfaces\Repositories\IUserRepository;
+use App\DTOs\Auth\RegisterUserDto;
+use App\Interfaces\Repositories\IAuthRepository;
 
 class RegisterAction
 {
     public function __construct(
-        private IUserRepository $userRepository
+        private IAuthRepository $userRepository
     )
     {}
 
@@ -16,6 +16,6 @@ class RegisterAction
     {
         $userDto = new RegisterUserDto($data);
 
-        return $this->userRepository->store($userDto);
+        return $this->userRepository->store($userDto->withMakeHash());
     }
 }

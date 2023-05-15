@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DTOs\User;
+namespace App\DTOs\Auth;
 
 use App\DTOs\DataTransferObject;
 use Illuminate\Support\Facades\Hash;

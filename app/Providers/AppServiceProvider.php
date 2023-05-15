@@ -4,17 +4,17 @@ namespace App\Providers;
 
 use App\Interfaces\ICotacaoBrapi;
 use Illuminate\Support\Collection;
+use App\Repositories\AuthRepository;
 use App\Repositories\AtivoRepository;
 use Illuminate\Support\ServiceProvider;
 use App\Services\Api\CotacaoBrapiService;
 use App\Repositories\ClasseAtivoRepository;
 use Illuminate\Pagination\LengthAwarePaginator;
+use App\Interfaces\Repositories\IAuthRepository;
 use App\Interfaces\Repositories\IAtivoRepository;
+use App\Repositories\RebalanceamentoClasseRepository;
 use App\Interfaces\Repositories\IClasseAtivoRepository;
 use App\Interfaces\Repositories\IRebalanceamentoClasseRepository;
-use App\Interfaces\Repositories\IUserRepository;
-use App\Repositories\RebalanceamentoClasseRepository;
-use App\Repositories\UserRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -32,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(IClasseAtivoRepository::class, ClasseAtivoRepository::class);
         $this->app->singleton(IAtivoRepository::class, AtivoRepository::class);
         $this->app->singleton(IRebalanceamentoClasseRepository::class, RebalanceamentoClasseRepository::class);
-        $this->app->singleton(IUserRepository::class, UserRepository::class);
+        $this->app->singleton(IAuthRepository::class, AuthRepository::class);
     }
 
     /**
