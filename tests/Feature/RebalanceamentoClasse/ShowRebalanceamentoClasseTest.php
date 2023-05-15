@@ -5,11 +5,13 @@ namespace Tests\Feature\Ativo;
 use Tests\TestCase;
 
 use App\Models\RebalanceamentoClasse;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ShowRebalanceamentoClasseTest extends TestCase
 {
     use DatabaseTransactions;
+    use WithoutMiddleware;
 
     public function test_deve_listar_um_rebalanceamento_por_classe_ativo(): void
     {

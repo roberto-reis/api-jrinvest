@@ -2,16 +2,18 @@
 
 namespace Tests\Feature\Ativo;
 
-use App\Models\ClasseAtivo;
 use Tests\TestCase;
-
-use App\Models\RebalanceamentoClasse;
 use App\Models\User;
+
+use App\Models\ClasseAtivo;
+use App\Models\RebalanceamentoClasse;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class UpdateRebalanceamentoClasseTest extends TestCase
 {
     use DatabaseTransactions;
+    use WithoutMiddleware;
 
     public function test_deve_ser_obrigatorio_os_campos_ao_atualizar_rebalanceamento_classe_ativo(): void
     {

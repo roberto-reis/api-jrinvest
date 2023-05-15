@@ -5,12 +5,13 @@ namespace Tests\Feature\Ativo;
 use Tests\TestCase;
 
 use App\Models\Ativo;
-use function PHPUnit\Framework\assertEquals;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ShowAtivoTest extends TestCase
 {
     use DatabaseTransactions;
+    use WithoutMiddleware;
 
     public function test_deve_listar_ativo(): void
     {

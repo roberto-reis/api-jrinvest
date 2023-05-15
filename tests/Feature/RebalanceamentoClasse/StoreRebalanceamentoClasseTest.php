@@ -5,11 +5,13 @@ namespace Tests\Feature\Ativo;
 use Tests\TestCase;
 
 use App\Models\RebalanceamentoClasse;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class StoreRebalanceamentoClasseTest extends TestCase
 {
     use DatabaseTransactions;
+    use WithoutMiddleware;
 
     public function test_deve_ser_obrigatorio_os_campos_ao_cadastrar_rebalanceamento_classe_ativo(): void
     {

@@ -5,9 +5,12 @@ namespace Tests\Feature\ClasseAtivo;
 use Tests\TestCase;
 
 use function PHPUnit\Framework\assertEquals;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 
 class ListAllClasseAtivoTest extends TestCase
 {
+    use WithoutMiddleware;
+
     public function test_deve_listar_todos_as_classes_de_ativos(): void
     {
         $response = $this->get(route('classe-ativo.listAll'));

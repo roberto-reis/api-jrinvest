@@ -5,11 +5,12 @@ namespace Tests\Feature\Ativo;
 use Tests\TestCase;
 use App\Models\Ativo;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 
 class DeleteAtivoTest extends TestCase
 {
     use DatabaseTransactions;
+    use WithoutMiddleware;
 
     public function test_retornar_ativo_nao_encontrado_404(): void
     {

@@ -3,11 +3,12 @@
 namespace Tests\Feature\Ativo;
 
 use Tests\TestCase;
-
-use function PHPUnit\Framework\assertEquals;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 
 class ListAllAtivoTest extends TestCase
 {
+    use WithoutMiddleware;
+
     public function test_deve_listar_todos_os_ativos(): void
     {
         $response = $this->get(route('ativo.listAll'));

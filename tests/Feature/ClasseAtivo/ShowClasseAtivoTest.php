@@ -6,11 +6,13 @@ use Tests\TestCase;
 
 use App\Models\ClasseAtivo;
 
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ShowClasseAtivoTest extends TestCase
 {
     use DatabaseTransactions;
+    use WithoutMiddleware;
 
     public function test_deve_listar_classe_de_ativo(): void
     {

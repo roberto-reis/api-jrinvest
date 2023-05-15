@@ -5,11 +5,13 @@ namespace Tests\Feature\Ativo;
 use Tests\TestCase;
 
 use App\Models\RebalanceamentoClasse;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class DeleteRebalanceamentoClasseTest extends TestCase
 {
     use DatabaseTransactions;
+    use WithoutMiddleware;
 
     public function test_deve_retornar_rebalanceamento_por_classe_ativo_nao_encontrado_404(): void
     {

@@ -2,15 +2,17 @@
 
 namespace Tests\Feature\ClasseAtivo;
 
-use App\Models\Ativo;
 use Tests\TestCase;
+use App\Models\Ativo;
 use App\Models\ClasseAtivo;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 
 class DeleteClasseAtivoTest extends TestCase
 {
     use DatabaseTransactions;
+    use WithoutMiddleware;
 
     public function test_deve_retornar_classe_ativo_nao_encontrado_404(): void
     {
