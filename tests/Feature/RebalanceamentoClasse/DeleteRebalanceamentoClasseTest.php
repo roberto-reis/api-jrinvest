@@ -35,4 +35,19 @@ class DeleteRebalanceamentoClasseTest extends TestCase
         ]);
     }
 
+    public function test_deve_esta_autenticado_ao_deletar_um_rebalanceamento_classe_ativo(): void
+    {
+        $this->withMiddleware();
+        $uidQualquer = '32c0e209-cff9-4cc3-af17-71cb6a48d01a';
+
+        $response = $this->delete(route('rebalanceamento-classes.delete', $uidQualquer), [], [
+            'Accept' => 'application/json'
+        ]);
+
+        $response->assertStatus(401)
+                 ->assertJson([
+                    'message' => 'Unauthenticated.'
+                 ]);
+    }
+
 }

@@ -43,4 +43,19 @@ class ShowRebalanceamentoClasseTest extends TestCase
                 "menssage" => "Rebalanceamento por classe não encontrado"
             ]);
     }
+
+    public function test_deve_esta_autenticado_para_listar_rebalanceamento_por_classe_ativo(): void
+    {
+        $this->withMiddleware();
+        $uidQualquer = '123';
+
+        $response = $this->get(route('rebalanceamento-classes.show', $uidQualquer), [
+            'Accept' => 'application/json'
+        ]);
+
+        $response->assertStatus(401)
+                 ->assertJson([
+                    'message' => 'Unauthenticated.'
+                 ]);
+    }
 }

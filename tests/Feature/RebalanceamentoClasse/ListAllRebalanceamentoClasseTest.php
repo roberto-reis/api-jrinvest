@@ -33,4 +33,18 @@ class ListAllRebalanceamentoClasseTest extends TestCase
 
         assertEquals(data_get($response->json(), 'data.per_page'), $perPage);
     }
+
+    public function test_deve_esta_autenticado_para_todos_os_rebalanceamento_por_classe_de_ativo(): void
+    {
+        $this->withMiddleware();
+
+        $response = $this->get(route('rebalanceamento-classes.listAll'), [
+            'Accept' => 'application/json'
+        ]);
+
+        $response->assertStatus(401)
+                 ->assertJson([
+                    'message' => 'Unauthenticated.'
+                 ]);
+    }
 }

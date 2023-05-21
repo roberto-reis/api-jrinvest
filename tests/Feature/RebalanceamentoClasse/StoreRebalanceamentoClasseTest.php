@@ -54,4 +54,18 @@ class StoreRebalanceamentoClasseTest extends TestCase
                 "menssage" => "A soma dos percentuais não pode ser maior que 100.00%"
             ]);
     }
+
+    public function test_deve_esta_autenticado_para_cadastrar_rebalanceamento_por_classe_ativo(): void
+    {
+        $this->withMiddleware();
+
+        $response = $this->post(route('rebalanceamento-classes.store'), [], [
+            'Accept' => 'application/json'
+        ]);
+
+        $response->assertStatus(401)
+                 ->assertJson([
+                    'message' => 'Unauthenticated.'
+                 ]);
+    }
 }

@@ -5,7 +5,6 @@ namespace Tests\Feature\Ativo;
 use Tests\TestCase;
 use App\Models\User;
 
-use App\Models\ClasseAtivo;
 use App\Models\RebalanceamentoClasse;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -92,5 +91,19 @@ class UpdateRebalanceamentoClasseTest extends TestCase
 
         $response->assertJson(['menssage' => 'Rebalanceamento por classe não encontrado'])
                 ->assertStatus(404);
+    }
+
+    public function test_deve_esta_autenticado_para_atualizar_rebalanceamento_por_classe_ativo(): void
+    {
+        $this->withMiddleware();
+
+        $response = $this->put(route('rebalanceamento-classes.update', '123'), [], [
+            'Accept' => 'application/json'
+        ]);
+
+        $response->assertStatus(401)
+                 ->assertJson([
+                    'message' => 'Unauthenticated.'
+                 ]);
     }
 }
