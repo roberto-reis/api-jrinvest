@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Ativo;
+namespace Tests\Feature\RebalanceamentoClasse;
 
 use Tests\TestCase;
 use App\Models\User;
