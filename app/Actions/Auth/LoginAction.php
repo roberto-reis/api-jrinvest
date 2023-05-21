@@ -3,6 +3,8 @@
 namespace App\Actions\Auth;
 
 use App\DTOs\Auth\LoginUserDto;
+use App\Exceptions\LoginException;
+use Illuminate\Support\Facades\Auth;
 use App\Interfaces\Repositories\IAuthRepository;
 
 class LoginAction
@@ -16,6 +18,10 @@ class LoginAction
     {
         $userDto = new LoginUserDto($data);
 
-        return $this->authRepository->login($userDto);
+        if (!Auth::attempt($userDto->toArray())) {
+            throw new LoginException("E-mail ou senha invalidos!", 401);
+        }
+
+        return create_token(Auth::user());
     }
 }

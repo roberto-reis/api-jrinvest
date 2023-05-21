@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 
@@ -22,5 +23,22 @@ if (!function_exists('response_api')) {
             'menssage' => $mensagem,
             'data' => $data
         ], $statusCode);
+    }
+}
+
+if (!function_exists('create_token')) {
+    function create_token(User $user, string $name = 'auth_token', array $abilities = ['*']): array
+    {
+        $timeInMinutes = (int) env('TOKEN_EXPITEST_AT');
+        $expiresAt = $timeInMinutes > 0 ? now()->addMinutes($timeInMinutes) : null;
+
+        $token = $user->createToken($name, $abilities, $expiresAt);
+
+        return [
+            'user'         => $user->toArray(),
+            'access_token' => $token->plainTextToken,
+            'expires_at'   => $token->accessToken->expires_at,
+            'token_type'   => 'Bearer'
+        ];
     }
 }
