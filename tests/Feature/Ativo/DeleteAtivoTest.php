@@ -34,4 +34,18 @@ class DeleteAtivoTest extends TestCase
         ]);
     }
 
+    public function test_deve_esta_autenticado_rota_ao_deletar_ativo(): void
+    {
+        $this->withMiddleware();
+        $uidQualquer = '123';
+
+        $response = $this->delete(route('ativo.delete', $uidQualquer), [], [
+            'Accept' => 'application/json'
+        ]);
+
+        $response->assertStatus(401)
+                 ->assertJson([
+                    'message' => 'Unauthenticated.'
+                 ]);
+    }
 }

@@ -28,4 +28,17 @@ class ListAllAtivoTest extends TestCase
             ]
         ])->assertStatus(200);
     }
+
+    public function test_deve_esta_autenticado_para_listar_todos_os_ativos(): void
+    {
+        $this->withMiddleware();
+        $response = $this->get(route('ativo.listAll'), [
+            'Accept' => 'application/json'
+        ]);
+
+        $response->assertStatus(401)
+                 ->assertJson([
+                    'message' => 'Unauthenticated.'
+                 ]);
+    }
 }

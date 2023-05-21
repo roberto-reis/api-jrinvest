@@ -53,4 +53,18 @@ class UpdateAtivoTest extends TestCase
         ]);
     }
 
+    public function test_deve_esta_autenticado_para_atualizar_um_ativo(): void
+    {
+        $this->withMiddleware();
+
+        $response = $this->put(route('ativo.update', '123'), [], [
+            'Accept' => 'application/json'
+        ]);
+
+        $response->assertStatus(401)
+                 ->assertJson([
+                    'message' => 'Unauthenticated.'
+                 ]);
+    }
+
 }
