@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Actions\Auth\LoginAction;
 use Illuminate\Http\JsonResponse;
-use App\Actions\Auth\RegisterAction;
 use App\Exceptions\LoginException;
+use App\Actions\Auth\RegisterAction;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -49,11 +51,27 @@ class AuthController extends Controller
         }
     }
 
+    public function user(Request $request): JsonResponse
+    {
+        try {
+            $user = $request->user()->toArray();
+            return response_api('Dados retornados com sucesso', $user, 200);
+
+        } catch (\Exception $e) {
+            send_log('Erro ao logar usuário', [], 'error', $e);
+            return response_api(
+                'Erro ao logar usuário',
+                [],
+                $e->getCode() == 0 ? 500 : $e->getCode()
+            );
+        }
+    }
+
     public function logout(): JsonResponse
     {
         try {
-            auth()->user()->tokens()->delete();
-            return response_api('Logout feito com sucesso', [], 204);
+            Auth::user()->tokens()->delete();
+            return response_api('Logout feito com sucesso', [], 200);
 
         } catch (\Exception $e) {
             send_log('Erro ao deslogar usuário', [], 'error', $e);
