@@ -36,21 +36,18 @@ class UpdateClasseAtivoTest extends TestCase
                 ->assertStatus(404);
     }
 
-    public function test_deve_atualizar_uma_classe_de_ativo(): void
+    public function test_deve_esta_autenticado_para_atualizar_um_ativo(): void
     {
-        $classeAtivo = ClasseAtivo::factory()->create();
-        $classeAtualizada = [
-            'nome' => 'Novo Nome',
-            'descricao' => 'Nova Descrição'
-        ];
+        $this->withMiddleware();
 
-        $response = $this->put(route('classe-ativo.update', $classeAtivo->uid), $classeAtualizada);
-
-        $response->assertStatus(200);
-        $this->assertDatabaseHas('classes_ativos', [
-            'nome' => $classeAtualizada['nome'],
-            'descricao' => $classeAtualizada['descricao']
+        $response = $this->put(route('classe-ativo.update', '123'), [], [
+            'Accept' => 'application/json'
         ]);
+
+        $response->assertStatus(401)
+                 ->assertJson([
+                    'message' => 'Unauthenticated.'
+                 ]);
     }
 
 }

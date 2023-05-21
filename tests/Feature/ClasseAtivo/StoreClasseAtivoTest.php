@@ -33,4 +33,17 @@ class StoreClasseAtivoTest extends TestCase
         ]);
     }
 
+    public function test_deve_esta_autenticado_para_cadastrar_uma_classe_de_ativo(): void
+    {
+        $this->withMiddleware();
+
+        $response = $this->post(route('classe-ativo.store'), [], [
+            'Accept' => 'application/json'
+        ]);
+
+        $response->assertStatus(401)
+                 ->assertJson([
+                    'message' => 'Unauthenticated.'
+                 ]);
+    }
 }

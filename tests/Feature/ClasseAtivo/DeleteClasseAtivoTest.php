@@ -48,4 +48,19 @@ class DeleteClasseAtivoTest extends TestCase
         $response->assertJson(['menssage' => 'Não será possivel deletar, existe ativo ultilizando essa classe'])
                 ->assertStatus(400);
     }
+
+    public function test_deve_esta_autenticado_ao_deletar_uma_classe_ativo(): void
+    {
+        $this->withMiddleware();
+        $uidQualquer = '32c0e209-cff9-4cc3-af17-71cb6a48d01a';
+
+        $response = $this->delete(route('classe-ativo.delete', $uidQualquer), [], [
+            'Accept' => 'application/json'
+        ]);
+
+        $response->assertStatus(401)
+                 ->assertJson([
+                    'message' => 'Unauthenticated.'
+                 ]);
+    }
 }
