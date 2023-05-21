@@ -5,11 +5,12 @@ namespace Tests\Feature\Ativo;
 use Tests\TestCase;
 use App\Models\Ativo;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 
 class DeleteAtivoTest extends TestCase
 {
     use DatabaseTransactions;
+    use WithoutMiddleware;
 
     public function test_retornar_ativo_nao_encontrado_404(): void
     {
@@ -17,7 +18,7 @@ class DeleteAtivoTest extends TestCase
 
         $response = $this->delete(route('ativo.delete', $uidQualquer));
 
-        $response->assertJson(['menssage' => 'Ativo não encontrado'])
+        $response->assertJson(['message' => 'Ativo não encontrado'])
                 ->assertStatus(404);
     }
 
@@ -33,4 +34,18 @@ class DeleteAtivoTest extends TestCase
         ]);
     }
 
+    public function test_deve_esta_autenticado_rota_ao_deletar_ativo(): void
+    {
+        $this->withMiddleware();
+        $uidQualquer = '123';
+
+        $response = $this->delete(route('ativo.delete', $uidQualquer), [], [
+            'Accept' => 'application/json'
+        ]);
+
+        $response->assertStatus(401)
+                 ->assertJson([
+                    'message' => 'Unauthenticated.'
+                 ]);
+    }
 }

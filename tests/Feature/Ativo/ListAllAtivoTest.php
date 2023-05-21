@@ -3,11 +3,12 @@
 namespace Tests\Feature\Ativo;
 
 use Tests\TestCase;
-
-use function PHPUnit\Framework\assertEquals;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 
 class ListAllAtivoTest extends TestCase
 {
+    use WithoutMiddleware;
+
     public function test_deve_listar_todos_os_ativos(): void
     {
         $response = $this->get(route('ativo.listAll'));
@@ -26,5 +27,18 @@ class ListAllAtivoTest extends TestCase
                 'per_page' => $perPage
             ]
         ])->assertStatus(200);
+    }
+
+    public function test_deve_esta_autenticado_para_listar_todos_os_ativos(): void
+    {
+        $this->withMiddleware();
+        $response = $this->get(route('ativo.listAll'), [
+            'Accept' => 'application/json'
+        ]);
+
+        $response->assertStatus(401)
+                 ->assertJson([
+                    'message' => 'Unauthenticated.'
+                 ]);
     }
 }

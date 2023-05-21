@@ -1,15 +1,17 @@
 <?php
 
-namespace Tests\Feature\Ativo;
+namespace Tests\Feature\RebalanceamentoClasse;
 
 use Tests\TestCase;
 
 use App\Models\RebalanceamentoClasse;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class DeleteRebalanceamentoClasseTest extends TestCase
 {
     use DatabaseTransactions;
+    use WithoutMiddleware;
 
     public function test_deve_retornar_rebalanceamento_por_classe_ativo_nao_encontrado_404(): void
     {
@@ -17,7 +19,7 @@ class DeleteRebalanceamentoClasseTest extends TestCase
 
         $response = $this->delete(route('rebalanceamento-classes.delete', $uidQualquer));
 
-        $response->assertJson(['menssage' => 'Rebalanceamento por classe não encontrado'])
+        $response->assertJson(['message' => 'Rebalanceamento por classe não encontrado'])
                 ->assertStatus(404);
     }
 
@@ -31,6 +33,21 @@ class DeleteRebalanceamentoClasseTest extends TestCase
         $this->assertDatabaseMissing('rebalanceamento_classes', [
             'uid' => $rebalanceamento->uid
         ]);
+    }
+
+    public function test_deve_esta_autenticado_ao_deletar_um_rebalanceamento_classe_ativo(): void
+    {
+        $this->withMiddleware();
+        $uidQualquer = '32c0e209-cff9-4cc3-af17-71cb6a48d01a';
+
+        $response = $this->delete(route('rebalanceamento-classes.delete', $uidQualquer), [], [
+            'Accept' => 'application/json'
+        ]);
+
+        $response->assertStatus(401)
+                 ->assertJson([
+                    'message' => 'Unauthenticated.'
+                 ]);
     }
 
 }

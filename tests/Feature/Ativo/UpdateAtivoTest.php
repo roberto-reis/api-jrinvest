@@ -4,12 +4,14 @@ namespace Tests\Feature\Ativo;
 
 use Tests\TestCase;
 use App\Models\Ativo;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 
 class UpdateAtivoTest extends TestCase
 {
     use DatabaseTransactions;
+    use WithoutMiddleware;
 
     public function test_deve_ser_obrigatorio_os_campos_para_atualizar_um_ativo(): void
     {
@@ -27,7 +29,7 @@ class UpdateAtivoTest extends TestCase
 
         $response = $this->put(route('ativo.update', '123'), $ativoAtualizado);
 
-        $response->assertJson(['menssage' => 'Ativo não encontrado'])
+        $response->assertJson(['message' => 'Ativo não encontrado'])
                 ->assertStatus(404);
     }
 
@@ -49,6 +51,20 @@ class UpdateAtivoTest extends TestCase
             'nome' => $ativoAtualizada['nome'],
             'setor' => $ativoAtualizada['setor']
         ]);
+    }
+
+    public function test_deve_esta_autenticado_para_atualizar_um_ativo(): void
+    {
+        $this->withMiddleware();
+
+        $response = $this->put(route('ativo.update', '123'), [], [
+            'Accept' => 'application/json'
+        ]);
+
+        $response->assertStatus(401)
+                 ->assertJson([
+                    'message' => 'Unauthenticated.'
+                 ]);
     }
 
 }

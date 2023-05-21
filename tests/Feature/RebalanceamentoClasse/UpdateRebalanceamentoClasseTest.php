@@ -1,17 +1,18 @@
 <?php
 
-namespace Tests\Feature\Ativo;
+namespace Tests\Feature\RebalanceamentoClasse;
 
-use App\Models\ClasseAtivo;
 use Tests\TestCase;
+use App\Models\User;
 
 use App\Models\RebalanceamentoClasse;
-use App\Models\User;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class UpdateRebalanceamentoClasseTest extends TestCase
 {
     use DatabaseTransactions;
+    use WithoutMiddleware;
 
     public function test_deve_ser_obrigatorio_os_campos_ao_atualizar_rebalanceamento_classe_ativo(): void
     {
@@ -42,7 +43,7 @@ class UpdateRebalanceamentoClasseTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([
-                "menssage" => "Dados Atualizados com sucesso"
+                "message" => "Dados Atualizados com sucesso"
             ]);
 
         $this->assertDatabaseHas('rebalanceamento_classes', [
@@ -73,7 +74,7 @@ class UpdateRebalanceamentoClasseTest extends TestCase
 
         $response->assertStatus(400)
             ->assertJson([
-                "menssage" => "A soma dos percentuais não pode ser maior que 100.00%"
+                "message" => "A soma dos percentuais não pode ser maior que 100.00%"
             ]);
     }
 
@@ -88,7 +89,21 @@ class UpdateRebalanceamentoClasseTest extends TestCase
             $rebalanceamentoClasse->toArray()
         );
 
-        $response->assertJson(['menssage' => 'Rebalanceamento por classe não encontrado'])
+        $response->assertJson(['message' => 'Rebalanceamento por classe não encontrado'])
                 ->assertStatus(404);
+    }
+
+    public function test_deve_esta_autenticado_para_atualizar_rebalanceamento_por_classe_ativo(): void
+    {
+        $this->withMiddleware();
+
+        $response = $this->put(route('rebalanceamento-classes.update', '123'), [], [
+            'Accept' => 'application/json'
+        ]);
+
+        $response->assertStatus(401)
+                 ->assertJson([
+                    'message' => 'Unauthenticated.'
+                 ]);
     }
 }
