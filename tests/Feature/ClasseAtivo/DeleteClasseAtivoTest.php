@@ -20,7 +20,7 @@ class DeleteClasseAtivoTest extends TestCase
 
         $response = $this->delete(route('classe-ativo.delete', $uidQualquer));
 
-        $response->assertJson(['menssage' => 'Classe de ativo não encontrado'])
+        $response->assertJson(['message' => 'Classe de ativo não encontrado'])
                 ->assertStatus(404);
     }
 
@@ -45,7 +45,7 @@ class DeleteClasseAtivoTest extends TestCase
 
         $response = $this->delete(route('classe-ativo.delete', $classeAtivo->uid));
 
-        $response->assertJson(['menssage' => 'Não será possivel deletar, existe ativo ultilizando essa classe'])
+        $response->assertJson(['message' => 'Não será possivel deletar, existe ativo ultilizando essa classe'])
                 ->assertStatus(400);
     }
 

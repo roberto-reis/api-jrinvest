@@ -33,7 +33,7 @@ class StoreRebalanceamentoClasseTest extends TestCase
 
         $response->assertStatus(201)
             ->assertJson([
-                "menssage" => "Dados cadastrados com sucesso"
+                "message" => "Dados cadastrados com sucesso"
             ]);
 
         $this->assertDatabaseHas('rebalanceamento_classes', [
@@ -51,7 +51,7 @@ class StoreRebalanceamentoClasseTest extends TestCase
 
         $response->assertStatus(400)
             ->assertJson([
-                "menssage" => "A soma dos percentuais não pode ser maior que 100.00%"
+                "message" => "A soma dos percentuais não pode ser maior que 100.00%"
             ]);
     }
 

@@ -40,7 +40,7 @@ class ShowRebalanceamentoClasseTest extends TestCase
 
         $response->assertStatus(404)
             ->assertJson([
-                "menssage" => "Rebalanceamento por classe não encontrado"
+                "message" => "Rebalanceamento por classe não encontrado"
             ]);
     }
 

@@ -29,7 +29,7 @@ class UpdateAtivoTest extends TestCase
 
         $response = $this->put(route('ativo.update', '123'), $ativoAtualizado);
 
-        $response->assertJson(['menssage' => 'Ativo não encontrado'])
+        $response->assertJson(['message' => 'Ativo não encontrado'])
                 ->assertStatus(404);
     }
 

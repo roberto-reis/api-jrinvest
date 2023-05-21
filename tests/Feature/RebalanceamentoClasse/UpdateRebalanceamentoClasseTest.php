@@ -43,7 +43,7 @@ class UpdateRebalanceamentoClasseTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([
-                "menssage" => "Dados Atualizados com sucesso"
+                "message" => "Dados Atualizados com sucesso"
             ]);
 
         $this->assertDatabaseHas('rebalanceamento_classes', [
@@ -74,7 +74,7 @@ class UpdateRebalanceamentoClasseTest extends TestCase
 
         $response->assertStatus(400)
             ->assertJson([
-                "menssage" => "A soma dos percentuais não pode ser maior que 100.00%"
+                "message" => "A soma dos percentuais não pode ser maior que 100.00%"
             ]);
     }
 
@@ -89,7 +89,7 @@ class UpdateRebalanceamentoClasseTest extends TestCase
             $rebalanceamentoClasse->toArray()
         );
 
-        $response->assertJson(['menssage' => 'Rebalanceamento por classe não encontrado'])
+        $response->assertJson(['message' => 'Rebalanceamento por classe não encontrado'])
                 ->assertStatus(404);
     }
 

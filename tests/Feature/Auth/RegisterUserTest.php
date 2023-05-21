@@ -33,7 +33,7 @@ class RegisterUserTest extends TestCase
 
         $response->assertStatus(201)
                  ->assertJson([
-                    'menssage' => 'Dados cadastrados com sucesso'
+                    'message' => 'Dados cadastrados com sucesso'
                  ]);
 
         $this->assertDatabaseHas('users', [
@@ -54,7 +54,7 @@ class RegisterUserTest extends TestCase
 
         $response->assertStatus(200)
                  ->assertJson([
-                    'menssage' => 'Dados retornados com sucesso'
+                    'message' => 'Dados retornados com sucesso'
                  ]);
     }
 }

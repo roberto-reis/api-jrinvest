@@ -18,7 +18,7 @@ class DeleteAtivoTest extends TestCase
 
         $response = $this->delete(route('ativo.delete', $uidQualquer));
 
-        $response->assertJson(['menssage' => 'Ativo não encontrado'])
+        $response->assertJson(['message' => 'Ativo não encontrado'])
                 ->assertStatus(404);
     }
 

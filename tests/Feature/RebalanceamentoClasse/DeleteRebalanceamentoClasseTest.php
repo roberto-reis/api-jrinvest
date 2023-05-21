@@ -19,7 +19,7 @@ class DeleteRebalanceamentoClasseTest extends TestCase
 
         $response = $this->delete(route('rebalanceamento-classes.delete', $uidQualquer));
 
-        $response->assertJson(['menssage' => 'Rebalanceamento por classe não encontrado'])
+        $response->assertJson(['message' => 'Rebalanceamento por classe não encontrado'])
                 ->assertStatus(404);
     }
 

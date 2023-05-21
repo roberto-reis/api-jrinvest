@@ -32,7 +32,7 @@ class LoginUserTest extends TestCase
 
         $response->assertStatus(401)
                  ->assertJson([
-                    'menssage' => 'E-mail ou senha invalidos!'
+                    'message' => 'E-mail ou senha invalidos!'
                  ]);
     }
 
@@ -46,7 +46,7 @@ class LoginUserTest extends TestCase
 
         $response->assertStatus(200)
                  ->assertJson([
-                    'menssage' => 'Dados retornados com sucesso'
+                    'message' => 'Dados retornados com sucesso'
                  ]);
     }
 }
