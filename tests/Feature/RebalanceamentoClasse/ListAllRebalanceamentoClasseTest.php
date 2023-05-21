@@ -1,16 +1,18 @@
 <?php
 
-namespace Tests\Feature\ClasseAtivo;
+namespace Tests\Feature\RebalanceamentoClasse;
 
 use Tests\TestCase;
 use App\Models\RebalanceamentoClasse;
 
 use function PHPUnit\Framework\assertEquals;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ListAllRebalanceamentoClasseTest extends TestCase
 {
     use DatabaseTransactions;
+    use WithoutMiddleware;
 
     public function test_deve_listar_todos_os_rebalanceamento_por_classe_de_ativo(): void
     {
@@ -30,5 +32,19 @@ class ListAllRebalanceamentoClasseTest extends TestCase
                 ->assertJsonCount($perPage, 'data.data');
 
         assertEquals(data_get($response->json(), 'data.per_page'), $perPage);
+    }
+
+    public function test_deve_esta_autenticado_para_todos_os_rebalanceamento_por_classe_de_ativo(): void
+    {
+        $this->withMiddleware();
+
+        $response = $this->get(route('rebalanceamento-classes.listAll'), [
+            'Accept' => 'application/json'
+        ]);
+
+        $response->assertStatus(401)
+                 ->assertJson([
+                    'message' => 'Unauthenticated.'
+                 ]);
     }
 }

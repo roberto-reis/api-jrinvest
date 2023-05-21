@@ -14,13 +14,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 Route::prefix('v1/')->group(function() {
-    require __DIR__ . '/classe-ativo.php';
-    require __DIR__ . '/ativo.php';
-    require __DIR__ . '/rebalanceamento.php';
+    Route::middleware('auth:sanctum')->group(function() {
+        require __DIR__ . '/classe-ativo.php';
+        require __DIR__ . '/ativo.php';
+        require __DIR__ . '/rebalanceamento.php';
+    });
+
+    require __DIR__ . '/auth.php';
 });
 

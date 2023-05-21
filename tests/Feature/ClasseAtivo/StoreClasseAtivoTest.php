@@ -2,14 +2,16 @@
 
 namespace Tests\Feature\ClasseAtivo;
 
-use App\Models\ClasseAtivo;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
+use App\Models\ClasseAtivo;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 
 class StoreClasseAtivoTest extends TestCase
 {
     use DatabaseTransactions;
+    use WithoutMiddleware;
 
     public function test_deve_ser_obrigatorio_os_campos_nome_e_descricao_ao_cadastrar_classe_ativo(): void
     {
@@ -31,4 +33,17 @@ class StoreClasseAtivoTest extends TestCase
         ]);
     }
 
+    public function test_deve_esta_autenticado_para_cadastrar_uma_classe_de_ativo(): void
+    {
+        $this->withMiddleware();
+
+        $response = $this->post(route('classe-ativo.store'), [], [
+            'Accept' => 'application/json'
+        ]);
+
+        $response->assertStatus(401)
+                 ->assertJson([
+                    'message' => 'Unauthenticated.'
+                 ]);
+    }
 }

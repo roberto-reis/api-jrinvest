@@ -5,12 +5,13 @@ namespace Tests\Feature\Ativo;
 use Tests\TestCase;
 
 use App\Models\Ativo;
-use function PHPUnit\Framework\assertEquals;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ShowAtivoTest extends TestCase
 {
     use DatabaseTransactions;
+    use WithoutMiddleware;
 
     public function test_deve_listar_ativo(): void
     {
@@ -37,6 +38,21 @@ class ShowAtivoTest extends TestCase
         $response = $this->get(route('ativo.show', $uidQualquer));
 
         $response->assertStatus(404)
-            ->assertJson(['menssage' => 'Ativo não encontrado']);
+            ->assertJson(['message' => 'Ativo não encontrado']);
+    }
+
+    public function test_deve_esta_autenticado_para_listar_ativo(): void
+    {
+        $this->withMiddleware();
+        $uidQualquer = '123';
+
+        $response = $this->get(route('ativo.show', $uidQualquer), [
+            'Accept' => 'application/json'
+        ]);
+
+        $response->assertStatus(401)
+                 ->assertJson([
+                    'message' => 'Unauthenticated.'
+                 ]);
     }
 }

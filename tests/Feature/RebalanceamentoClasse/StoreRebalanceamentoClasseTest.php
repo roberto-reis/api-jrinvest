@@ -1,15 +1,17 @@
 <?php
 
-namespace Tests\Feature\Ativo;
+namespace Tests\Feature\RebalanceamentoClasse;
 
 use Tests\TestCase;
 
 use App\Models\RebalanceamentoClasse;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class StoreRebalanceamentoClasseTest extends TestCase
 {
     use DatabaseTransactions;
+    use WithoutMiddleware;
 
     public function test_deve_ser_obrigatorio_os_campos_ao_cadastrar_rebalanceamento_classe_ativo(): void
     {
@@ -31,7 +33,7 @@ class StoreRebalanceamentoClasseTest extends TestCase
 
         $response->assertStatus(201)
             ->assertJson([
-                "menssage" => "Dados cadastrados com sucesso"
+                "message" => "Dados cadastrados com sucesso"
             ]);
 
         $this->assertDatabaseHas('rebalanceamento_classes', [
@@ -49,7 +51,21 @@ class StoreRebalanceamentoClasseTest extends TestCase
 
         $response->assertStatus(400)
             ->assertJson([
-                "menssage" => "A soma dos percentuais não pode ser maior que 100.00%"
+                "message" => "A soma dos percentuais não pode ser maior que 100.00%"
             ]);
+    }
+
+    public function test_deve_esta_autenticado_para_cadastrar_rebalanceamento_por_classe_ativo(): void
+    {
+        $this->withMiddleware();
+
+        $response = $this->post(route('rebalanceamento-classes.store'), [], [
+            'Accept' => 'application/json'
+        ]);
+
+        $response->assertStatus(401)
+                 ->assertJson([
+                    'message' => 'Unauthenticated.'
+                 ]);
     }
 }
