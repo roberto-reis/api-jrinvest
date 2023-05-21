@@ -20,7 +20,7 @@ if (!function_exists('send_log')) {
 if (!function_exists('response_api')) {
     function response_api(string $mensagem, array $data = [], int $statusCode = 200): JsonResponse {
         return response()->json([
-            'menssage' => $mensagem,
+            'message' => $mensagem,
             'data' => $data
         ], $statusCode);
     }

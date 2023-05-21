@@ -38,7 +38,7 @@ class ShowAtivoTest extends TestCase
         $response = $this->get(route('ativo.show', $uidQualquer));
 
         $response->assertStatus(404)
-            ->assertJson(['menssage' => 'Ativo não encontrado']);
+            ->assertJson(['message' => 'Ativo não encontrado']);
     }
 
     public function test_deve_esta_autenticado_para_listar_ativo(): void

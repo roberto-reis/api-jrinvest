@@ -46,5 +46,4 @@ class StoreAtivoTest extends TestCase
                     'message' => 'Unauthenticated.'
                  ]);
     }
-
 }

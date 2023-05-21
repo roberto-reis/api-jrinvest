@@ -13,5 +13,4 @@ Route::controller(AuthController::class)->prefix('auth')->name('auth')->group(fu
         Route::put('update/{uid}', 'update')->name('.update');
         Route::delete('delete/{uid}', 'delete')->name('.delete');
     });
-
 });
