@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\RebalanceamentoAtivo;
+use App\Exceptions\RebalanceamentoAtivoException;
 use App\Interfaces\Repositories\IRebalanceamentoAtivoRepository;
 
 class RebalanceamentoAtivoRepository implements IRebalanceamentoAtivoRepository
@@ -47,5 +48,14 @@ class RebalanceamentoAtivoRepository implements IRebalanceamentoAtivoRepository
         }
 
         return $rebalanceamentoQuery->paginate($filters['perPage'] ?? $this->perPage)->toArray();
+    }
+
+    public function find(string $uid, array $with = []): array
+    {
+        $rebalanceamentoClasse = $this->model::with($with)->find($uid);
+
+        if (!$rebalanceamentoClasse) throw new RebalanceamentoAtivoException('Rebalanceamento por ativo não encontrado', 404);
+
+        return $rebalanceamentoClasse->toArray();
     }
 }
