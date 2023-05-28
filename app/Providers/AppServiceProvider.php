@@ -12,8 +12,10 @@ use App\Repositories\ClasseAtivoRepository;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Interfaces\Repositories\IAuthRepository;
 use App\Interfaces\Repositories\IAtivoRepository;
+use App\Repositories\RebalanceamentoAtivoRepository;
 use App\Repositories\RebalanceamentoClasseRepository;
 use App\Interfaces\Repositories\IClasseAtivoRepository;
+use App\Interfaces\Repositories\IRebalanceamentoAtivoRepository;
 use App\Interfaces\Repositories\IRebalanceamentoClasseRepository;
 
 class AppServiceProvider extends ServiceProvider
@@ -33,6 +35,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(IAtivoRepository::class, AtivoRepository::class);
         $this->app->singleton(IRebalanceamentoClasseRepository::class, RebalanceamentoClasseRepository::class);
         $this->app->singleton(IAuthRepository::class, AuthRepository::class);
+        $this->app->singleton(IRebalanceamentoAtivoRepository::class, RebalanceamentoAtivoRepository::class);
     }
 
     /**

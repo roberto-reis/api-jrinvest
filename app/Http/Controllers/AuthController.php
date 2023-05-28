@@ -70,7 +70,7 @@ class AuthController extends Controller
     public function logout(): JsonResponse
     {
         try {
-            Auth::user()->tokens()->delete();
+            Auth::user()->currentAccessToken()->delete();
             return response_api('Logout feito com sucesso', [], 200);
 
         } catch (\Exception $e) {
@@ -82,4 +82,9 @@ class AuthController extends Controller
             );
         }
     }
+
+    // TODO: Faltar Implementar Update User
+    // TODO: Faltar Implementar Delete User
+    // TODO: Faltar Implementar Forgot Password
+    // TODO: Faltar Implementar Reset Password
 }
