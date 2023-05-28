@@ -30,7 +30,9 @@ class UpdateRebalanceamentoClasseTest extends TestCase
 
     public function test_deve_atualizar_rebalanceamento_por_classe_ativo(): void
     {
+        $user = User::factory()->create();
         $rebalanceamentoClasse = RebalanceamentoClasse::factory()->create([
+            'user_uid' => $user->uid,
             'percentual' => 50
         ]);
 
