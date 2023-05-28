@@ -6,9 +6,11 @@ use Illuminate\Http\JsonResponse;
 use App\Actions\RebalanceamentoAtivo\ShowAction;
 use App\Actions\RebalanceamentoAtivo\StoreAction;
 use App\Exceptions\RebalanceamentoAtivoException;
+use App\Actions\RebalanceamentoAtivo\UpdateAction;
 use App\Actions\RebalanceamentoAtivo\ListAllAction;
 use App\Http\Requests\RebalanceamentoAtivo\ListRebalanceamentoAtivoRequest;
 use App\Http\Requests\RebalanceamentoAtivo\StoreRebalanceamentoAtivoRequest;
+use App\Http\Requests\RebalanceamentoAtivo\UpdateRebalanceamentoAtivoRequest;
 
 class RebalanceamentoAtivoController extends Controller
 {
@@ -76,4 +78,26 @@ class RebalanceamentoAtivoController extends Controller
             );
         }
     }
+
+    public function update(UpdateRebalanceamentoAtivoRequest $request, UpdateAction $updateAction, $uid): JsonResponse
+    {
+        try {
+            $rebalanceamentoAtivo = $updateAction->execute($uid, $request->validated());
+
+            return response_api('Dados Atualizados com sucesso', $rebalanceamentoAtivo);
+
+        } catch (RebalanceamentoAtivoException $e) {
+            return response_api($e->getMessage(), [], $e->getCode());
+
+        } catch (\Exception $e) {
+            send_log('Erro ao atualizar rebalanceamento por ativo', [], 'error', $e);
+            return response_api(
+                'Erro ao atualizar rebalanceamento por ativo',
+                [],
+                $e->getCode() == 0 ? 500 : $e->getCode()
+            );
+        }
+    }
+
+    // TODO: Falta Implementar Delete
 }

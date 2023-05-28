@@ -69,4 +69,23 @@ class RebalanceamentoAtivoRepository implements IRebalanceamentoAtivoRepository
     {
         return $this->model::create($dto->toArray())->toArray();
     }
+
+    public function exists(string $value, string $field = 'uid'): bool
+    {
+        return $this->model::where($field, $value)->exists();
+    }
+
+    public function somaPecentualUpdate(string $userUid, string $uid): float
+    {
+        return $this->model::where('user_uid', $userUid)->where('uid', '<>', $uid)->sum('percentual');
+    }
+
+    public function update(string $uid, RebalanceamentoAtivoDTO $dto): array
+    {
+        $rebalanceamentoAtivo = $this->model::find($uid);
+
+        $rebalanceamentoAtivo->update($dto->toArray());
+
+        return $rebalanceamentoAtivo->toArray();
+    }
 }

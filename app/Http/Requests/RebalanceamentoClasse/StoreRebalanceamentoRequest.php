@@ -28,7 +28,7 @@ class StoreRebalanceamentoRequest extends FormRequest
                 'required',
                 'uuid',
                 'exists:classes_ativos,uid',
-                Rule::unique('rebalanceamento_classes')->where('user_uid', $this->user_uid)
+                Rule::unique('rebalanceamento_classes')->where('user_uid', $this->user_uid)// validation unique composite key
             ],
             'percentual' => ['required', 'numeric', 'min:0.01', 'max:100.00', 'regex:/^\d+(\.\d{1,2})?$/']
         ];
