@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Ativo;
+namespace Tests\Feature\ClasseAtivo;
 
 use Tests\TestCase;
 

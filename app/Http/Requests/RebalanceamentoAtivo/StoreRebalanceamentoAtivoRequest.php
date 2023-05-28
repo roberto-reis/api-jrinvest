@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\RebalanceamentoClasse;
+namespace App\Http\Requests\RebalanceamentoAtivo;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRebalanceamentoRequest extends FormRequest
+class StoreRebalanceamentoAtivoRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,11 +24,11 @@ class StoreRebalanceamentoRequest extends FormRequest
     {
         return [
             'user_uid' => ['required', 'uuid', 'exists:users,uid'],
-            'classe_ativo_uid' => [
+            'ativo_uid' => [
                 'required',
                 'uuid',
-                'exists:classes_ativos,uid',
-                Rule::unique('rebalanceamento_classes')->where('user_uid', $this->user_uid)// validation unique composite key
+                'exists:ativos,uid',
+                Rule::unique('rebalanceamento_ativos')->where('user_uid', $this->user_uid) // validation unique composite key
             ],
             'percentual' => ['required', 'numeric', 'min:0.01', 'max:100.00', 'regex:/^\d+(\.\d{1,2})?$/']
         ];
@@ -37,11 +37,11 @@ class StoreRebalanceamentoRequest extends FormRequest
     public function messages()
     {
         return [
-            'classe_ativo_uid.required' => 'O campo :attribute é obrigatório',
+            'ativo_uid.required' => 'O campo :attribute é obrigatório',
             'percentual.regex' => 'O campo :attribute tem que ser número válido. ex: 1.50 ou 25.50',
             'percentual.min' => 'O campo :attribute deve ser pelo menos :min.',
             'percentual.max' => 'O campo :attribute deve ser no máximo :max.',
-            'classe_ativo_uid.unique' => 'Já foi definido uma porcentagem para esta classe de ativo',
+            'ativo_uid.unique' => 'Já foi definido uma porcentagem para este ativo',
         ];
     }
 }
