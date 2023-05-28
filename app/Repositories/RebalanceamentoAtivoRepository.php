@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\RebalanceamentoAtivo;
 use App\Exceptions\RebalanceamentoAtivoException;
+use App\DTOs\Rebalanceamento\RebalanceamentoAtivoDTO;
 use App\Interfaces\Repositories\IRebalanceamentoAtivoRepository;
 
 class RebalanceamentoAtivoRepository implements IRebalanceamentoAtivoRepository
@@ -13,7 +14,7 @@ class RebalanceamentoAtivoRepository implements IRebalanceamentoAtivoRepository
     private array $searchFields = ['percentual', 'created_at'];
     private array $serachRelationships = [
         'user' => 'name',
-        'classeAtivo' => 'nome'
+        'ativo' => 'nome'
     ];
 
 
@@ -57,5 +58,15 @@ class RebalanceamentoAtivoRepository implements IRebalanceamentoAtivoRepository
         if (!$rebalanceamentoClasse) throw new RebalanceamentoAtivoException('Rebalanceamento por ativo não encontrado', 404);
 
         return $rebalanceamentoClasse->toArray();
+    }
+
+    public function somaPecentual(string $data, string $campo = 'user_uid'): float
+    {
+        return $this->model::where($campo, $data)->sum('percentual');
+    }
+
+    public function store(RebalanceamentoAtivoDTO $dto): array
+    {
+        return $this->model::create($dto->toArray())->toArray();
     }
 }
