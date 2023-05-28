@@ -13,7 +13,7 @@ class ShowAction
 
     public function execute(string $uid): array
     {
-        $rebalanceamentoClasses = $this->repository->find($uid, ['user', 'ativo']);
-        return $rebalanceamentoClasses;
+        $rebalanceamentoAtivo = $this->repository->find($uid, ['user', 'ativo']);
+        return $rebalanceamentoAtivo;
     }
 }

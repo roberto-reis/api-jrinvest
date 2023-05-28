@@ -22,9 +22,9 @@ class UpdateAction
         }
 
         // Verificar soma do pecentual, não pode ser maior que 100.00
-        $somaPecentualClasse = $this->rebalanceamentoRepository->somaPecentualUpdate($dto->user_uid, $uid);
-        $somaPecentualClasse += $dto->percentual;
-        if ($somaPecentualClasse > 100) {
+        $somaPecentualAtivo = $this->rebalanceamentoRepository->somaPecentualUpdate($dto->user_uid, $uid);
+        $somaPecentualAtivo += $dto->percentual;
+        if ($somaPecentualAtivo > 100) {
             throw new RebalanceamentoAtivoException('A soma dos percentuais não pode ser maior que 100.00%', 400);
         }
 

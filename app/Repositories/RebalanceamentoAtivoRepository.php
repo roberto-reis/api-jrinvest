@@ -88,4 +88,15 @@ class RebalanceamentoAtivoRepository implements IRebalanceamentoAtivoRepository
 
         return $rebalanceamentoAtivo->toArray();
     }
+
+    public function delete(string $uid): bool
+    {
+        $rebalanceamentoAtivo = $this->model::find($uid);
+
+        if (!$rebalanceamentoAtivo) {
+            throw new RebalanceamentoAtivoException('Rebalanceamento por ativo não encontrado', 404);
+        }
+
+        return $rebalanceamentoAtivo->delete();
+    }
 }

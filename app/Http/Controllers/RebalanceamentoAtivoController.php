@@ -6,6 +6,7 @@ use Illuminate\Http\JsonResponse;
 use App\Actions\RebalanceamentoAtivo\ShowAction;
 use App\Actions\RebalanceamentoAtivo\StoreAction;
 use App\Exceptions\RebalanceamentoAtivoException;
+use App\Actions\RebalanceamentoAtivo\DeleteAction;
 use App\Actions\RebalanceamentoAtivo\UpdateAction;
 use App\Actions\RebalanceamentoAtivo\ListAllAction;
 use App\Http\Requests\RebalanceamentoAtivo\ListRebalanceamentoAtivoRequest;
@@ -57,9 +58,9 @@ class RebalanceamentoAtivoController extends Controller
     public function store(StoreRebalanceamentoAtivoRequest $request, StoreAction $storeAction): JsonResponse
     {
         try {
-            $rebalanceamentoClasse = $storeAction->execute($request->validated());
+            $rebalanceamentoAtivo = $storeAction->execute($request->validated());
 
-            return response_api('Dados cadastrados com sucesso',$rebalanceamentoClasse, 201);
+            return response_api('Dados cadastrados com sucesso',$rebalanceamentoAtivo, 201);
 
         } catch (RebalanceamentoAtivoException $e) {
             return response_api(
@@ -99,5 +100,24 @@ class RebalanceamentoAtivoController extends Controller
         }
     }
 
-    // TODO: Falta Implementar Delete
+    public function delete(DeleteAction $deleteAction, $uid): JsonResponse
+    {
+        try {
+            $deleteAction->execute($uid);
+
+            return response_api('Dados deletado com sucesso');
+
+        } catch (RebalanceamentoAtivoException $e) {
+            return response_api($e->getMessage(), [], $e->getCode());
+
+        } catch (\Exception $e) {
+            send_log('Erro ao deletar rebalanceamento por ativo', [], 'error', $e);
+
+            return response_api(
+                'Erro ao deletar rebalanceamento por ativo',
+                [],
+                $e->getCode() == 0 ? 500 : $e->getCode()
+            );
+        }
+    }
 }

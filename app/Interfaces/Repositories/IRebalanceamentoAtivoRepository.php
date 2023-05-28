@@ -13,4 +13,5 @@ interface IRebalanceamentoAtivoRepository
     public function exists(string $value, string $field = 'uid'): bool;
     public function somaPecentualUpdate(string $userUid, string $uid): float;
     public function update(string $uid, RebalanceamentoAtivoDTO $dto): array;
+    public function delete(string $uid): bool;
 }
