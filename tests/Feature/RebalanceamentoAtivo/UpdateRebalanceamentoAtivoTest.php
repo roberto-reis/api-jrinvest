@@ -5,42 +5,42 @@ namespace Tests\Feature\RebalanceamentoClasse;
 use Tests\TestCase;
 use App\Models\User;
 
-use App\Models\RebalanceamentoClasse;
+use App\Models\RebalanceamentoAtivo;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class UpdateRebalanceamentoClasseTest extends TestCase
+class UpdateRebalanceamentoAtivoTest extends TestCase
 {
     use DatabaseTransactions;
     use WithoutMiddleware;
 
-    public function test_deve_ser_obrigatorio_os_campos_ao_atualizar_rebalanceamento_classe_ativo(): void
+    public function test_deve_ser_obrigatorio_os_campos_ao_atualizar_rebalanceamento_por_ativo(): void
     {
         $uidQualquer = '123';
 
-        $response = $this->put(route('rebalanceamento-classes.update', $uidQualquer), []);
+        $response = $this->put(route('rebalanceamento-ativos.update', $uidQualquer), []);
 
         $response->assertStatus(302)
                 ->assertSessionHasErrors([
                     'user_uid',
-                    'classe_ativo_uid',
+                    'ativo_uid',
                     'percentual'
                 ]);
     }
 
-    public function test_deve_atualizar_rebalanceamento_por_classe_ativo(): void
+    public function test_deve_atualizar_rebalanceamento_por_ativo(): void
     {
         $user = User::factory()->create();
-        $rebalanceamentoClasse = RebalanceamentoClasse::factory()->create([
+        $rebalanceamentoAtivo = RebalanceamentoAtivo::factory()->create([
             'user_uid' => $user->uid,
             'percentual' => 50
         ]);
 
-        $rebalanceamentoClasse->percentual = 30.00;
+        $rebalanceamentoAtivo->percentual = 30.00;
 
         $response = $this->put(
-            route('rebalanceamento-classes.update', $rebalanceamentoClasse->uid),
-            $rebalanceamentoClasse->toArray()
+            route('rebalanceamento-ativos.update', $rebalanceamentoAtivo->uid),
+            $rebalanceamentoAtivo->toArray()
         );
 
         $response->assertStatus(200)
@@ -48,30 +48,30 @@ class UpdateRebalanceamentoClasseTest extends TestCase
                 "message" => "Dados Atualizados com sucesso"
             ]);
 
-        $this->assertDatabaseHas('rebalanceamento_classes', [
-            'uid' => $rebalanceamentoClasse->uid,
-            'percentual' => $rebalanceamentoClasse->percentual
+        $this->assertDatabaseHas('rebalanceamento_ativos', [
+            'uid' => $rebalanceamentoAtivo->uid,
+            'percentual' => $rebalanceamentoAtivo->percentual
         ]);
     }
 
     public function test_deve_nao_atualizar_rebalanceamento_com_soma_a_percentuais_maior_que_100(): void
     {
         $user = User::factory()->create();
-        RebalanceamentoClasse::factory()->create([
+        RebalanceamentoAtivo::factory()->create([
             'user_uid' => $user->uid,
             'percentual' => 80.00
         ]);
 
-        $rebalanceamentoClasse = RebalanceamentoClasse::factory()->create([
+        $rebalanceamentoAtivo = RebalanceamentoAtivo::factory()->create([
             'user_uid' => $user->uid,
             'percentual' => 20.00
         ]);
 
-        $rebalanceamentoClasse->percentual = 30.00;
+        $rebalanceamentoAtivo->percentual = 30.00;
 
         $response = $this->put(
-            route('rebalanceamento-classes.update', $rebalanceamentoClasse->uid),
-            $rebalanceamentoClasse->toArray()
+            route('rebalanceamento-ativos.update', $rebalanceamentoAtivo->uid),
+            $rebalanceamentoAtivo->toArray()
         );
 
         $response->assertStatus(400)
@@ -80,18 +80,18 @@ class UpdateRebalanceamentoClasseTest extends TestCase
             ]);
     }
 
-    public function test_deve_retornar_rebalanceamento_por_classe_ativo_nao_encontrado_404(): void
+    public function test_deve_retornar_rebalanceamento_por_ativo_nao_encontrado_404(): void
     {
         $uidQualquer = '32c0e209-cff9-4cc3-af17-71cb6a48d01a';
-        $rebalanceamentoClasse = RebalanceamentoClasse::factory()->create();
+        $rebalanceamentoAtivo = RebalanceamentoAtivo::factory()->create();
 
         $response = $this->put(
-            route('rebalanceamento-classes.update',
+            route('rebalanceamento-ativos.update',
             $uidQualquer),
-            $rebalanceamentoClasse->toArray()
+            $rebalanceamentoAtivo->toArray()
         );
 
-        $response->assertJson(['message' => 'Rebalanceamento por classe não encontrado'])
+        $response->assertJson(['message' => 'Rebalanceamento por ativo não encontrado'])
                 ->assertStatus(404);
     }
 
@@ -99,7 +99,7 @@ class UpdateRebalanceamentoClasseTest extends TestCase
     {
         $this->withMiddleware();
 
-        $response = $this->put(route('rebalanceamento-classes.update', '123'), [], [
+        $response = $this->put(route('rebalanceamento-ativos.update', '123'), [], [
             'Accept' => 'application/json'
         ]);
 
