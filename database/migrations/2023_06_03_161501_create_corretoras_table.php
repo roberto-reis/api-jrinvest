@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('classes_ativos', function (Blueprint $table) {
+        Schema::create('corretoras', function (Blueprint $table) {
             $table->uuid('uid')->primary();
-            $table->string('nome', 50)->unique();
-            $table->string('nome_interno', 50)->index();
-            $table->string('descricao', 60)->index();
+            $table->string('nome')->unique();
+            $table->string('nome_interno')->index();
             $table->timestamps();
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('classes_ativos');
+        Schema::dropIfExists('corretoras');
     }
 };
