@@ -17,7 +17,7 @@ class UpdateAtivoTest extends TestCase
     {
         $ativo = Ativo::factory()->create();
 
-        $response = $this->put(route('ativo.update', $ativo->uid), []);
+        $response = $this->put(route('ativos.update', $ativo->uid), []);
 
         $response->assertSessionHasErrors(['codigo', 'nome', 'classe_ativo_uid', 'setor'])
                 ->assertStatus(302);
@@ -27,7 +27,7 @@ class UpdateAtivoTest extends TestCase
     {
         $ativoAtualizado = Ativo::factory()->make()->toArray();
 
-        $response = $this->put(route('ativo.update', '123'), $ativoAtualizado);
+        $response = $this->put(route('ativos.update', '123'), $ativoAtualizado);
 
         $response->assertJson(['message' => 'Ativo não encontrado'])
                 ->assertStatus(404);
@@ -43,7 +43,7 @@ class UpdateAtivoTest extends TestCase
             'setor' => 'Novo setor'
         ];
 
-        $response = $this->put(route('ativo.update', $ativo->uid), $ativoAtualizada);
+        $response = $this->put(route('ativos.update', $ativo->uid), $ativoAtualizada);
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('ativos', [
@@ -57,7 +57,7 @@ class UpdateAtivoTest extends TestCase
     {
         $this->withMiddleware();
 
-        $response = $this->put(route('ativo.update', '123'), [], [
+        $response = $this->put(route('ativos.update', '123'), [], [
             'Accept' => 'application/json'
         ]);
 

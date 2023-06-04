@@ -15,7 +15,7 @@ class StoreAtivoTest extends TestCase
 
     public function test_deve_ser_obrigatorio_os_campos_ao_cadastrar_um_ativo(): void
     {
-        $response = $this->post(route('ativo.store'), []);
+        $response = $this->post(route('ativos.store'), []);
 
         $response->assertSessionHasErrors(['codigo', 'nome', 'classe_ativo_uid', 'setor'])
                 ->assertStatus(302);
@@ -25,7 +25,7 @@ class StoreAtivoTest extends TestCase
     {
         $ativo = Ativo::factory()->make();
 
-        $response = $this->post(route('ativo.store'), $ativo->toArray());
+        $response = $this->post(route('ativos.store'), $ativo->toArray());
 
         $response->assertStatus(201);
         $this->assertDatabaseHas('ativos', [
@@ -37,7 +37,7 @@ class StoreAtivoTest extends TestCase
     {
         $this->withMiddleware();
 
-        $response = $this->post(route('ativo.store'), [], [
+        $response = $this->post(route('ativos.store'), [], [
             'Accept' => 'application/json'
         ]);
 
