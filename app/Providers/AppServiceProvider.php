@@ -15,8 +15,10 @@ use App\Interfaces\Repositories\IAtivoRepository;
 use App\Repositories\RebalanceamentoAtivoRepository;
 use App\Repositories\RebalanceamentoClasseRepository;
 use App\Interfaces\Repositories\IClasseAtivoRepository;
+use App\Interfaces\Repositories\IProventoRepository;
 use App\Interfaces\Repositories\IRebalanceamentoAtivoRepository;
 use App\Interfaces\Repositories\IRebalanceamentoClasseRepository;
+use App\Repositories\ProventoRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -36,6 +38,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(IRebalanceamentoClasseRepository::class, RebalanceamentoClasseRepository::class);
         $this->app->singleton(IAuthRepository::class, AuthRepository::class);
         $this->app->singleton(IRebalanceamentoAtivoRepository::class, RebalanceamentoAtivoRepository::class);
+        $this->app->singleton(IProventoRepository::class, ProventoRepository::class);
     }
 
     /**
