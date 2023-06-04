@@ -24,7 +24,9 @@ class ListProventoRequest extends FormRequest
         return [
             'search' => ['nullable', 'string'],
             'perPage' => ['nullable', 'integer'],
-            'withPaginate' => ['nullable', 'boolean']
+            'withPaginate' => ['nullable', 'boolean'],
+            'sort' => ['nullable', 'string', 'in:data_com,data_pagamento,quantidade_ativo,valor,yield_on_cost,created_at'],
+            'direction' => ['nullable', 'string', 'in:asc,desc']
         ];
     }
 }

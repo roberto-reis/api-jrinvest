@@ -37,6 +37,10 @@ class AtivoRepository implements IAtivoRepository
             $ativosQuery->orderBy($filters['sort'], $filters['direction'] ?? 'asc');
         }
 
+        if (isset($filters['withPaginate']) && !(bool)$filters['withPaginate']) {
+            return $ativosQuery->get()->toArray();
+        }
+
         return $ativosQuery->paginate($filters['perPage'] ?? $this->perPage)->toArray();
     }
 

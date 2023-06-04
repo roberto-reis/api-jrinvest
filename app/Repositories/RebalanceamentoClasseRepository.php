@@ -44,7 +44,7 @@ class RebalanceamentoClasseRepository implements IRebalanceamentoClasseRepositor
             $rebalanceamentoQuery->orderBy($filters['sort'], $filters['direction'] ?? 'asc');
         }
 
-        if (isset($filters['with_paginate']) && !(bool)$filters['with_paginate']) {
+        if (isset($filters['withPaginate']) && !(bool)$filters['withPaginate']) {
             return $rebalanceamentoQuery->get()->toArray();
         }
 

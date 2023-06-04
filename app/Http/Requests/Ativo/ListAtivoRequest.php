@@ -24,6 +24,7 @@ class ListAtivoRequest extends FormRequest
         return [
             'search' => ['nullable', 'string'],
             'perPage' => ['nullable', 'integer'],
+            'withPaginate' => ['nullable', 'boolean'],
             'sort' => ['nullable', 'string', 'in:codigo,nome,setor,created_at'],
             'direction' => ['nullable', 'string', 'in:asc,desc']
         ];
