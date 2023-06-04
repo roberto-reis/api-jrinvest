@@ -15,16 +15,8 @@ class ListAllAction
     )
     {}
 
-    public function execute(string $userUid, array $filters = []): array
+    public function execute(array $filters = []): array
     {
-        if (!$this->authRepository->exists($userUid)) {
-            throw new ProventoException("Usuário não encontrado", 404);
-        }
-
-        if ($userUid !== Auth::user()->uid) {
-            throw new ProventoException("Usuário não autorizado", 403);
-        }
-
-        return $this->proventoRepository->getAll($userUid, $filters);
+        return $this->proventoRepository->getAll($filters);
     }
 }

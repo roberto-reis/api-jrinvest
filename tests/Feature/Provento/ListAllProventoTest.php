@@ -23,21 +23,9 @@ class ListAllProventoTest extends TestCase
         Sanctum::actingAs($user, ['*']);
         Provento::factory(5)->create(['user_uid' => $user->uid]);
 
-        $response = $this->get(route('proventos.listAll', $user->uid));
+        $response = $this->get(route('proventos.listAll'));
 
         $response->assertStatus(200);
-    }
-
-    public function test_deve_nao_encontrar_usuario_404(): void
-    {
-        $uidQualquer = '123';
-
-        $response = $this->get(route('proventos.listAll', $uidQualquer));
-
-        $response->assertStatus(404)
-                 ->assertJson([
-                    'message' => 'Usuário não encontrado'
-                 ]);
     }
 
     public function test_deve_listar_proventos_com_filtro_paginate(): void
@@ -49,7 +37,6 @@ class ListAllProventoTest extends TestCase
         $perPage = 2;
 
         $response = $this->get(route('proventos.listAll', [
-            'userUid' => $user->uid,
             'perPage' => $perPage
         ]));
 
