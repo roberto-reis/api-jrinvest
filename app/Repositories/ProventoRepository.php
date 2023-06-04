@@ -2,9 +2,11 @@
 
 namespace App\Repositories;
 
+use App\DTOs\Provento\StoreProventoDTO;
 use App\Models\Provento;
 use App\Exceptions\ProventoException;
 use App\Interfaces\Repositories\IProventoRepository;
+use Illuminate\Support\Facades\Auth;
 
 class ProventoRepository implements IProventoRepository
 {
@@ -21,10 +23,10 @@ class ProventoRepository implements IProventoRepository
         $this->model = app(Provento::class);
     }
 
-    public function getAll(string $userUid, array $filters): array
+    public function getAll(array $filters): array
     {
         $proventos = $this->model::query()->with(['ativo', 'tipoProvento'])
-                                          ->where('user_uid', $userUid);
+                                          ->where('user_uid', Auth::user()->uid);
 
         if (isset($filters['search']) && !empty($filters['search'])) {
             $proventos->where(function($query) use ($filters) {
@@ -61,5 +63,10 @@ class ProventoRepository implements IProventoRepository
         if (!$provento) throw new ProventoException('Provento não encontrado', 404);
 
         return $provento->toArray();
+    }
+
+    public function store(StoreProventoDTO $dto): array
+    {
+        return $this->model::create($dto->toArray())->toArray();
     }
 }

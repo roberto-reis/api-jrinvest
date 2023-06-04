@@ -4,16 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use App\Actions\Provento\ShowAction;
+use App\Actions\Provento\StoreAction;
 use App\Exceptions\ProventoException;
 use App\Actions\Provento\ListAllAction;
 use App\Http\Requests\Provento\ListProventoRequest;
+use App\Http\Requests\Provento\StoreProventoRequest;
 
 class ProventoController extends Controller
 {
-    public function listAll(ListProventoRequest $request, ListAllAction $listAll, $userUid): JsonResponse
+    public function listAll(ListProventoRequest $request, ListAllAction $listAll): JsonResponse
     {
         try {
-            $classesAtivos = $listAll->execute($userUid, $request->validated());
+            $classesAtivos = $listAll->execute($request->validated());
 
             return response_api('Dados retornados com sucesso', $classesAtivos);
 
@@ -50,22 +52,22 @@ class ProventoController extends Controller
         }
     }
 
-    // public function store(StoreClasseAtivoRequest $request, StoreAction $storeAction): JsonResponse
-    // {
-    //     try {
-    //         $classesAtivos = $storeAction->execute($request->validated());
+    public function store(StoreProventoRequest $request, StoreAction $storeAction): JsonResponse
+    {
+        try {
+            $provento = $storeAction->execute($request->validated());
 
-    //         return response_api('Dados cadastrados com sucesso', $classesAtivos, 201);
+            return response_api('Dados cadastrados com sucesso', $provento, 201);
 
-    //     } catch (\Exception $e) {
-    //         send_log('Erro ao cadastrar a classe de ativo', [], 'error', $e);
-    //         return response_api(
-    //             'Erro ao cadastrar a classe de ativo',
-    //             [],
-    //             $e->getCode() == 0 ? 500 : $e->getCode()
-    //         );
-    //     }
-    // }
+        } catch (\Exception $e) {
+            send_log('Erro ao cadastrar provento', [], 'error', $e);
+            return response_api(
+                'Erro ao cadastrar provento',
+                [],
+                $e->getCode() == 0 ? 500 : $e->getCode()
+            );
+        }
+    }
 
     // public function update(UpdateClasseAtivoRequest $request, UpdateAction $updateAction, $uid): JsonResponse
     // {

@@ -2,8 +2,6 @@
 
 namespace App\Actions\Provento;
 
-use Illuminate\Support\Facades\Auth;
-use App\Exceptions\ProventoException;
 use App\Interfaces\Repositories\IAuthRepository;
 use App\Interfaces\Repositories\IProventoRepository;
 
