@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
+use App\Actions\Provento\ShowAction;
 use App\Exceptions\ProventoException;
 use App\Actions\Provento\ListAllAction;
 use App\Http\Requests\Provento\ListProventoRequest;
@@ -20,8 +21,7 @@ class ProventoController extends Controller
             return response_api( $e->getMessage(), [], $e->getCode());
 
         } catch (\Exception $e) {
-            dd($e);
-            send_log('Erro ao listar Proventos', [], 'error', $e);
+            send_log('Erro ao listar todos Proventos', [], 'error', $e);
             return response_api(
                 'Erro ao listar Proventos',
                 [],
@@ -30,25 +30,25 @@ class ProventoController extends Controller
         }
     }
 
-    // public function show(ShowAction $showAction, string $uid): JsonResponse
-    // {
-    //     try {
-    //         $classeAtivo = $showAction->execute($uid);
+    public function show(ShowAction $showAction, string $uid, string $userUid): JsonResponse
+    {
+        try {
+            $classeAtivo = $showAction->execute($uid, $userUid);
 
-    //         return response_api('Dados retornados com sucesso', $classeAtivo);
+            return response_api('Dados retornados com sucesso', $classeAtivo);
 
-    //     } catch (ClasseAtivoException $e) {
-    //         return response_api($e->getMessage(), [], $e->getCode());
+        } catch (ProventoException $e) {
+            return response_api($e->getMessage(), [], $e->getCode());
 
-    //     } catch (\Exception $e) {
-    //         send_log('Erro ao listar classe de ativo', [], 'error', $e);
-    //         return response_api(
-    //             'Erro ao listar classe de ativo',
-    //             [],
-    //             $e->getCode() == 0 ? 500 : $e->getCode()
-    //         );
-    //     }
-    // }
+        } catch (\Exception $e) {
+            send_log('Erro ao listar Provento', [], 'error', $e);
+            return response_api(
+                'Erro ao listar Provento',
+                [],
+                $e->getCode() == 0 ? 500 : $e->getCode()
+            );
+        }
+    }
 
     // public function store(StoreClasseAtivoRequest $request, StoreAction $storeAction): JsonResponse
     // {

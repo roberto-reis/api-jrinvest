@@ -2,8 +2,9 @@
 
 namespace App\Repositories;
 
-use App\Interfaces\Repositories\IProventoRepository;
 use App\Models\Provento;
+use App\Exceptions\ProventoException;
+use App\Interfaces\Repositories\IProventoRepository;
 
 class ProventoRepository implements IProventoRepository
 {
@@ -40,6 +41,10 @@ class ProventoRepository implements IProventoRepository
             });
         }
 
+        if (isset($filters['sort']) && isset($filters['direction'])) {
+            $proventos->orderBy($filters['sort'], $filters['direction']);
+        }
+
         if (isset($filters['withPaginate']) && !(bool)$filters['withPaginate']) {
             return $proventos->get()->toArray();
         }
@@ -47,4 +52,14 @@ class ProventoRepository implements IProventoRepository
         return $proventos->paginate($filters['perPage'] ?? $this->perPage)->toArray();
     }
 
+    public function find(string $uid, string $userUid): array
+    {
+        $provento = $this->model::with(['ativo', 'tipoProvento'])
+                            ->where('uid', $uid)
+                            ->where('user_uid', $userUid)->first();
+
+        if (!$provento) throw new ProventoException('Provento não encontrado', 404);
+
+        return $provento->toArray();
+    }
 }
