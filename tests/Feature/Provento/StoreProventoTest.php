@@ -7,10 +7,9 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\Provento;
 use Laravel\Sanctum\Sanctum;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class ShowProventoTest extends TestCase
+class StoreProventoTest extends TestCase
 {
     use DatabaseTransactions;
 

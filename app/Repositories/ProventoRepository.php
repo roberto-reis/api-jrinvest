@@ -2,11 +2,11 @@
 
 namespace App\Repositories;
 
-use App\DTOs\Provento\StoreProventoDTO;
 use App\Models\Provento;
+use App\DTOs\Provento\ProventoDTO;
+use Illuminate\Support\Facades\Auth;
 use App\Exceptions\ProventoException;
 use App\Interfaces\Repositories\IProventoRepository;
-use Illuminate\Support\Facades\Auth;
 
 class ProventoRepository implements IProventoRepository
 {
@@ -54,19 +54,43 @@ class ProventoRepository implements IProventoRepository
         return $proventos->paginate($filters['perPage'] ?? $this->perPage)->toArray();
     }
 
-    public function find(string $uid, string $userUid): array
+    public function find(string $uid): array
     {
         $provento = $this->model::with(['ativo', 'tipoProvento'])
                             ->where('uid', $uid)
-                            ->where('user_uid', $userUid)->first();
+                            ->where('user_uid', Auth::user()->uid)->first();
 
         if (!$provento) throw new ProventoException('Provento não encontrado', 404);
 
         return $provento->toArray();
     }
 
-    public function store(StoreProventoDTO $dto): array
+    public function store(ProventoDTO $dto): array
     {
         return $this->model::create($dto->toArray())->toArray();
+    }
+
+    public function update(string $uid, ProventoDTO $dto): array
+    {
+        $provento = $this->model::with(['ativo', 'tipoProvento'])
+                            ->where('uid', $uid)
+                            ->where('user_uid', $dto->user_uid)->first();
+
+        if (!$provento) throw new ProventoException('Provento não encontrado', 404);
+
+        $provento->update($dto->toArray());
+
+        return $provento->toArray();
+    }
+
+    public function delete(string $uid): bool
+    {
+        $provento = $this->model::with(['ativo', 'tipoProvento'])
+                            ->where('uid', $uid)
+                            ->where('user_uid', Auth::user()->uid)->first();
+
+        if (!$provento) throw new ProventoException('Provento não encontrado', 404);
+
+        return $provento->delete();
     }
 }

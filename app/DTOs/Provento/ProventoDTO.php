@@ -4,7 +4,7 @@ namespace App\DTOs\Provento;
 
 use App\DTOs\DataTransferObject;
 
-class StoreProventoDTO extends DataTransferObject
+class ProventoDTO extends DataTransferObject
 {
     public ?string $user_uid;
     public ?string $ativo_uid;

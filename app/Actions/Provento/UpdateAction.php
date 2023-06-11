@@ -6,14 +6,14 @@ use App\DTOs\Provento\ProventoDTO;
 use Illuminate\Support\Facades\Auth;
 use App\Interfaces\Repositories\IProventoRepository;
 
-class StoreAction
+class UpdateAction
 {
     public function __construct(
-        private IProventoRepository $proventoRepository,
+        private IProventoRepository $proventoRepository
     )
     {}
 
-    public function execute(array $provento = []): array
+    public function execute(string $uid, array $provento = []): array
     {
         $proventoDTO = new ProventoDTO($provento);
         $proventoDTO->user_uid = Auth::user()->uid;
@@ -22,10 +22,10 @@ class StoreAction
 
         // TODO: Pegar o preço medio para calcular yield_on_cost
         // $precoMedio = 95.00;
-        // $custoDoAtivos = ($precoMedio * $proventoDTO->quantidade_ativo);
-        // $proventoDTO->yield_on_cost = ($proventoDTO->valor_total / $custoDoAtivos) * 100;
+        // $custoDoAtivos = ($precoMedio * $storeProventoDTO->quantidade_ativo);
+        // $storeProventoDTO->yield_on_cost = ($storeProventoDTO->valor_total / $custoDoAtivos) * 100;
         $proventoDTO->yield_on_cost = 0.0;
 
-        return $this->proventoRepository->store($proventoDTO);
+        return $this->proventoRepository->update($uid, $proventoDTO);
     }
 }
