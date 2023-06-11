@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\ClasseAtivo;
+namespace App\Http\Requests\Provento;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ListClasseAtivoRequest extends FormRequest
+class ListProventoRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,7 @@ class ListClasseAtivoRequest extends FormRequest
             'search' => ['nullable', 'string'],
             'perPage' => ['nullable', 'integer'],
             'withPaginate' => ['nullable', 'boolean'],
-            'sort' => ['nullable', 'string', 'in:nome_interno,descricao,created_at'],
+            'sort' => ['nullable', 'string', 'in:data_com,data_pagamento,quantidade_ativo,valor,yield_on_cost,created_at'],
             'direction' => ['nullable', 'string', 'in:asc,desc']
         ];
     }

@@ -21,4 +21,9 @@ class AuthRepository implements IAuthRepository
 
         return create_token($user);
     }
+
+    public function exists(string $value, string $field = 'uid'): bool
+    {
+        return $this->model::where($field, $value)->exists();
+    }
 }

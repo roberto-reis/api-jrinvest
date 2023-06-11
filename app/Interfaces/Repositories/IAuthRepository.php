@@ -7,4 +7,5 @@ use App\DTOs\Auth\RegisterUserDto;
 interface IAuthRepository
 {
     public function store(RegisterUserDto $dto): array;
+    public function exists(string $value, string $field = 'uid'): bool;
 }

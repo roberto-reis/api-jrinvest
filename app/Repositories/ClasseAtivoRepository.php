@@ -32,6 +32,10 @@ class ClasseAtivoRepository implements IClasseAtivoRepository
             $classesQuery->orderBy($filters['sort'], $filters['direction']);
         }
 
+        if (isset($filters['withPaginate']) && !(bool)$filters['withPaginate']) {
+            return $classesQuery->get()->toArray();
+        }
+
         return $classesQuery->paginate($filters['perPage'] ?? $this->perPage)->toArray();
     }
 

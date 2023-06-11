@@ -24,7 +24,7 @@ class ListRebalanceamentoAtivoRequest extends FormRequest
         return [
             'search' => ['nullable', 'string'],
             'perPage' => ['nullable', 'integer'],
-            'with_paginate' => ['nullable', 'boolean'],
+            'withPaginate' => ['nullable', 'boolean'],
             'sort' => ['nullable', 'string', 'in:percentual,created_at'],
             'direction' => ['nullable', 'string', 'in:asc,desc']
         ];

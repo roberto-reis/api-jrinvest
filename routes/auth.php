@@ -10,7 +10,7 @@ Route::controller(AuthController::class)->prefix('auth')->name('auth')->group(fu
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('logout', 'logout')->name('.logout');
         Route::get('user', 'user')->name('.user');
-        Route::put('update/{uid}', 'update')->name('.update');
-        Route::delete('delete/{uid}', 'delete')->name('.delete');
+        Route::put('{uid}/update', 'update')->name('.update');
+        Route::delete('{uid}/delete', 'delete')->name('.delete');
     });
 });
