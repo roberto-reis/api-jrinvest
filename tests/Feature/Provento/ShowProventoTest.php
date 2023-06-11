@@ -38,7 +38,7 @@ class ShowProventoTest extends TestCase
 
     public function test_deve_nao_listar_provento_404(): void
     {
-        $uidQualquer = '123';
+        $uidQualquer = '32c0e209-cff9-4cc3-af17-71cb6a48d01a';
         $user = User::factory()->create();
         Sanctum::actingAs($user, ['*']);
 
@@ -50,7 +50,7 @@ class ShowProventoTest extends TestCase
 
     public function test_deve_esta_autenticado_para_listar_provento(): void
     {
-        $uidQualquer = '123';
+        $uidQualquer = '32c0e209-cff9-4cc3-af17-71cb6a48d01a';
 
         $response = $this->get(route('proventos.show', [
             'uid' => $uidQualquer,

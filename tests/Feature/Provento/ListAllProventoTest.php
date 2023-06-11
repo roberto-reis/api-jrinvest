@@ -47,7 +47,7 @@ class ListAllProventoTest extends TestCase
     public function test_deve_esta_autenticado_para_listar_todos_proventos_de_um_usuario(): void
     {
         $this->withMiddleware();
-        $uidQualquer = '123';
+        $uidQualquer = '32c0e209-cff9-4cc3-af17-71cb6a48d01a';
 
         $response = $this->get(route('proventos.listAll', $uidQualquer), [
             'Accept' => 'application/json'
