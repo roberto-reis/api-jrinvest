@@ -23,6 +23,7 @@ Route::prefix('v1/')->group(function() {
         require __DIR__ . '/classe-ativo.php';
         require __DIR__ . '/ativo.php';
         require __DIR__ . '/rebalanceamento.php';
+        require __DIR__ . '/provento.php';
     });
 
     require __DIR__ . '/auth.php';

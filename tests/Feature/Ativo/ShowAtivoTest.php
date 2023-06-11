@@ -17,7 +17,7 @@ class ShowAtivoTest extends TestCase
     {
         $ativo = Ativo::factory()->create();
 
-        $response = $this->get(route('ativo.show', $ativo->uid));
+        $response = $this->get(route('ativos.show', $ativo->uid));
 
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -35,7 +35,7 @@ class ShowAtivoTest extends TestCase
     {
         $uidQualquer = '123';
 
-        $response = $this->get(route('ativo.show', $uidQualquer));
+        $response = $this->get(route('ativos.show', $uidQualquer));
 
         $response->assertStatus(404)
             ->assertJson(['message' => 'Ativo não encontrado']);
@@ -46,7 +46,7 @@ class ShowAtivoTest extends TestCase
         $this->withMiddleware();
         $uidQualquer = '123';
 
-        $response = $this->get(route('ativo.show', $uidQualquer), [
+        $response = $this->get(route('ativos.show', $uidQualquer), [
             'Accept' => 'application/json'
         ]);
 

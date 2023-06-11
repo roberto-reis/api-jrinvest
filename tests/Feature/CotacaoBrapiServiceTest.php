@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Interfaces\ICotacaoBrapi;
-use App\Models\Ativo;
 use Tests\TestCase;
 
 use function PHPUnit\Framework\assertEquals;

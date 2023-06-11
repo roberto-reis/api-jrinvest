@@ -11,7 +11,7 @@ class ListAllAtivoTest extends TestCase
 
     public function test_deve_listar_todos_os_ativos(): void
     {
-        $response = $this->get(route('ativo.listAll'));
+        $response = $this->get(route('ativos.listAll'));
 
         $response->assertStatus(200);
     }
@@ -20,7 +20,7 @@ class ListAllAtivoTest extends TestCase
     {
         $perPage = 2;
 
-        $response = $this->get(route('ativo.listAll', ['perPage' => $perPage]));
+        $response = $this->get(route('ativos.listAll', ['perPage' => $perPage]));
 
         $response->assertJson([
             'data' => [
@@ -32,7 +32,7 @@ class ListAllAtivoTest extends TestCase
     public function test_deve_esta_autenticado_para_listar_todos_os_ativos(): void
     {
         $this->withMiddleware();
-        $response = $this->get(route('ativo.listAll'), [
+        $response = $this->get(route('ativos.listAll'), [
             'Accept' => 'application/json'
         ]);
 

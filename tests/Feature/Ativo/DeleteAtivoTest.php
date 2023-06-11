@@ -16,7 +16,7 @@ class DeleteAtivoTest extends TestCase
     {
         $uidQualquer = '32c0e209-cff9-4cc3-af17-71cb6a48d01a';
 
-        $response = $this->delete(route('ativo.delete', $uidQualquer));
+        $response = $this->delete(route('ativos.delete', $uidQualquer));
 
         $response->assertJson(['message' => 'Ativo não encontrado'])
                 ->assertStatus(404);
@@ -26,7 +26,7 @@ class DeleteAtivoTest extends TestCase
     {
         $ativo = Ativo::factory()->create();
 
-        $response = $this->delete(route('ativo.delete', $ativo->uid));
+        $response = $this->delete(route('ativos.delete', $ativo->uid));
 
         $response->assertStatus(200);
         $this->assertDatabaseMissing('ativos', [
@@ -39,7 +39,7 @@ class DeleteAtivoTest extends TestCase
         $this->withMiddleware();
         $uidQualquer = '123';
 
-        $response = $this->delete(route('ativo.delete', $uidQualquer), [], [
+        $response = $this->delete(route('ativos.delete', $uidQualquer), [], [
             'Accept' => 'application/json'
         ]);
 

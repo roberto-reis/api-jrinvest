@@ -1,9 +1,9 @@
 <?php
 
+use App\Http\Controllers\ProventoController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AtivoController;
 
-Route::controller(AtivoController::class)->prefix('ativo')->name('ativos')->group(function() {
+Route::controller(ProventoController::class)->prefix('proventos')->name('proventos')->group(function() {
     Route::get('list-all', 'listAll')->name('.listAll');
     Route::get('{uid}/show', 'show')->name('.show');
     Route::post('store', 'store')->name('.store');
