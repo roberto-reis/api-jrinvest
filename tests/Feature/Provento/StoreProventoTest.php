@@ -13,48 +13,49 @@ class StoreProventoTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function test_deve_listar_provento_para_usuario(): void
+    public function test_deve_ser_obrigatorio_os_campos_para_cadastrar_provento(): void
     {
         $user = User::factory()->create();
         Sanctum::actingAs($user, ['*']);
-        $provento = Provento::factory()->create(['user_uid' => $user->uid]);
+        $response = $this->post(route('proventos.store'), []);
 
-        $response = $this->get(route('proventos.show', $provento->uid));
+        $response->assertSessionHasErrors([
+            'ativo_uid',
+            'tipo_provento_uid',
+            'corretora_uid',
+            'data_pagamento',
+            'quantidade_ativo',
+            'valor'
+            ])
+            ->assertStatus(302);
+    }
 
-        $response->assertStatus(200)
+    public function test_deve_cadastrar_provento_para_usuario(): void
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user, ['*']);
+        $provento = Provento::factory()->make();
+
+        $response = $this->post(route('proventos.store', $provento->toArray()));
+
+        $response->assertStatus(201)
             ->assertJsonStructure([
                 "data" => [
+                    'user_uid',
+                    'ativo_uid',
+                    'tipo_provento_uid',
                     'data_com',
                     'data_pagamento',
                     'quantidade_ativo',
                     'valor',
-                    'yield_on_cost',
-                    'ativo',
-                    'tipo_provento',
+                    'yield_on_cost'
                   ]
             ]);
     }
 
-    public function test_deve_nao_listar_provento_404(): void
+    public function test_deve_esta_autenticado_para_cadastrar_provento(): void
     {
-        $uidQualquer = '123';
-        $user = User::factory()->create();
-        Sanctum::actingAs($user, ['*']);
-
-        $response = $this->get(route('proventos.show', $uidQualquer));
-
-        $response->assertStatus(404)
-            ->assertJson(['message' => 'Provento não encontrado']);
-    }
-
-    public function test_deve_esta_autenticado_para_listar_provento(): void
-    {
-        $uidQualquer = '123';
-
-        $response = $this->get(route('proventos.show', [
-            'uid' => $uidQualquer,
-            'userUid' => $uidQualquer
-        ]), [
+        $response = $this->post(route('proventos.store'), [], [
             'Accept' => 'application/json'
         ]);
 
