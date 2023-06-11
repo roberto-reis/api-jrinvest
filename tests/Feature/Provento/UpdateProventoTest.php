@@ -79,7 +79,7 @@ class UpdateProventoTest extends TestCase
 
     public function test_deve_esta_autenticado_para_atualizar_provento(): void
     {
-        $response = $this->post(route('proventos.store'), [], [
+        $response = $this->post(route('proventos.update'), [], [
             'Accept' => 'application/json'
         ]);
 

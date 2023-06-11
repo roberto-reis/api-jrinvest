@@ -41,6 +41,7 @@ class StoreProventoTest extends TestCase
         $response->assertStatus(201)
             ->assertJsonStructure([
                 "data" => [
+                    'uid',
                     'user_uid',
                     'ativo_uid',
                     'tipo_provento_uid',
@@ -51,6 +52,11 @@ class StoreProventoTest extends TestCase
                     'yield_on_cost'
                   ]
             ]);
+
+        $this->assertDatabaseHas('proventos', [
+            'uid' => $response->json()['data']['uid'],
+            'user_uid' => $response->json()['data']['user_uid']
+        ]);
     }
 
     public function test_deve_esta_autenticado_para_cadastrar_provento(): void
