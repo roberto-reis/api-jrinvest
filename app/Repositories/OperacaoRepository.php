@@ -10,11 +10,15 @@ class OperacaoRepository implements IOperacaoRepository
 {
     private Operacao $model;
     private int $perPage = 15;
-    private array $searchFields = ['cotacao_preco','quantidade','corretora','data_operacao','created_at'];
-    private array $searchWith = [
-        'user' => 'name',
-        'ativo' => 'codigo',
-        'tipoOperacao' => 'nome'
+    private array $searchFields = [
+        'cotacao_preco',
+        'quantidade',
+        'corretora',
+        'data_operacao',
+        'operacoes.created_at',
+        'users.name',
+        'ativos.codigo',
+        'tipos_operacoes.nome'
     ];
 
     public function __construct()
@@ -24,21 +28,22 @@ class OperacaoRepository implements IOperacaoRepository
 
     public function getAll(array $filters): array
     {
-        $withRelationship = array_keys($this->searchWith);
-        $operacoes = $this->model::query()->with($withRelationship)
-                                          ->where('user_uid', Auth::user()->uid);
+        $operacoes = $this->model::query()
+                            ->select([
+                                'operacoes.*',
+                                'users.name as user_name',
+                                'ativos.codigo as codigo_ativo',
+                                'tipos_operacoes.nome as tipo_operacao'
+                            ])
+                            ->join('tipos_operacoes', 'operacoes.tipo_operacao_uid', '=', 'tipos_operacoes.uid')
+                            ->join('users', 'operacoes.user_uid', '=', 'users.uid')
+                            ->join('ativos', 'operacoes.ativo_uid', '=', 'ativos.uid')
+                            ->where('user_uid', Auth::user()->uid);
 
         if (isset($filters['search']) && !empty($filters['search'])) {
             $operacoes->where(function($query) use ($filters) {
                 foreach($this->searchFields as $field) {
                     $query->orWhere($field, 'like', "%{$filters['search']}%");
-                }
-
-                // Buscar nos relacionamentos
-                foreach ($this->searchWith as $relationship => $field) {
-                    $query->orWhereHas($relationship, function($query) use ($field, $filters) {
-                        $query->where($field, 'like', "%{$filters['search']}%");
-                    });
                 }
             });
         }
