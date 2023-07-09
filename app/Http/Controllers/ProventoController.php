@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Provento;
 use Illuminate\Http\JsonResponse;
 use App\Actions\Provento\ShowAction;
 use App\Actions\Provento\StoreAction;
