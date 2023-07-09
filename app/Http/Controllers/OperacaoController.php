@@ -19,7 +19,6 @@ class OperacaoController extends Controller
             return response_api( $e->getMessage(), [], $e->getCode());
 
         } catch (\Exception $e) {
-            dd($e);
             send_log('Erro ao listar operações', [], 'error', $e);
             return response_api(
                 'Erro ao listar operações',
