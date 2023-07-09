@@ -8,7 +8,6 @@ use App\Models\User;
 use App\Models\Operacao;
 use Laravel\Sanctum\Sanctum;
 use function PHPUnit\Framework\assertEquals;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ListAllOperacoesTest extends TestCase

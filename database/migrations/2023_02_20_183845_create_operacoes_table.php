@@ -16,15 +16,16 @@ return new class extends Migration
             $table->foreignUuid('user_uid')->index();
             $table->foreignUuid('ativo_uid')->index();
             $table->foreignUuid('tipo_operacao_uid')->index();
+            $table->foreignUuid('corretora_uid');
             $table->string('quantidade', 50);
             $table->string('cotacao_preco', 50);
-            $table->string('corretora', 50)->index();
             $table->timestamp('data_operacao');
             $table->timestamps();
 
             $table->foreign('user_uid')->references('uid')->on('users');
             $table->foreign('ativo_uid')->references('uid')->on('ativos');
             $table->foreign('tipo_operacao_uid')->references('uid')->on('tipos_operacoes');
+            $table->foreign('corretora_uid')->references('uid')->on('corretoras')->cascadeOnDelete();
         });
     }
 

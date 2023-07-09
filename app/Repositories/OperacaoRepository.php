@@ -13,11 +13,11 @@ class OperacaoRepository implements IOperacaoRepository
     private array $searchFields = [
         'cotacao_preco',
         'quantidade',
-        'corretora',
         'data_operacao',
         'operacoes.created_at',
         'ativos.codigo',
-        'tipos_operacoes.nome'
+        'tipos_operacoes.nome',
+        'corretoras.nome'
     ];
 
     public function __construct()
@@ -31,10 +31,12 @@ class OperacaoRepository implements IOperacaoRepository
                             ->select([
                                 'operacoes.*',
                                 'ativos.codigo as codigo_ativo',
-                                'tipos_operacoes.nome as tipo_operacao'
+                                'tipos_operacoes.nome as tipo_operacao',
+                                'corretoras.nome as nome_corretora'
                             ])
                             ->join('tipos_operacoes', 'operacoes.tipo_operacao_uid', '=', 'tipos_operacoes.uid')
                             ->join('ativos', 'operacoes.ativo_uid', '=', 'ativos.uid')
+                            ->join('corretoras', 'operacoes.corretora_uid', '=', 'corretoras.uid')
                             ->where('user_uid', Auth::user()->uid);
 
         if (isset($filters['search']) && !empty($filters['search'])) {
@@ -45,8 +47,8 @@ class OperacaoRepository implements IOperacaoRepository
             });
         }
 
-        if (isset($filters['sort']) && isset($filters['direction'])) {
-            $operacoes->orderBy($filters['sort'], $filters['direction']);
+        if (isset($filters['sort'])) {
+            $operacoes->orderBy($filters['sort'], $filters['direction'] ?? 'asc');
         }
 
         if (isset($filters['withPaginate']) && !(bool)$filters['withPaginate']) {

@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\User;
 use App\Models\Ativo;
 use App\Models\Operacao;
+use App\Models\Corretora;
 use App\Models\TipoOperacao;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -27,9 +28,9 @@ class OperacaoFactory extends Factory
             'user_uid' => User::factory()->create()->uid,
             'ativo_uid' => Ativo::factory()->create()->uid,
             'tipo_operacao_uid' => TipoOperacao::all()->random()->uid,
+            'corretora_uid' => Corretora::all()->random()->uid,
             'cotacao_preco' => fake()->randomFloat(2, 0.01, 500.00),
             'quantidade' => fake()->randomFloat(2, 0.01, 500.00),
-            'corretora' => fake()->text(30),
             'data_operacao' => fake()->date(),
         ];
     }
