@@ -25,7 +25,7 @@ class ListRebalanceamentoClasseRequest extends FormRequest
             'search' => ['nullable', 'string'],
             'perPage' => ['nullable', 'integer'],
             'withPaginate' => ['nullable', 'boolean'],
-            'sort' => ['nullable', 'string', 'in:percentual,created_at'],
+            'sort' => ['nullable', 'string', 'in:percentual,created_at,classe_ativo'],
             'direction' => ['nullable', 'string', 'in:asc,desc']
         ];
     }

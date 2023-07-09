@@ -5,6 +5,7 @@ namespace App\Actions\RebalanceamentoClasse;
 use App\DTOs\Rebalanceamento\RebalanceamentoClasseDTO;
 use App\Exceptions\RebalanceamentoClasseException;
 use App\Interfaces\Repositories\IRebalanceamentoClasseRepository;
+use Illuminate\Support\Facades\Auth;
 
 class StoreAction
 {
@@ -16,6 +17,7 @@ class StoreAction
     public function execute(array $rebalanceamento = []): array
     {
         $dto = new RebalanceamentoClasseDTO($rebalanceamento);
+        $dto->user_uid = Auth::user()->uid;
 
         // Verificar soma do pecentual, não pode ser maior que 100.00
         $somaPecentualClasse = $this->rebalanceamentoClasseRepository->somaPecentual($dto->user_uid);

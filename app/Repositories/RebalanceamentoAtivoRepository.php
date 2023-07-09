@@ -82,7 +82,8 @@ class RebalanceamentoAtivoRepository implements IRebalanceamentoAtivoRepository
 
     public function update(string $uid, RebalanceamentoAtivoDTO $dto): array
     {
-        $rebalanceamentoAtivo = $this->model::find($uid);
+        $rebalanceamentoAtivo = $this->model::where('uid', $uid)
+                                        ->where('user_uid', $dto->user_uid)->first();
 
         $rebalanceamentoAtivo->update($dto->toArray());
 
@@ -91,7 +92,8 @@ class RebalanceamentoAtivoRepository implements IRebalanceamentoAtivoRepository
 
     public function delete(string $uid): bool
     {
-        $rebalanceamentoAtivo = $this->model::find($uid);
+        $rebalanceamentoAtivo = $this->model::where('uid', $uid)
+                                        ->where('user_uid', Auth::user()->uid)->first();
 
         if (!$rebalanceamentoAtivo) {
             throw new RebalanceamentoAtivoException('Rebalanceamento por ativo não encontrado', 404);

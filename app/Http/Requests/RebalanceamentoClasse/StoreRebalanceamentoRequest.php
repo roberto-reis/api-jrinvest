@@ -3,6 +3,7 @@
 namespace App\Http\Requests\RebalanceamentoClasse;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class StoreRebalanceamentoRequest extends FormRequest
@@ -23,12 +24,11 @@ class StoreRebalanceamentoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_uid' => ['required', 'uuid', 'exists:users,uid'],
             'classe_ativo_uid' => [
                 'required',
                 'uuid',
                 'exists:classes_ativos,uid',
-                Rule::unique('rebalanceamento_classes')->where('user_uid', $this->user_uid)// validation unique composite key
+                Rule::unique('rebalanceamento_classes')->where('user_uid', Auth::user()->uid)// validation unique composite key
             ],
             'percentual' => ['required', 'numeric', 'min:0.01', 'max:100.00', 'regex:/^\d+(\.\d{1,2})?$/']
         ];

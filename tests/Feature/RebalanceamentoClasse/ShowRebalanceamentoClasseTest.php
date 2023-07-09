@@ -4,18 +4,20 @@ namespace Tests\Feature\RebalanceamentoClasse;
 
 use Tests\TestCase;
 
+use App\Models\User;
+use Laravel\Sanctum\Sanctum;
 use App\Models\RebalanceamentoClasse;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ShowRebalanceamentoClasseTest extends TestCase
 {
     use DatabaseTransactions;
-    use WithoutMiddleware;
 
     public function test_deve_listar_um_rebalanceamento_por_classe_ativo(): void
     {
-        $rebalanceamentoClasse = RebalanceamentoClasse::factory()->create();;
+        $user = User::factory()->create();
+        Sanctum::actingAs($user, ['*']);
+        $rebalanceamentoClasse = RebalanceamentoClasse::factory()->create(['user_uid' => $user->uid]);
 
         $response = $this->get(route('rebalanceamento-classes.show', $rebalanceamentoClasse->uid));
 
@@ -35,6 +37,8 @@ class ShowRebalanceamentoClasseTest extends TestCase
     public function test_deve_nao_listar_um_rebalanceamento_por_classe_ativo_404(): void
     {
         $uidQualquer = '123';
+        $user = User::factory()->create();
+        Sanctum::actingAs($user, ['*']);
 
         $response = $this->get(route('rebalanceamento-classes.show', $uidQualquer));
 
@@ -46,7 +50,6 @@ class ShowRebalanceamentoClasseTest extends TestCase
 
     public function test_deve_esta_autenticado_para_listar_rebalanceamento_por_classe_ativo(): void
     {
-        $this->withMiddleware();
         $uidQualquer = '123';
 
         $response = $this->get(route('rebalanceamento-classes.show', $uidQualquer), [
