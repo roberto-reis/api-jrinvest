@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\RebalanceamentoAtivo;
+use Illuminate\Support\Facades\Auth;
 use App\Exceptions\RebalanceamentoAtivoException;
 use App\DTOs\Rebalanceamento\RebalanceamentoAtivoDTO;
 use App\Interfaces\Repositories\IRebalanceamentoAtivoRepository;
@@ -11,12 +12,7 @@ class RebalanceamentoAtivoRepository implements IRebalanceamentoAtivoRepository
 {
     private RebalanceamentoAtivo $model;
     private int $perPage = 15;
-    private array $searchFields = ['percentual', 'created_at'];
-    private array $serachRelationships = [
-        'user' => 'name',
-        'ativo' => 'nome'
-    ];
-
+    private array $searchFields = ['percentual', 'rebalanceamento_ativos.created_at', 'ativos.codigo'];
 
     public function __construct()
     {
@@ -25,19 +21,20 @@ class RebalanceamentoAtivoRepository implements IRebalanceamentoAtivoRepository
 
     public function getAll(array $filters): array
     {
-        $rebalanceamentoQuery = $this->model::query()->with(['user', 'ativo']);
+        $rebalanceamentoQuery = $this->model::query()
+                                    ->select([
+                                        'rebalanceamento_ativos.*',
+                                        'ativos.codigo as codigo_ativo'
+                                    ])
+                                    ->join('ativos', 'rebalanceamento_ativos.ativo_uid', '=', 'ativos.uid')
+                                    ->where('user_uid', Auth::user()->uid);
 
         if (isset($filters['search'])) {
-            foreach($this->searchFields as $field) {
-                $rebalanceamentoQuery->orWhere($field, 'like', "%{$filters['search']}%");
-            }
-
-            // Buscar na tabela relacionamento
-            foreach ($this->serachRelationships as $key => $field) {
-                $rebalanceamentoQuery->orWhereHas($key, function($query) use ($field, $filters) {
-                    $query->where($field, 'like', "%{$filters['search']}%");
-                });
-            }
+            $rebalanceamentoQuery->where(function($query) use ($filters) {
+                foreach($this->searchFields as $field) {
+                    $query->orWhere($field, 'like', "%{$filters['search']}%");
+                }
+            });
         }
 
         if (isset($filters['sort'])) {
@@ -53,7 +50,10 @@ class RebalanceamentoAtivoRepository implements IRebalanceamentoAtivoRepository
 
     public function find(string $uid, array $with = []): array
     {
-        $rebalanceamentoClasse = $this->model::with($with)->find($uid);
+        $rebalanceamentoClasse = $this->model::with($with)
+                                    ->where('uid', $uid)
+                                    ->where('user_uid', Auth::user()->uid)
+                                    ->first();
 
         if (!$rebalanceamentoClasse) throw new RebalanceamentoAtivoException('Rebalanceamento por ativo não encontrado', 404);
 
