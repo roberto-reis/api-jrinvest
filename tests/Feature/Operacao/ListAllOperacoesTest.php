@@ -13,12 +13,10 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ListAllOperacoesTest extends TestCase
 {
-    use WithoutMiddleware;
-    // use DatabaseTransactions;
+    use DatabaseTransactions;
 
     public function test_deve_listar_todas_operacoes_de_um_usuario(): void
     {
-        $this->withMiddleware();
         $user = User::factory()->create();
         Sanctum::actingAs($user, ['*']);
         Operacao::factory(5)->create(['user_uid' => $user->uid]);
