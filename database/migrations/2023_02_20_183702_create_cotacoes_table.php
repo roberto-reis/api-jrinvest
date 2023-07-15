@@ -15,7 +15,7 @@ return new class extends Migration
             $table->uuid('uid')->primary();
             $table->foreignUuid('ativo_uid')->index();
             $table->char('moeda_ref', 3);
-            $table->string('preco', 50)->index();
+            $table->double('preco')->index();
             $table->timestamps();
 
             $table->foreign('ativo_uid')->references('uid')->on('ativos')->onDelete('cascade');

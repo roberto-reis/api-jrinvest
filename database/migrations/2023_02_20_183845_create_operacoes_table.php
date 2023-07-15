@@ -17,8 +17,8 @@ return new class extends Migration
             $table->foreignUuid('ativo_uid')->index();
             $table->foreignUuid('tipo_operacao_uid')->index();
             $table->foreignUuid('corretora_uid');
-            $table->string('quantidade', 50);
-            $table->string('cotacao_preco', 50);
+            $table->double('quantidade');
+            $table->double('cotacao_preco');
             $table->timestamp('data_operacao');
             $table->timestamps();
 

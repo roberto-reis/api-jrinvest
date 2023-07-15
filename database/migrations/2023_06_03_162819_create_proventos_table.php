@@ -19,9 +19,9 @@ return new class extends Migration
             $table->foreignUuid('corretora_uid');
             $table->date('data_com')->nullable();
             $table->date('data_pagamento');
-            $table->string('quantidade_ativo', 50);
-            $table->decimal('valor', 10, 2);
-            $table->decimal('yield_on_cost', 10, 2);
+            $table->double('quantidade_ativo');
+            $table->double('valor');
+            $table->double('yield_on_cost', 10, 2);
             $table->timestamps();
 
             $table->foreign('user_uid')->references('uid')->on('users')->cascadeOnDelete();
