@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\OperacaoException;
 use App\Models\Operacao;
 use Illuminate\Support\Facades\Auth;
 use App\Interfaces\Repositories\IOperacaoRepository;
@@ -56,5 +57,16 @@ class OperacaoRepository implements IOperacaoRepository
         }
 
         return $operacoes->paginate($filters['perPage'] ?? $this->perPage)->toArray();
+    }
+
+    public function find(string $uid): array
+    {
+        $operacao = $this->model::with(['ativo', 'ativo.classeAtivo', 'tipoOperacao', 'corretora'])
+                            ->where('uid', $uid)
+                            ->where('user_uid', Auth::user()->uid)->first();
+
+        if (!$operacao) throw new OperacaoException('Operação não encontrado', 404);
+
+        return $operacao->toArray();
     }
 }
