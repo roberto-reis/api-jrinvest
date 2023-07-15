@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\ClasseAtivo;
+namespace Tests\Feature\Operacao;
 
 use App\Models\Operacao;
 use Tests\TestCase;
