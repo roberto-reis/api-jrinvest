@@ -2,9 +2,10 @@
 
 namespace App\Repositories;
 
-use App\Exceptions\OperacaoException;
 use App\Models\Operacao;
+use App\DTOs\Operacao\OperacaoDTO;
 use Illuminate\Support\Facades\Auth;
+use App\Exceptions\OperacaoException;
 use App\Interfaces\Repositories\IOperacaoRepository;
 
 class OperacaoRepository implements IOperacaoRepository
@@ -68,5 +69,10 @@ class OperacaoRepository implements IOperacaoRepository
         if (!$operacao) throw new OperacaoException('Operação não encontrado', 404);
 
         return $operacao->toArray();
+    }
+
+    public function store(OperacaoDTO $dto): array
+    {
+        return $this->model::create($dto->toArray())->toArray();
     }
 }
