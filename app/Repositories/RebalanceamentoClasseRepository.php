@@ -2,21 +2,17 @@
 
 namespace App\Repositories;
 
-use App\DTOs\Rebalanceamento\RebalanceamentoClasseDTO;
-use App\Exceptions\RebalanceamentoClasseException;
-use App\Interfaces\Repositories\IRebalanceamentoClasseRepository;
+use Illuminate\Support\Facades\Auth;
 use App\Models\RebalanceamentoClasse;
+use App\Exceptions\RebalanceamentoClasseException;
+use App\DTOs\Rebalanceamento\RebalanceamentoClasseDTO;
+use App\Interfaces\Repositories\IRebalanceamentoClasseRepository;
 
 class RebalanceamentoClasseRepository implements IRebalanceamentoClasseRepository
 {
     private RebalanceamentoClasse $model;
     private int $perPage = 15;
-    private array $searchFields = ['percentual', 'created_at'];
-    private array $serachRelationships = [
-        'user' => 'name',
-        'classeAtivo' => 'nome'
-    ];
-
+    private array $searchFields = ['percentual', 'rebalanceamento_classes.created_at', 'classes_ativos.nome'];
 
     public function __construct()
     {
@@ -25,19 +21,20 @@ class RebalanceamentoClasseRepository implements IRebalanceamentoClasseRepositor
 
     public function getAll(array $filters): array
     {
-        $rebalanceamentoQuery = $this->model::query()->with(['user', 'classeAtivo']);
+        $rebalanceamentoQuery = $this->model::query()
+                                    ->select([
+                                        'rebalanceamento_classes.*',
+                                        'classes_ativos.nome as classe_ativo'
+                                    ])
+                                    ->join('classes_ativos', 'rebalanceamento_classes.classe_ativo_uid', '=', 'classes_ativos.uid')
+                                    ->where('user_uid', Auth::user()->uid);
 
         if (isset($filters['search'])) {
-            foreach($this->searchFields as $field) {
-                $rebalanceamentoQuery->orWhere($field, 'like', "%{$filters['search']}%");
-            }
-
-            // Buscar na tabela relacionamento
-            foreach ($this->serachRelationships as $key => $field) {
-                $rebalanceamentoQuery->orWhereHas($key, function($query) use ($field, $filters) {
-                    $query->where($field, 'like', "%{$filters['search']}%");
-                });
-            }
+            $rebalanceamentoQuery->where(function($query) use ($filters) {
+                foreach($this->searchFields as $field) {
+                    $query->orWhere($field, 'like', "%{$filters['search']}%");
+                }
+            });
         }
 
         if (isset($filters['sort'])) {
@@ -53,7 +50,10 @@ class RebalanceamentoClasseRepository implements IRebalanceamentoClasseRepositor
 
     public function find(string $uid, array $with = []): array
     {
-        $rebalanceamentoClasse = $this->model::with($with)->find($uid);
+        $rebalanceamentoClasse = $this->model::with($with)
+                                        ->where('uid', $uid)
+                                        ->where('user_uid', Auth::user()->uid)
+                                        ->first();
 
         if (!$rebalanceamentoClasse) throw new RebalanceamentoClasseException('Rebalanceamento por classe não encontrado', 404);
 
@@ -82,7 +82,8 @@ class RebalanceamentoClasseRepository implements IRebalanceamentoClasseRepositor
 
     public function update(string $uid, RebalanceamentoClasseDTO $dto): array
     {
-        $rebalanceamentoClasse = $this->model::find($uid);
+        $rebalanceamentoClasse = $this->model::where('uid', $uid)
+                                            ->where('user_uid', $dto->user_uid)->first();
 
         $rebalanceamentoClasse->update($dto->toArray());
 
@@ -91,7 +92,8 @@ class RebalanceamentoClasseRepository implements IRebalanceamentoClasseRepositor
 
     public function delete(string $uid): bool
     {
-        $rebalanceamentoClasse = $this->model::find($uid);
+        $rebalanceamentoClasse = $this->model::where('uid', $uid)
+                                        ->where('user_uid', Auth::user()->uid)->first();
 
         if (!$rebalanceamentoClasse) {
             throw new RebalanceamentoClasseException('Rebalanceamento por classe não encontrado', 404);

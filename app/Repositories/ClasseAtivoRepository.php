@@ -28,8 +28,8 @@ class ClasseAtivoRepository implements IClasseAtivoRepository
             }
         }
 
-        if (isset($filters['sort']) && isset($filters['direction'])) {
-            $classesQuery->orderBy($filters['sort'], $filters['direction']);
+        if (isset($filters['sort'])) {
+            $classesQuery->orderBy($filters['sort'], $filters['direction'] ?? 'asc');
         }
 
         if (isset($filters['withPaginate']) && !(bool)$filters['withPaginate']) {

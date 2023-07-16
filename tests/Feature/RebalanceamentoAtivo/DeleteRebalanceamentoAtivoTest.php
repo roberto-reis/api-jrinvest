@@ -4,6 +4,8 @@ namespace Tests\Feature\RebalanceamentoAtivo;
 
 use Tests\TestCase;
 
+use App\Models\User;
+use Laravel\Sanctum\Sanctum;
 use App\Models\RebalanceamentoAtivo;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -11,11 +13,12 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 class DeleteRebalanceamentoAtivoTest extends TestCase
 {
     use DatabaseTransactions;
-    use WithoutMiddleware;
 
     public function test_deve_retornar_rebalanceamento_por_ativo_nao_encontrado_404(): void
     {
         $uidQualquer = '32c0e209-cff9-4cc3-af17-71cb6a48d01a';
+        $user = User::factory()->create();
+        Sanctum::actingAs($user, ['*']);
 
         $response = $this->delete(route('rebalanceamento-ativos.delete', $uidQualquer));
 
@@ -25,7 +28,9 @@ class DeleteRebalanceamentoAtivoTest extends TestCase
 
     public function test_deve_deletar_um_rebalanceamento_por_ativo(): void
     {
-        $rebalanceamento = RebalanceamentoAtivo::factory()->create();
+        $user = User::factory()->create();
+        Sanctum::actingAs($user, ['*']);
+        $rebalanceamento = RebalanceamentoAtivo::factory()->create(['user_uid' => $user->uid]);
 
         $response = $this->delete(route('rebalanceamento-ativos.delete', $rebalanceamento->uid));
 
@@ -37,7 +42,6 @@ class DeleteRebalanceamentoAtivoTest extends TestCase
 
     public function test_deve_esta_autenticado_ao_deletar_um_rebalanceamento_por_ativo(): void
     {
-        $this->withMiddleware();
         $uidQualquer = '32c0e209-cff9-4cc3-af17-71cb6a48d01a';
 
         $response = $this->delete(route('rebalanceamento-ativos.delete', $uidQualquer), [], [

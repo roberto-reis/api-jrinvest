@@ -5,24 +5,24 @@ namespace Tests\Feature\RebalanceamentoClasse;
 use Tests\TestCase;
 use App\Models\User;
 
+use Laravel\Sanctum\Sanctum;
 use App\Models\RebalanceamentoClasse;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class UpdateRebalanceamentoClasseTest extends TestCase
 {
     use DatabaseTransactions;
-    use WithoutMiddleware;
 
     public function test_deve_ser_obrigatorio_os_campos_ao_atualizar_rebalanceamento_classe_ativo(): void
     {
         $uidQualquer = '123';
+        $user = User::factory()->create();
+        Sanctum::actingAs($user, ['*']);
 
         $response = $this->put(route('rebalanceamento-classes.update', $uidQualquer), []);
 
         $response->assertStatus(302)
                 ->assertSessionHasErrors([
-                    'user_uid',
                     'classe_ativo_uid',
                     'percentual'
                 ]);
@@ -31,6 +31,7 @@ class UpdateRebalanceamentoClasseTest extends TestCase
     public function test_deve_atualizar_rebalanceamento_por_classe_ativo(): void
     {
         $user = User::factory()->create();
+        Sanctum::actingAs($user, ['*']);
         $rebalanceamentoClasse = RebalanceamentoClasse::factory()->create([
             'user_uid' => $user->uid,
             'percentual' => 50
@@ -57,6 +58,7 @@ class UpdateRebalanceamentoClasseTest extends TestCase
     public function test_deve_nao_atualizar_rebalanceamento_com_soma_a_percentuais_maior_que_100(): void
     {
         $user = User::factory()->create();
+        Sanctum::actingAs($user, ['*']);
         RebalanceamentoClasse::factory()->create([
             'user_uid' => $user->uid,
             'percentual' => 80.00
@@ -83,6 +85,8 @@ class UpdateRebalanceamentoClasseTest extends TestCase
     public function test_deve_retornar_rebalanceamento_por_classe_ativo_nao_encontrado_404(): void
     {
         $uidQualquer = '32c0e209-cff9-4cc3-af17-71cb6a48d01a';
+        $user = User::factory()->create();
+        Sanctum::actingAs($user, ['*']);
         $rebalanceamentoClasse = RebalanceamentoClasse::factory()->create();
 
         $response = $this->put(
@@ -97,8 +101,6 @@ class UpdateRebalanceamentoClasseTest extends TestCase
 
     public function test_deve_esta_autenticado_para_atualizar_rebalanceamento_por_classe_ativo(): void
     {
-        $this->withMiddleware();
-
         $response = $this->put(route('rebalanceamento-classes.update', '123'), [], [
             'Accept' => 'application/json'
         ]);

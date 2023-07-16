@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Provento;
+namespace App\Http\Requests\Operacao;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class StoreProventoRequest extends FormRequest
+class OperacaoRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,12 +23,11 @@ class StoreProventoRequest extends FormRequest
     {
         return [
             'ativo_uid' => ['required', 'uuid', 'exists:ativos,uid'],
-            'tipo_provento_uid' => ['required', 'uuid', 'exists:tipos_proventos,uid'],
+            'tipo_operacao_uid' => ['required', 'uuid', 'exists:tipos_operacoes,uid'],
             'corretora_uid' => ['required', 'uuid', 'exists:corretoras,uid'],
-            'data_com' => ['nullable', 'date'],
-            'data_pagamento' => ['required', 'date'],
-            'quantidade_ativo' => ['required', 'numeric'],
-            'valor' => ['required', 'numeric']
+            'cotacao_preco' => ['required', 'numeric'],
+            'quantidade' => ['required', 'numeric'],
+            'data_operacao' => ['required', 'date', 'date_format:Y-m-d']
         ];
     }
 }
