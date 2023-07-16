@@ -18,6 +18,7 @@ class OperacaoRepository implements IOperacaoRepository
         'data_operacao',
         'operacoes.created_at',
         'ativos.codigo',
+        'classes_ativos.nome',
         'tipos_operacoes.nome',
         'corretoras.nome'
     ];
@@ -33,11 +34,13 @@ class OperacaoRepository implements IOperacaoRepository
                             ->select([
                                 'operacoes.*',
                                 'ativos.codigo as codigo_ativo',
+                                'classes_ativos.nome as classe_ativo',
                                 'tipos_operacoes.nome as tipo_operacao',
                                 'corretoras.nome as nome_corretora'
                             ])
                             ->join('tipos_operacoes', 'operacoes.tipo_operacao_uid', '=', 'tipos_operacoes.uid')
                             ->join('ativos', 'operacoes.ativo_uid', '=', 'ativos.uid')
+                            ->join('classes_ativos', 'ativos.classe_ativo_uid', '=', 'classes_ativos.uid')
                             ->join('corretoras', 'operacoes.corretora_uid', '=', 'corretoras.uid')
                             ->where('user_uid', Auth::user()->uid);
 

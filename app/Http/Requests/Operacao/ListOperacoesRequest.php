@@ -25,7 +25,7 @@ class ListOperacoesRequest extends FormRequest
             'search' => ['nullable', 'string'],
             'perPage' => ['nullable', 'integer'],
             'withPaginate' => ['nullable', 'boolean'],
-            'sort' => ['nullable', 'string', 'in:cotacao_preco,quantidade,data_operacao,created_at,codigo_ativo,tipo_operacao,nome_corretora'],
+            'sort' => ['nullable', 'string', 'in:cotacao_preco,quantidade,data_operacao,created_at,codigo_ativo,classe_ativo,tipo_operacao,nome_corretora'],
             'direction' => ['nullable', 'string', 'in:asc,desc']
         ];
     }
