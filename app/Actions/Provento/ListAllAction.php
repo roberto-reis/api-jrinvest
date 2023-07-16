@@ -7,10 +7,7 @@ use App\Interfaces\Repositories\IProventoRepository;
 
 class ListAllAction
 {
-    public function __construct(
-        private IProventoRepository $proventoRepository,
-        private IAuthRepository $authRepository
-    )
+    public function __construct(private IProventoRepository $proventoRepository)
     {}
 
     public function execute(array $filters = []): array

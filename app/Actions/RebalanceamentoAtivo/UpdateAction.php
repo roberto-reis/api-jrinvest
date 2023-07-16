@@ -5,6 +5,7 @@ namespace App\Actions\RebalanceamentoAtivo;
 use App\Exceptions\RebalanceamentoAtivoException;
 use App\DTOs\Rebalanceamento\RebalanceamentoAtivoDTO;
 use App\Interfaces\Repositories\IRebalanceamentoAtivoRepository;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateAction
 {
@@ -16,6 +17,7 @@ class UpdateAction
     public function execute(string $uid, array $rebalanceamento = []): array
     {
         $dto = new RebalanceamentoAtivoDTO($rebalanceamento);
+        $dto->user_uid = Auth::user()->uid;
 
         if (!$this->rebalanceamentoRepository->exists($uid)) {
             throw new RebalanceamentoAtivoException('Rebalanceamento por ativo não encontrado', 404);

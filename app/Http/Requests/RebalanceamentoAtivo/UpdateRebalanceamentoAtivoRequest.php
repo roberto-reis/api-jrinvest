@@ -3,6 +3,7 @@
 namespace App\Http\Requests\RebalanceamentoAtivo;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class UpdateRebalanceamentoAtivoRequest extends FormRequest
@@ -23,12 +24,11 @@ class UpdateRebalanceamentoAtivoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_uid' => ['required', 'uuid', 'exists:users,uid'],
             'ativo_uid' => [
                 'required',
                 'uuid',
                 'exists:ativos,uid',
-                Rule::unique('rebalanceamento_ativos')->where('user_uid', $this->user_uid)->ignore($this->uid, 'uid')
+                Rule::unique('rebalanceamento_ativos')->where('user_uid', Auth::user()->uid)->ignore($this->uid, 'uid')
             ],
             'percentual' => ['required', 'numeric', 'min:0.01', 'max:100.00', 'regex:/^\d+(\.\d{1,2})?$/']
         ];
@@ -37,7 +37,6 @@ class UpdateRebalanceamentoAtivoRequest extends FormRequest
     public function messages()
     {
         return [
-            'user_uid.uuid' => 'O campo :attribute deve ser uuid valido',
             'ativo_uid.uuid' => 'O campo :attribute deve ser uuid valido',
             'ativo_uid.required' => 'O :attribute é obrigatório',
             'ativo_uid.unique' => 'Já foi definido uma porcentagem para esta classe',

@@ -2,8 +2,9 @@
 
 namespace App\Actions\RebalanceamentoClasse;
 
-use App\DTOs\Rebalanceamento\RebalanceamentoClasseDTO;
+use Illuminate\Support\Facades\Auth;
 use App\Exceptions\RebalanceamentoClasseException;
+use App\DTOs\Rebalanceamento\RebalanceamentoClasseDTO;
 use App\Interfaces\Repositories\IRebalanceamentoClasseRepository;
 
 class UpdateAction
@@ -16,6 +17,7 @@ class UpdateAction
     public function execute(string $uid, array $rebalanceamento = []): array
     {
         $dto = new RebalanceamentoClasseDTO($rebalanceamento);
+        $dto->user_uid = Auth::user()->uid;
 
         if (!$this->rebalanceamentoRepository->exists($uid)) {
             throw new RebalanceamentoClasseException('Rebalanceamento por classe não encontrado', 404);

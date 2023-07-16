@@ -4,6 +4,8 @@ namespace Tests\Feature\RebalanceamentoAtivo;
 
 use Tests\TestCase;
 
+use App\Models\User;
+use Laravel\Sanctum\Sanctum;
 use App\Models\RebalanceamentoAtivo;
 use function PHPUnit\Framework\assertEquals;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
@@ -12,10 +14,11 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 class ListAllRebalanceamentoAtivoTest extends TestCase
 {
     use DatabaseTransactions;
-    use WithoutMiddleware;
 
     public function test_deve_listar_todos_os_rebalanceamento_por_ativo(): void
     {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user, ['*']);
         $response = $this->get(route('rebalanceamento-ativos.listAll'));
 
         $response->assertStatus(200);
@@ -23,7 +26,9 @@ class ListAllRebalanceamentoAtivoTest extends TestCase
 
     public function test_deve_listar_rebalanceamento_por_ativo_com_filtro_perPage(): void
     {
-        RebalanceamentoAtivo::factory(3)->create();
+        $user = User::factory()->create();
+        Sanctum::actingAs($user, ['*']);
+        RebalanceamentoAtivo::factory(3)->create(['user_uid' => $user->uid]);
         $perPage = 2;
 
         $response = $this->get(route('rebalanceamento-ativos.listAll', ['perPage' => $perPage]));
@@ -36,8 +41,6 @@ class ListAllRebalanceamentoAtivoTest extends TestCase
 
     public function test_deve_esta_autenticado_para_todos_os_rebalanceamento_por_ativo(): void
     {
-        $this->withMiddleware();
-
         $response = $this->get(route('rebalanceamento-ativos.listAll'), [
             'Accept' => 'application/json'
         ]);

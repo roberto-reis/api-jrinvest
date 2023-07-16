@@ -4,23 +4,24 @@ namespace Tests\Feature\RebalanceamentoAtivo;
 
 use Tests\TestCase;
 
-use App\Models\RebalanceamentoAtivo;
 use App\Models\User;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Laravel\Sanctum\Sanctum;
+use App\Models\RebalanceamentoAtivo;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class StoreRebalanceamentoAtivoTest extends TestCase
 {
     use DatabaseTransactions;
-    use WithoutMiddleware;
 
     public function test_deve_ser_obrigatorio_os_campos_ao_cadastrar_rebalanceamento_ativo(): void
     {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user, ['*']);
+
         $response = $this->post(route('rebalanceamento-ativos.store'), []);
 
         $response->assertStatus(302)
                 ->assertSessionHasErrors([
-                    'user_uid',
                     'ativo_uid',
                     'percentual'
                 ]);
@@ -28,6 +29,9 @@ class StoreRebalanceamentoAtivoTest extends TestCase
 
     public function test_deve_cadastrar_rebalanceamento_por_ativo(): void
     {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user, ['*']);
+
         $rebalanceamentoAtivo = RebalanceamentoAtivo::factory()->make();
 
         $response = $this->post(route('rebalanceamento-ativos.store'), $rebalanceamentoAtivo->toArray());
@@ -45,6 +49,7 @@ class StoreRebalanceamentoAtivoTest extends TestCase
     public function test_deve_nao_cadastrar_rebalanceamento_com_soma_percentuais_maior_que_100(): void
     {
         $user = User::factory()->create();
+        Sanctum::actingAs($user, ['*']);
         RebalanceamentoAtivo::factory()->create([
             'user_uid' => $user->uid,
             'percentual' => 80.00
@@ -64,8 +69,6 @@ class StoreRebalanceamentoAtivoTest extends TestCase
 
     public function test_deve_esta_autenticado_para_cadastrar_rebalanceamento_por_ativo(): void
     {
-        $this->withMiddleware();
-
         $response = $this->post(route('rebalanceamento-ativos.store'), [], [
             'Accept' => 'application/json'
         ]);

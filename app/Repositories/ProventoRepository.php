@@ -12,10 +12,16 @@ class ProventoRepository implements IProventoRepository
 {
     private Provento $model;
     private int $perPage = 15;
-    private array $searchFields = ['data_com', 'data_pagamento', 'quantidade_ativo', 'valor', 'yield_on_cost', 'created_at'];
-    private array $searchWith = [
-        'ativo' => 'codigo',
-        'tipoProvento' => 'nome'
+    private array $searchFields = [
+        'data_com',
+        'data_pagamento',
+        'quantidade_ativo',
+        'valor',
+        'yield_on_cost',
+        'proventos.created_at',
+        'ativos.codigo',
+        'tipos_proventos.nome',
+        'corretoras.nome'
     ];
 
     public function __construct()
@@ -25,26 +31,29 @@ class ProventoRepository implements IProventoRepository
 
     public function getAll(array $filters): array
     {
-        $proventos = $this->model::query()->with(['ativo', 'tipoProvento'])
-                                          ->where('user_uid', Auth::user()->uid);
+        $proventos = $this->model::query()
+                                ->select([
+                                    'proventos.*',
+                                    'ativos.codigo as codigo_ativo',
+                                    'tipos_proventos.nome as tipo_provento',
+                                    'corretoras.nome as nome_corretora'
+                                ])
+                                ->join('tipos_proventos', 'proventos.tipo_provento_uid', '=', 'tipos_proventos.uid')
+                                ->join('ativos', 'proventos.ativo_uid', '=', 'ativos.uid')
+                                ->join('corretoras', 'proventos.corretora_uid', '=', 'corretoras.uid')
+                                ->where('user_uid', Auth::user()->uid);
 
-        if (isset($filters['search']) && !empty($filters['search'])) {
+
+        if (isset($filters['search'])) {
             $proventos->where(function($query) use ($filters) {
                 foreach($this->searchFields as $field) {
                     $query->orWhere($field, 'like', "%{$filters['search']}%");
                 }
-
-                // Buscar nos relacionamentos
-                foreach ($this->searchWith as $relationship => $field) {
-                    $query->orWhereHas($relationship, function($query) use ($field, $filters) {
-                        $query->where($field, 'like', "%{$filters['search']}%");
-                    });
-                }
             });
         }
 
-        if (isset($filters['sort']) && isset($filters['direction'])) {
-            $proventos->orderBy($filters['sort'], $filters['direction']);
+        if (isset($filters['sort'])) {
+            $proventos->orderBy($filters['sort'], $filters['direction'] ?? 'asc');
         }
 
         if (isset($filters['withPaginate']) && !(bool)$filters['withPaginate']) {
@@ -72,8 +81,7 @@ class ProventoRepository implements IProventoRepository
 
     public function update(string $uid, ProventoDTO $dto): array
     {
-        $provento = $this->model::with(['ativo', 'tipoProvento'])
-                            ->where('uid', $uid)
+        $provento = $this->model::where('uid', $uid)
                             ->where('user_uid', $dto->user_uid)->first();
 
         if (!$provento) throw new ProventoException('Provento não encontrado', 404);
@@ -85,8 +93,7 @@ class ProventoRepository implements IProventoRepository
 
     public function delete(string $uid): bool
     {
-        $provento = $this->model::with(['ativo', 'tipoProvento'])
-                            ->where('uid', $uid)
+        $provento = $this->model::where('uid', $uid)
                             ->where('user_uid', Auth::user()->uid)->first();
 
         if (!$provento) throw new ProventoException('Provento não encontrado', 404);

@@ -3,9 +3,8 @@
 namespace App\Http\Requests\Provento;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class UpdateProventoRequest extends FormRequest
+class ProventoRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

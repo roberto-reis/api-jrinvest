@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Provento;
 use Illuminate\Http\JsonResponse;
 use App\Actions\Provento\ShowAction;
 use App\Actions\Provento\StoreAction;
@@ -11,8 +10,7 @@ use App\Actions\Provento\DeleteAction;
 use App\Actions\Provento\UpdateAction;
 use App\Actions\Provento\ListAllAction;
 use App\Http\Requests\Provento\ListProventoRequest;
-use App\Http\Requests\Provento\StoreProventoRequest;
-use App\Http\Requests\Provento\UpdateProventoRequest;
+use App\Http\Requests\Provento\ProventoRequest;
 
 class ProventoController extends Controller
 {
@@ -56,7 +54,7 @@ class ProventoController extends Controller
         }
     }
 
-    public function store(StoreProventoRequest $request, StoreAction $storeAction): JsonResponse
+    public function store(ProventoRequest $request, StoreAction $storeAction): JsonResponse
     {
         try {
             $provento = $storeAction->execute($request->validated());
@@ -73,7 +71,7 @@ class ProventoController extends Controller
         }
     }
 
-    public function update(UpdateProventoRequest $request, UpdateAction $updateAction, $uid): JsonResponse
+    public function update(ProventoRequest $request, UpdateAction $updateAction, $uid): JsonResponse
     {
         try {
             $provento = $updateAction->execute($uid, $request->validated());
