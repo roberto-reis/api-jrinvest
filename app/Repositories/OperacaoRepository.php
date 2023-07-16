@@ -87,4 +87,14 @@ class OperacaoRepository implements IOperacaoRepository
 
         return $operacao->toArray();
     }
+
+    public function delete(string $uid): bool
+    {
+        $operacao = $this->model::where('uid', $uid)
+                            ->where('user_uid', Auth::user()->uid)->first();
+
+        if (!$operacao) throw new OperacaoException('Operação não encontrado', 404);
+
+        return $operacao->delete();
+    }
 }

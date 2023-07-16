@@ -6,6 +6,7 @@ use Illuminate\Http\JsonResponse;
 use App\Actions\Operacao\ShowAction;
 use App\Actions\Operacao\StoreAction;
 use App\Exceptions\OperacaoException;
+use App\Actions\Operacao\DeleteAction;
 use App\Actions\Operacao\UpdateAction;
 use App\Actions\Operacao\ListAllAction;
 use App\Http\Requests\Operacao\OperacaoRequest;
@@ -83,6 +84,26 @@ class OperacaoController extends Controller
             send_log('Erro ao atualizar operação', [], 'error', $e);
             return response_api(
                 'Erro ao atualizar operação',
+                [],
+                $e->getCode() == 0 ? 500 : $e->getCode()
+            );
+        }
+    }
+
+    public function delete(DeleteAction $deleteAction, $uid): JsonResponse
+    {
+        try {
+            $deleteAction->execute($uid);
+
+            return response_api('Dados deletado com sucesso');
+
+        } catch (OperacaoException $e) {
+            return response_api($e->getMessage(), [], $e->getCode());
+
+        } catch (\Exception $e) {
+            send_log('Erro ao deletar operação', [], 'error', $e);
+            return response_api(
+                'Erro ao deletar operação',
                 [],
                 $e->getCode() == 0 ? 500 : $e->getCode()
             );

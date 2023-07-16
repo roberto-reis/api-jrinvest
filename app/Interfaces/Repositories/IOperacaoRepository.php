@@ -10,4 +10,5 @@ interface IOperacaoRepository
     public function find(string $uid): array;
     public function store(OperacaoDTO $dto): array;
     public function update(string $uid, OperacaoDTO $dto): array;
+    public function delete(string $uid): bool;
 }
