@@ -75,4 +75,16 @@ class OperacaoRepository implements IOperacaoRepository
     {
         return $this->model::create($dto->toArray())->toArray();
     }
+
+    public function update(string $uid, OperacaoDTO $dto): array
+    {
+        $operacao = $this->model::where('uid', $uid)
+                            ->where('user_uid', $dto->user_uid)->first();
+
+        if (!$operacao) throw new OperacaoException('Operação não encontrado', 404);
+
+        $operacao->update($dto->toArray());
+
+        return $operacao->toArray();
+    }
 }

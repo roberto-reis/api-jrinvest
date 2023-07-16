@@ -4,7 +4,7 @@ namespace App\Http\Requests\Operacao;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreOperacaoRequest extends FormRequest
+class OperacaoRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

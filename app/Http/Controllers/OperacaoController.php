@@ -6,9 +6,10 @@ use Illuminate\Http\JsonResponse;
 use App\Actions\Operacao\ShowAction;
 use App\Actions\Operacao\StoreAction;
 use App\Exceptions\OperacaoException;
+use App\Actions\Operacao\UpdateAction;
 use App\Actions\Operacao\ListAllAction;
+use App\Http\Requests\Operacao\OperacaoRequest;
 use App\Http\Requests\Operacao\ListOperacoesRequest;
-use App\Http\Requests\Operacao\StoreOperacaoRequest;
 
 class OperacaoController extends Controller
 {
@@ -51,7 +52,7 @@ class OperacaoController extends Controller
         }
     }
 
-    public function store(StoreOperacaoRequest $request, StoreAction $storeAction): JsonResponse
+    public function store(OperacaoRequest $request, StoreAction $storeAction): JsonResponse
     {
         try {
             $operacao = $storeAction->execute($request->validated());
@@ -62,6 +63,26 @@ class OperacaoController extends Controller
             send_log('Erro ao cadastrar operação', [], 'error', $e);
             return response_api(
                 'Erro ao cadastrar operação',
+                [],
+                $e->getCode() == 0 ? 500 : $e->getCode()
+            );
+        }
+    }
+
+    public function update(OperacaoRequest $request, UpdateAction $updateAction, $uid): JsonResponse
+    {
+        try {
+            $operacao = $updateAction->execute($uid, $request->validated());
+
+            return response_api('Dados Atualizados com sucesso', $operacao, 200);
+
+        } catch (OperacaoException $e) {
+            return response_api( $e->getMessage(), [], $e->getCode());
+
+        } catch (\Exception $e) {
+            send_log('Erro ao atualizar operação', [], 'error', $e);
+            return response_api(
+                'Erro ao atualizar operação',
                 [],
                 $e->getCode() == 0 ? 500 : $e->getCode()
             );
