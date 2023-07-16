@@ -19,12 +19,12 @@ class StoreOperacaoTest extends TestCase
         $response = $this->post(route('operacoes.store'), []);
 
         $response->assertSessionHasErrors([
-            'ativo_uid',
-            'tipo_operacao_uid',
-            'corretora_uid',
-            'cotacao_preco',
-            'quantidade',
-            'data_operacao'
+                'ativo_uid',
+                'tipo_operacao_uid',
+                'corretora_uid',
+                'cotacao_preco',
+                'quantidade',
+                'data_operacao'
             ])
             ->assertStatus(302);
     }
