@@ -22,7 +22,7 @@ if (!function_exists('response_api')) {
         return response()->json([
             'message' => $mensagem,
             'data' => $data
-        ], $statusCode);
+        ], $statusCode == 0 ? 500 : $statusCode);
     }
 }
 

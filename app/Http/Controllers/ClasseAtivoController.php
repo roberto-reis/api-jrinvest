@@ -27,7 +27,7 @@ class ClasseAtivoController extends Controller
             return response_api(
                 'Erro ao listar as classes de ativos',
                 [],
-                $e->getCode() == 0 ? 500 : $e->getCode()
+                $e->getCode()
             );
         }
     }
@@ -47,7 +47,7 @@ class ClasseAtivoController extends Controller
             return response_api(
                 'Erro ao listar classe de ativo',
                 [],
-                $e->getCode() == 0 ? 500 : $e->getCode()
+                $e->getCode()
             );
         }
     }
@@ -64,7 +64,7 @@ class ClasseAtivoController extends Controller
             return response_api(
                 'Erro ao cadastrar a classe de ativo',
                 [],
-                $e->getCode() == 0 ? 500 : $e->getCode()
+                $e->getCode()
             );
         }
     }
@@ -84,7 +84,7 @@ class ClasseAtivoController extends Controller
             return response_api(
                 'Erro ao atualizar a classe de ativo',
                 [],
-                $e->getCode() == 0 ? 500 : $e->getCode()
+                $e->getCode()
             );
         }
     }
@@ -104,7 +104,7 @@ class ClasseAtivoController extends Controller
             return response_api(
                 'Erro ao deletar classe ativo',
                 [],
-                $e->getCode() == 0 ? 500 : $e->getCode()
+                $e->getCode()
             );
         }
     }

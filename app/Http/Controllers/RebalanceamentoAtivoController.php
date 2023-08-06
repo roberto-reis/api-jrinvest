@@ -20,17 +20,16 @@ class RebalanceamentoAtivoController extends Controller
         try {
             $rebalanceamentoAtivos = $listAll->execute($request->validated());
 
-            return response()->json([
-                'menssage' => 'Dados retornados com sucesso',
-                'data' => $rebalanceamentoAtivos
-            ], 200);
+            return response_api('Dados retornados com sucesso', $rebalanceamentoAtivos, 200);
 
         } catch (\Exception $e) {
             send_log('Erro ao listar todos rebalanceamento por ativo', [], 'error', $e);
-            return response()->json([
-                'menssage' => 'Erro ao listar todos rebalanceamento por ativo',
-                'data' => []
-            ], $e->getCode() == 0 ? 500 : $e->getCode());
+
+            return response_api(
+                'Erro ao listar todos rebalanceamento por ativo',
+                [],
+                $e->getCode()
+            );
         }
     }
 
@@ -50,7 +49,7 @@ class RebalanceamentoAtivoController extends Controller
             return response_api(
             'Erro ao listar rebalanceamento por ativo',
             [],
-            $e->getCode() == 0 ? 500 : $e->getCode()
+            $e->getCode()
             );
         }
     }
@@ -66,7 +65,7 @@ class RebalanceamentoAtivoController extends Controller
             return response_api(
                 $e->getMessage(),
                 [],
-                $e->getCode() == 0 ? 500 : $e->getCode()
+                $e->getCode()
             );
 
         } catch (\Exception $e) {
@@ -75,7 +74,7 @@ class RebalanceamentoAtivoController extends Controller
             return response_api(
                 'Erro ao cadastrar rebalanceamento por ativo',
                 [],
-                $e->getCode() == 0 ? 500 : $e->getCode()
+                $e->getCode()
             );
         }
     }
@@ -95,7 +94,7 @@ class RebalanceamentoAtivoController extends Controller
             return response_api(
                 'Erro ao atualizar rebalanceamento por ativo',
                 [],
-                $e->getCode() == 0 ? 500 : $e->getCode()
+                $e->getCode()
             );
         }
     }
@@ -116,7 +115,7 @@ class RebalanceamentoAtivoController extends Controller
             return response_api(
                 'Erro ao deletar rebalanceamento por ativo',
                 [],
-                $e->getCode() == 0 ? 500 : $e->getCode()
+                $e->getCode()
             );
         }
     }
