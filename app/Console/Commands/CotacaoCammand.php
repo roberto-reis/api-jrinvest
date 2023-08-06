@@ -37,7 +37,7 @@ class CotacaoCammand extends Command
         }
 
         foreach ($classesAtivos as $classeAtivo) {
-            switch ($classeAtivo['nome_interno']) {
+            switch ($classeAtivo->nome_interno) {
                 case 'acoes':
                 case 'fii':
                     SalvarAcoesEFIICotacaoJob::dispatch($classeAtivo->ativos);

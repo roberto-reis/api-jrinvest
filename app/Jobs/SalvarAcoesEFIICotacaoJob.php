@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use Throwable;
 use App\Models\Cotacao;
 use Illuminate\Bus\Queueable;
 use App\Interfaces\ICotacaoBrapi;
@@ -31,39 +32,35 @@ class SalvarAcoesEFIICotacaoJob implements ShouldQueue
      */
     public function handle(ICotacaoBrapi $cotacaoBrapiService): void
     {
+        $ativosImpleded = $this->ativos->implode('codigo', ',');
+        $cotacaoAtivos = $cotacaoBrapiService->getCotacoes($ativosImpleded);
 
-        try {
-            $ativosImpleded = $this->ativos->implode('codigo', ',');
-            $cotacaoAtivos = $cotacaoBrapiService->getCotacoes($ativosImpleded);
-
-            if (empty($cotacaoAtivos)) {
-                throw new \Exception("Não há cotações para os ativos: {$ativosImpleded}");
-            }
-
-            foreach ($cotacaoAtivos['results'] as $cotacao) {
-                Cotacao::create([
-                    'ativo_uid' => $this->ativos->firstWhere('codigo', $cotacao['symbol'])->uid,
-                    'moeda_ref' => $cotacao['currency'],
-                    'preco' => $cotacao['regularMarketPrice'] ?? '0.0',
-                ]);
-            }
-
-
-            send_log('Cotações dos ativos', [
-                "ativos" => $ativosImpleded,
-                "Total"  => count($cotacaoAtivos['results'])
-            ]);
-
-        } catch (\Exception $exception) {
-            send_log(
-                'Error ao tentar salvar as cotações de ações e FIIs',
-                [],
-                $exception,
-                'error'
-            );
-
-            $this->fail($exception);
+        if (empty($cotacaoAtivos)) {
+            throw new \Exception("Não há cotações para os ativos: {$ativosImpleded}");
         }
 
+        foreach ($cotacaoAtivos['results'] as $cotacao) {
+            Cotacao::create([
+                'ativo_uid' => $this->ativos->firstWhere('codigo', $cotacao['symbol'])->uid,
+                'moeda_ref' => $cotacao['currency'],
+                'preco' => $cotacao['regularMarketPrice'] ?? '0.0',
+            ]);
+        }
+
+        send_log('Cotações dos ativos', [
+            "ativos" => $ativosImpleded,
+            "Total"  => count($cotacaoAtivos['results'])
+        ]);
+
+    }
+
+    public function failed(Throwable $exception)
+    {
+        send_log(
+            'Error ao tentar salvar as cotações de ações e FIIs',
+            [],
+            'error',
+            $exception
+        );
     }
 }
