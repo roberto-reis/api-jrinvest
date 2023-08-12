@@ -3,28 +3,28 @@
 namespace App\Listeners;
 
 use Throwable;
-use App\Models\Carteira;
-use App\Models\Operacao;
 use App\Events\ConsolidaCarteiraEvent;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use App\DTOs\Carteira\CarteiraUpdateOrCreateDTO;
+use App\Interfaces\Repositories\ICarteiraRepository;
 
 class MontaCarteiraListener implements ShouldQueue
 {
     use InteractsWithQueue;
+
+    public function __construct(private ICarteiraRepository $carteiraRepository)
+    {
+    }
 
     /**
      * Handle the event.
      */
     public function handle(ConsolidaCarteiraEvent $event): void
     {
-        $operacoesAtivos = Operacao::select('operacoes.*', 'ativos.codigo AS codigo_ativo', 'tipos_operacoes.nome_interno AS tipo_operacao')
-            ->join('ativos', 'operacoes.ativo_uid', '=', 'ativos.uid')
-            ->join('tipos_operacoes', 'operacoes.tipo_operacao_uid', '=', 'tipos_operacoes.uid')
-            ->where('user_uid', $event->userUid)
-            ->get();
+        $operacoesAtivos = $this->carteiraRepository->getAllByUser($event->userUid);
 
-        foreach ($operacoesAtivos->groupBy('codigo_ativo') as $operacoes) {
+        foreach ($operacoesAtivos as $ativoUid => $operacoes) {
 
             $somaOperacoesCompras = $operacoes->where('tipo_operacao', 'compra')->sum('quantidade');
             $somaOperacoesVendas = $operacoes->where('tipo_operacao', 'venda')->sum('quantidade');
@@ -33,16 +33,15 @@ class MontaCarteiraListener implements ShouldQueue
             $quantidadeSaldo = ($somaOperacoesCompras - $somaOperacoesVendas);
             $precoMedio = ($somaValorTotal / $somaOperacoesCompras);
 
-            // TODO: Alterar para repository
-            Carteira::updateOrCreate([
-                'user_uid' => $event->userUid,
-                'ativo_uid' => $operacoes->first()->ativo_uid,
-            ],
-            [
-                'quantidade' => $quantidadeSaldo,
-                'preco_medio' => $precoMedio,
-                'custo_total' => $quantidadeSaldo * $precoMedio
-            ]);
+            $dto = new CarteiraUpdateOrCreateDTO();
+            $dto->user_uid = $event->userUid;
+            $dto->ativo_uid = $ativoUid;
+            $dto->quantidade = $quantidadeSaldo;
+            $dto->preco_medio = $precoMedio;
+            $dto->custo_total = $quantidadeSaldo * $precoMedio;
+
+            $this->carteiraRepository->updateOrCreate($dto);
+
         }
     }
 
