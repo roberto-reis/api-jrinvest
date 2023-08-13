@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Operacao;
 
+use App\Models\Ativo;
 use App\Models\Operacao;
 use Tests\TestCase;
 use App\Models\User;
@@ -33,7 +34,11 @@ class StoreOperacaoTest extends TestCase
     {
         $user = User::factory()->create();
         Sanctum::actingAs($user, ['*']);
-        $operacao = Operacao::factory()->compra()->make();
+        $ativo = Ativo::factory()->create();
+        $operacao = Operacao::factory()->compra()->create([
+            'ativo_uid' => $ativo->uid,
+            'quantidade' => 50
+        ]);
 
         $response = $this->post(route('operacoes.store', $operacao->toArray()));
 
