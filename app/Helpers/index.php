@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 if (!function_exists('send_log')) {
@@ -18,7 +19,7 @@ if (!function_exists('send_log')) {
 }
 
 if (!function_exists('response_api')) {
-    function response_api(string $mensagem, array $data = [], int $statusCode = 200): JsonResponse {
+    function response_api(string $mensagem, array|Collection $data = [], int $statusCode = 200): JsonResponse {
         return response()->json([
             'message' => $mensagem,
             'data' => $data

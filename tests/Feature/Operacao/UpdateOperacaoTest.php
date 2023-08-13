@@ -34,7 +34,7 @@ class UpdateOperacaoTest extends TestCase
     {
         $user = User::factory()->create();
         Sanctum::actingAs($user, ['*']);
-        $operacao = Operacao::factory()->create(['user_uid' => $user->uid]);
+        $operacao = Operacao::factory()->compra()->create(['user_uid' => $user->uid]);
 
         $operacao->data_operacao = '2023-06-10';
         $operacao->quantidade = 50;
