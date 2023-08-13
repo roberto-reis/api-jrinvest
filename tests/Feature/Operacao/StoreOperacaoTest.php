@@ -33,7 +33,7 @@ class StoreOperacaoTest extends TestCase
     {
         $user = User::factory()->create();
         Sanctum::actingAs($user, ['*']);
-        $operacao = Operacao::factory()->make();
+        $operacao = Operacao::factory()->compra()->make();
 
         $response = $this->post(route('operacoes.store', $operacao->toArray()));
 
