@@ -8,6 +8,5 @@ use App\DTOs\Carteira\CarteiraUpdateOrCreateDTO;
 interface ICarteiraRepository
 {
     public function getAll(): Collection;
-    public function getAllByUser(string $userUid): Collection;
     public function updateOrCreate(CarteiraUpdateOrCreateDTO $dto): void;
 }

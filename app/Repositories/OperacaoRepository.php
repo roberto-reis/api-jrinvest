@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Operacao;
 use App\DTOs\Operacao\OperacaoDTO;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use App\Exceptions\OperacaoException;
 use App\Interfaces\Repositories\IOperacaoRepository;
@@ -99,5 +100,16 @@ class OperacaoRepository implements IOperacaoRepository
         if (!$operacao) throw new OperacaoException('Operação não encontrado', 404);
 
         return $operacao->delete();
+    }
+
+    public function getAllByUser(string $userUid): Collection
+    {
+        $operacoesAtivos = Operacao::select('operacoes.*', 'tipos_operacoes.nome_interno AS tipo_operacao')
+            ->join('tipos_operacoes', 'operacoes.tipo_operacao_uid', '=', 'tipos_operacoes.uid')
+            ->where('user_uid', $userUid)
+            ->get()
+            ->groupBy('ativo_uid');
+
+        return $operacoesAtivos;
     }
 }

@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\Carteira;
-use App\Models\Operacao;
 use App\DTOs\Carteira\CarteiraUpdateOrCreateDTO;
 use App\Interfaces\Repositories\ICarteiraRepository;
 use Illuminate\Support\Collection;
@@ -26,18 +25,6 @@ class CarteiraRepository implements ICarteiraRepository
                         ->where('user_uid', Auth::user()->uid);
 
         return $carteira->get();
-    }
-
-    public function getAllByUser(string $userUid): Collection
-    {
-        // TODO: Alterar para repository de Operações
-        $operacoesAtivos = Operacao::select('operacoes.*', 'tipos_operacoes.nome_interno AS tipo_operacao')
-            ->join('tipos_operacoes', 'operacoes.tipo_operacao_uid', '=', 'tipos_operacoes.uid')
-            ->where('user_uid', $userUid)
-            ->get()
-            ->groupBy('ativo_uid');
-
-        return $operacoesAtivos;
     }
 
     public function updateOrCreate(CarteiraUpdateOrCreateDTO $dto): void
