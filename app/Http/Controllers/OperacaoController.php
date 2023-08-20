@@ -28,7 +28,7 @@ class OperacaoController extends Controller
             return response_api(
                 'Erro ao listar operações',
                 [],
-                $e->getCode() == 0 ? 500 : $e->getCode()
+                $e->getCode()
             );
         }
     }
@@ -48,7 +48,7 @@ class OperacaoController extends Controller
             return response_api(
                 'Erro ao listar Operação',
                 [],
-                $e->getCode() == 0 ? 500 : $e->getCode()
+                $e->getCode()
             );
         }
     }
@@ -65,7 +65,7 @@ class OperacaoController extends Controller
             return response_api(
                 'Erro ao cadastrar operação',
                 [],
-                $e->getCode() == 0 ? 500 : $e->getCode()
+                $e->getCode()
             );
         }
     }
@@ -85,7 +85,7 @@ class OperacaoController extends Controller
             return response_api(
                 'Erro ao atualizar operação',
                 [],
-                $e->getCode() == 0 ? 500 : $e->getCode()
+                $e->getCode()
             );
         }
     }
@@ -105,7 +105,7 @@ class OperacaoController extends Controller
             return response_api(
                 'Erro ao deletar operação',
                 [],
-                $e->getCode() == 0 ? 500 : $e->getCode()
+                $e->getCode()
             );
         }
     }

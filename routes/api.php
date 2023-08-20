@@ -25,6 +25,7 @@ Route::prefix('v1/')->group(function() {
         require __DIR__ . '/rebalanceamento.php';
         require __DIR__ . '/provento.php';
         require __DIR__ . '/operacao.php';
+        require __DIR__ . '/portfolio.php';
     });
 
     require __DIR__ . '/auth.php';

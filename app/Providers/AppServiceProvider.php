@@ -12,13 +12,17 @@ use App\Repositories\ClasseAtivoRepository;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Interfaces\Repositories\IAuthRepository;
 use App\Interfaces\Repositories\IAtivoRepository;
+use App\Interfaces\Repositories\ICarteiraRepository;
 use App\Repositories\RebalanceamentoAtivoRepository;
 use App\Repositories\RebalanceamentoClasseRepository;
 use App\Interfaces\Repositories\IClasseAtivoRepository;
+use App\Interfaces\Repositories\ICotacaoRepository;
 use App\Interfaces\Repositories\IOperacaoRepository;
 use App\Interfaces\Repositories\IProventoRepository;
 use App\Interfaces\Repositories\IRebalanceamentoAtivoRepository;
 use App\Interfaces\Repositories\IRebalanceamentoClasseRepository;
+use App\Repositories\CarteiraRepository;
+use App\Repositories\CotacaoRepository;
 use App\Repositories\OperacaoRepository;
 use App\Repositories\ProventoRepository;
 
@@ -42,6 +46,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(IRebalanceamentoAtivoRepository::class, RebalanceamentoAtivoRepository::class);
         $this->app->singleton(IProventoRepository::class, ProventoRepository::class);
         $this->app->singleton(IOperacaoRepository::class, OperacaoRepository::class);
+        $this->app->singleton(ICarteiraRepository::class, CarteiraRepository::class);
+        $this->app->singleton(ICotacaoRepository::class, CotacaoRepository::class);
     }
 
     /**

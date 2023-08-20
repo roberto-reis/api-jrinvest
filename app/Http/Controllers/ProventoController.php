@@ -29,7 +29,7 @@ class ProventoController extends Controller
             return response_api(
                 'Erro ao listar Proventos',
                 [],
-                $e->getCode() == 0 ? 500 : $e->getCode()
+                $e->getCode()
             );
         }
     }
@@ -49,7 +49,7 @@ class ProventoController extends Controller
             return response_api(
                 'Erro ao listar Provento',
                 [],
-                $e->getCode() == 0 ? 500 : $e->getCode()
+                $e->getCode()
             );
         }
     }
@@ -66,7 +66,7 @@ class ProventoController extends Controller
             return response_api(
                 'Erro ao cadastrar provento',
                 [],
-                $e->getCode() == 0 ? 500 : $e->getCode()
+                $e->getCode()
             );
         }
     }
@@ -86,7 +86,7 @@ class ProventoController extends Controller
             return response_api(
                 'Erro ao atualizar provento',
                 [],
-                $e->getCode() == 0 ? 500 : $e->getCode()
+                $e->getCode()
             );
         }
     }
@@ -106,7 +106,7 @@ class ProventoController extends Controller
             return response_api(
                 'Erro ao deletar provento',
                 [],
-                $e->getCode() == 0 ? 500 : $e->getCode()
+                $e->getCode()
             );
         }
     }

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignUuid('ativo_uid')->index();
             $table->double('quantidade');
             $table->double('preco_medio');
-            $table->double('valor_total');
+            $table->double('custo_total');
             $table->timestamps();
 
             $table->foreign('user_uid')->references('uid')->on('users')->cascadeOnDelete();
