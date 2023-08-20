@@ -8,12 +8,17 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\DTOs\Carteira\CarteiraUpdateOrCreateDTO;
 use App\Interfaces\Repositories\ICarteiraRepository;
+use App\Interfaces\Repositories\IOperacaoRepository;
 
 class MontaCarteiraListener implements ShouldQueue
 {
     use InteractsWithQueue;
 
-    public function __construct(private ICarteiraRepository $carteiraRepository)
+    public function __construct(
+        private ICarteiraRepository $carteiraRepository,
+        private IOperacaoRepository $operacaoRepository,
+        private CarteiraUpdateOrCreateDTO $carteiraUpdateOrCreateDTO
+    )
     {
     }
 
@@ -22,7 +27,7 @@ class MontaCarteiraListener implements ShouldQueue
      */
     public function handle(ConsolidaCarteiraEvent $event): void
     {
-        $operacoesAtivos = $this->carteiraRepository->getAllByUser($event->userUid);
+        $operacoesAtivos = $this->operacaoRepository->getAllByUser($event->userUid);
 
         foreach ($operacoesAtivos as $ativoUid => $operacoes) {
 
@@ -33,12 +38,15 @@ class MontaCarteiraListener implements ShouldQueue
             $quantidadeSaldo = ($somaOperacoesCompras - $somaOperacoesVendas);
             $precoMedio = ($somaValorTotal / $somaOperacoesCompras);
 
-            $dto = new CarteiraUpdateOrCreateDTO();
-            $dto->user_uid = $event->userUid;
-            $dto->ativo_uid = $ativoUid;
-            $dto->quantidade = $quantidadeSaldo;
-            $dto->preco_medio = $precoMedio;
-            $dto->custo_total = $quantidadeSaldo * $precoMedio;
+            $custoTotal = $quantidadeSaldo * $precoMedio;
+
+            $dto = $this->carteiraUpdateOrCreateDTO->register(
+                $event->userUid,
+                $ativoUid,
+                $quantidadeSaldo,
+                $precoMedio,
+                $custoTotal
+            );
 
             $this->carteiraRepository->updateOrCreate($dto);
 
