@@ -23,7 +23,6 @@ class OperacaoFactory extends Factory
      */
     public function definition(): array
     {
-
         return [
             'user_uid' => User::factory()->create()->uid,
             'ativo_uid' => Ativo::factory()->create()->uid,
@@ -33,5 +32,23 @@ class OperacaoFactory extends Factory
             'quantidade' => fake()->randomFloat(2, 0.01, 500.00),
             'data_operacao' => fake()->date(),
         ];
+    }
+
+    public function compra(): Factory
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'tipo_operacao_uid' => TipoOperacao::where('nome_interno', 'compra')->first()->uid,
+            ];
+        });
+    }
+
+    public function venda(): Factory
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'tipo_operacao_uid' => TipoOperacao::where('nome_interno', 'venda')->first()->uid,
+            ];
+        });
     }
 }

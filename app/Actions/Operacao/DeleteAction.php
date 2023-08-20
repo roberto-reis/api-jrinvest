@@ -2,6 +2,8 @@
 
 namespace App\Actions\Operacao;
 
+use Illuminate\Support\Facades\Auth;
+use App\Events\ConsolidaCarteiraEvent;
 use App\Interfaces\Repositories\IOperacaoRepository;
 
 
@@ -12,6 +14,10 @@ class DeleteAction
 
     public function execute(string $uid): bool
     {
-        return $this->operacaoRepository->delete($uid);
+        $foiDeletado = $this->operacaoRepository->delete($uid);
+
+        event(new ConsolidaCarteiraEvent(Auth::user()->uid));
+
+        return $foiDeletado;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use Throwable;
 use App\Models\Cotacao;
 use Illuminate\Bus\Queueable;
 use App\Interfaces\ICotacaoBrapi;
@@ -31,36 +32,35 @@ class SalvarCriptoativosCotacaoJob implements ShouldQueue
      */
     public function handle(ICotacaoBrapi $cotacaoBrapiService): void
     {
-        try {
-            $ativosImploded = $this->ativos->implode('codigo', ',');
-            $cotacaoCriptos = $cotacaoBrapiService->getCotacoesCripto($ativosImploded);
+        $ativosImploded = $this->ativos->implode('codigo', ',');
+        $cotacaoCriptos = $cotacaoBrapiService->getCotacoesCripto($ativosImploded);
 
-            if (empty($cotacaoCriptos)) {
-                throw new \Exception("Não há cotações para os ativos: {$ativosImploded}");
-            }
-
-            foreach ($cotacaoCriptos['coins'] as $cotacao) {
-                Cotacao::create([
-                    'ativo_uid' => $this->ativos->firstWhere('codigo', $cotacao['coin'])->uid,
-                    'moeda_ref' => $cotacao['currency'],
-                    'preco' => $cotacao['regularMarketPrice'] ?? '0.0',
-                ]);
-            }
-
-            send_log('Cotações dos criptoativos', [
-                "ativos" => $ativosImploded,
-                "Total"  => count($cotacaoCriptos['coins'])
-            ]);
-
-        } catch (\Exception $exception) {
-            send_log(
-                'Error ao tentar salvar as cotações de criptomoedas',
-                [],
-                $exception,
-                'error'
-            );
-
-            $this->fail($exception);
+        if (empty($cotacaoCriptos)) {
+            throw new \Exception("Não há cotações para os ativos: {$ativosImploded}");
         }
+
+        foreach ($cotacaoCriptos['coins'] as $cotacao) {
+            Cotacao::create([
+                'ativo_uid' => $this->ativos->firstWhere('codigo', $cotacao['coin'])->uid,
+                'moeda_ref' => $cotacao['currency'],
+                'preco' => $cotacao['regularMarketPrice'] ?? '0.0',
+            ]);
+        }
+
+        send_log('Cotações dos criptoativos', [
+            "ativos" => $ativosImploded,
+            "Total"  => count($cotacaoCriptos['coins'])
+        ]);
+
+    }
+
+    public function failed(Throwable $exception)
+    {
+        send_log(
+            'Error ao tentar salvar as cotações de ações e FIIs',
+            [],
+            'error',
+            $exception
+        );
     }
 }

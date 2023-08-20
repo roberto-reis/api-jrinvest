@@ -24,7 +24,7 @@ class AuthController extends Controller
             return response_api(
                 'Erro ao cadastrar usuário',
                 [],
-                $e->getCode() == 0 ? 500 : $e->getCode()
+                $e->getCode()
             );
         }
     }
@@ -39,14 +39,14 @@ class AuthController extends Controller
             return response_api(
                 $e->getMessage(),
                 [],
-                $e->getCode() == 0 ? 500 : $e->getCode()
+                $e->getCode()
             );
         } catch (\Exception $e) {
             send_log('Erro ao logar usuário', [], 'error', $e);
             return response_api(
                 'Erro ao logar usuário',
                 [],
-                $e->getCode() == 0 ? 500 : $e->getCode()
+                $e->getCode()
             );
         }
     }
@@ -62,7 +62,7 @@ class AuthController extends Controller
             return response_api(
                 'Erro ao logar usuário',
                 [],
-                $e->getCode() == 0 ? 500 : $e->getCode()
+                $e->getCode()
             );
         }
     }
@@ -78,7 +78,7 @@ class AuthController extends Controller
             return response_api(
                 'Erro ao deslogar usuário',
                 [],
-                $e->getCode() == 0 ? 500 : $e->getCode()
+                $e->getCode()
             );
         }
     }

@@ -23,7 +23,7 @@ class AtivoController extends Controller
 
         } catch (\Exception $e) {
             send_log('Erro ao listar ativos', [], 'error', $e);
-            return response_api('Erro ao listar ativos', [], $e->getCode() == 0 ? 500 : $e->getCode());
+            return response_api('Erro ao listar ativos', [], $e->getCode());
         }
     }
 
@@ -42,7 +42,7 @@ class AtivoController extends Controller
             return response_api(
                 'Erro ao listar classe de ativo',
                 [],
-                $e->getCode() == 0 ? 500 : $e->getCode()
+                $e->getCode()
             );
         }
     }
@@ -59,7 +59,7 @@ class AtivoController extends Controller
             return response_api(
                 'Erro ao cadastrar a classe de ativo',
                 [],
-                $e->getCode() == 0 ? 500 : $e->getCode()
+                $e->getCode()
             );
         }
     }
@@ -79,7 +79,7 @@ class AtivoController extends Controller
             return response_api(
                 'Erro ao atualizar ativo',
                 [],
-                $e->getCode() == 0 ? 500 : $e->getCode()
+                $e->getCode()
             );
         }
     }
@@ -99,7 +99,7 @@ class AtivoController extends Controller
             return response_api(
                 'Erro ao deletar ativo',
                 [],
-                $e->getCode() == 0 ? 500 : $e->getCode()
+                $e->getCode()
             );
         }
     }
