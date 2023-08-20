@@ -17,7 +17,7 @@ class PortfolioController extends Controller
         } catch (\Exception $e) {
             send_log('Erro ao listar operações', [], 'error', $e);
             return response_api(
-                'Erro ao listar operações',
+                $e->getMessage(),
                 [],
                 $e->getCode()
             );

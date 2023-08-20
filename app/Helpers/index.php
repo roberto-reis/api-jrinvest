@@ -6,7 +6,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 if (!function_exists('send_log')) {
-    function send_log(string $mensagem, array $context = [], string $tipo = 'info', Exception $exception = null) {
+    function send_log(string $mensagem, array $context = [], string $tipo = 'info', Throwable $exception = null) {
         if ($exception) {
             $context['menssage'] = $exception->getMessage();
             $context['file'] = $exception->getFile();

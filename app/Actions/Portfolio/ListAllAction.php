@@ -2,13 +2,16 @@
 
 namespace App\Actions\Portfolio;
 
-use App\Interfaces\Repositories\ICarteiraRepository;
-use App\Models\Cotacao;
 use Illuminate\Support\Collection;
+use App\Interfaces\Repositories\ICotacaoRepository;
+use App\Interfaces\Repositories\ICarteiraRepository;
 
 class ListAllAction
 {
-    public function __construct(private ICarteiraRepository $carteiraRepository)
+    public function __construct(
+        private ICarteiraRepository $carteiraRepository,
+        private ICotacaoRepository $cotacaoRepository
+    )
     {}
 
     public function execute(array $filters = []): Collection
@@ -17,7 +20,7 @@ class ListAllAction
         // TODO: Falta impletação dos filtros
 
         $carteira = $this->carteiraRepository->getAll();
-        $cotacoes = Cotacao::get(); // TODO: Criar e chamar o repository de cotação
+        $cotacoes = $this->cotacaoRepository->getAll(now());
 
         // Calcula patrimonio por ativo
         $carteiraPatrimonio = $carteira->map(function ($ativo) use ($cotacoes) {
