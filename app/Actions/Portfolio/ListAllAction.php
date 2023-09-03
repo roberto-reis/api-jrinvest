@@ -14,13 +14,14 @@ class ListAllAction
     )
     {}
 
-    public function execute(array $filters = []): Collection
+    public function execute(): Collection
     {
         $portfolio = collect();
-        // TODO: Falta impletação dos filtros
 
         $carteira = $this->carteiraRepository->getAll();
         $cotacoes = $this->cotacaoRepository->getAll(now());
+
+        if ($cotacoes->isEmpty()) throw new \Exception("Sem dados de cotações");
 
         // Calcula patrimonio por ativo
         $carteiraPatrimonio = $carteira->map(function ($ativo) use ($cotacoes) {
