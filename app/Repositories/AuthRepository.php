@@ -3,7 +3,8 @@
 namespace App\Repositories;
 
 use App\Models\User;
-use App\DTOs\Auth\RegisterUserDto;
+use App\DTOs\Auth\UserDto;
+use App\Exceptions\UserException;
 use App\Interfaces\Repositories\IAuthRepository;
 
 class AuthRepository implements IAuthRepository
@@ -15,7 +16,7 @@ class AuthRepository implements IAuthRepository
         $this->model = app(User::class);
     }
 
-    public function store(RegisterUserDto $dto): array
+    public function store(UserDto $dto): array
     {
         $user = $this->model::create($dto->toArray());
 
@@ -25,5 +26,18 @@ class AuthRepository implements IAuthRepository
     public function exists(string $value, string $field = 'uid'): bool
     {
         return $this->model::where($field, $value)->exists();
+    }
+
+    public function update(string $uid, UserDto $dto): array
+    {
+        $user = $this->model::find($uid);
+
+        if (!$user) {
+            throw new UserException('User não encontrado', 404);
+        }
+
+        $user->update($dto->toArray());
+
+        return $user->toArray();
     }
 }

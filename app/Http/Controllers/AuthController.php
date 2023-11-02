@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Actions\Auth\LoginAction;
+use App\Exceptions\UserException;
 use Illuminate\Http\JsonResponse;
+use App\Actions\Auth\UpdateAction;
 use App\Exceptions\LoginException;
 use App\Actions\Auth\RegisterAction;
-use App\Http\Requests\Auth\LoginRequest;
-use App\Http\Requests\Auth\RegisterRequest;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\UpdateRequest;
+use App\Http\Requests\Auth\RegisterRequest;
 
 class AuthController extends Controller
 {
@@ -83,8 +86,31 @@ class AuthController extends Controller
         }
     }
 
-    // TODO: Faltar Implementar Update User
-    // TODO: Faltar Implementar Delete User
-    // TODO: Faltar Implementar Forgot Password
-    // TODO: Faltar Implementar Reset Password
+    public function update(UpdateRequest $request, UpdateAction $updateAction, string $uid): JsonResponse
+    {
+        try {
+            $user = $updateAction->execute($uid, $request->validated());
+            return response_api('Dados atualizado com sucesso', $user, 200);
+
+        } catch (UserException $e) {
+            return response_api(
+                $e->getMessage(),
+                [],
+                $e->getCode()
+            );
+        } catch (\Exception $e) {
+            send_log('Erro ao atualizar usuário', [], 'error', $e);
+            return response_api(
+                'Erro ao atualizar usuário',
+                [],
+                $e->getCode()
+            );
+        }
+    }
+
+
+
+    // TODO: Falta Implementar Delete User
+    // TODO: Falta Implementar Forgot Password
+    // TODO: Falta Implementar Reset Password
 }

@@ -2,7 +2,8 @@
 
 namespace App\Actions\Auth;
 
-use App\DTOs\Auth\RegisterUserDto;
+use App\DTOs\Auth\UserDto;
+use Illuminate\Support\Facades\Hash;
 use App\Interfaces\Repositories\IAuthRepository;
 
 class RegisterAction
@@ -14,8 +15,10 @@ class RegisterAction
 
     public function execute(array $data): array
     {
-        $userDto = new RegisterUserDto($data);
+        $userDto = new UserDto($data);
 
-        return $this->userRepository->store($userDto->withMakeHash());
+        $userDto->password = Hash::make($userDto->password);
+
+        return $this->userRepository->store($userDto);
     }
 }
