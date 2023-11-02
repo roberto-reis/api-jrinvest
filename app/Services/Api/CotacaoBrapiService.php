@@ -3,16 +3,18 @@
 namespace App\Services\Api;
 
 use App\Interfaces\ICotacaoBrapi;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 
 class CotacaoBrapiService implements ICotacaoBrapi
 {
     private string $baseUrl;
+    private string $token;
 
     public function __construct()
     {
         $this->baseUrl = env('URL_COTACAO_BRAPI');
+        $this->token = env('TOKEN_COTACAO_BRAPI');
     }
 
     /**
@@ -24,16 +26,11 @@ class CotacaoBrapiService implements ICotacaoBrapi
     public function getCotacoes(string $codigoAtivos): array
     {
         try {
-            $response = Http::get($this->baseUrl . 'quote/'. $codigoAtivos);
+            $response = Http::get($this->baseUrl . 'quote/'. $codigoAtivos . "?token={$this->token}");
 
-
-            if ($response->successful()) {
-                return $response->json();
-            }
-
-            return [];
+            return $this->trataRespostaHttp($response);
         } catch (\Exception $e) {
-            Log::error('Erro ao consultar cotação de ações ou FII: ', [$e->getMessage()]);
+            send_log('Erro ao consultar cotação de ações ou FII: ', [$e->getMessage()], 'error');
         }
 
     }
@@ -48,16 +45,29 @@ class CotacaoBrapiService implements ICotacaoBrapi
     public function getCotacoesCripto(string $codigoAtivos, string $moedaRef = 'BRL'): array
     {
         try {
-            $response = Http::get($this->baseUrl . 'v2/crypto?coin=' . $codigoAtivos . '&currency=' . $moedaRef);
+            $response = Http::get($this->baseUrl . "v2/crypto?token={$this->token}&coin=" . $codigoAtivos . '&currency=' . $moedaRef);
 
-            if ($response->successful()) {
-                return $response->json();
-            }
-            return [];
+            return $this->trataRespostaHttp($response);
         } catch (\Exception $e) {
-            Log::error('Erro ao consultar cotação de criptomoedas: ', [$e->getMessage()]);
+            send_log('Erro ao consultar cotação de criptomoedas: ', [$e->getMessage()], 'error');
         }
 
     }
 
+    private function trataRespostaHttp(Response $response): array
+    {
+        if (!$response->ok() || !$response->created()) {
+            send_log(
+                'Requisição retornou diferente de 200 ou 201:',
+                [
+                    'status' => $response->status(),
+                    ...$response->json()
+                ]
+            );
+
+            return [];
+        }
+
+        return $response->json();
+    }
 }
