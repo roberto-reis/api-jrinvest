@@ -56,7 +56,7 @@ class CotacaoBrapiService implements ICotacaoBrapi
 
     private function trataRespostaHttp(Response $response): array
     {
-        if (!$response->ok() || !$response->created()) {
+        if (!$response->ok() && !$response->created()) {
             send_log(
                 'Requisição retornou diferente de 200 ou 201:',
                 [
