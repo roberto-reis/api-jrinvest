@@ -11,12 +11,12 @@ use Illuminate\Support\Facades\Hash;
 class ResetAction
 {
     //  Por padrão 30 minutos
-    private int $tempoExpiracaoToken = env('TOKEN_EXPIRED_RESET_PASSWORD_AT', 30);
+    private int $tempoExpiracaoToken;
 
-    public function __construct(
-        private IAuthRepository $userRepository
-    )
-    {}
+    public function __construct(private IAuthRepository $userRepository)
+    {
+        $this->tempoExpiracaoToken = (int) env('TOKEN_EXPIRED_RESET_PASSWORD_AT', 30);
+    }
 
     public function execute(array $dados): bool
     {

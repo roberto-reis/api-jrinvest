@@ -139,7 +139,7 @@ class AuthController extends Controller
     {
         try {
             $forgotAction->execute($request->validated());
-            return response_api('Senha resetada com sucesso', [], 200);
+            return response_api('Senha alterada com sucesso', [], 200);
 
         } catch (AuthException $e) {
             return response_api(
