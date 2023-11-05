@@ -12,5 +12,7 @@ Route::controller(AuthController::class)->prefix('auth')->name('auth')->group(fu
         Route::get('user', 'user')->name('.user');
         Route::put('{uid}/update', 'update')->name('.update');
         Route::delete('{uid}/delete', 'delete')->name('.delete');
+        Route::post('forgot', 'forgot')->name('.forgot');
+        Route::post('reset', 'reset')->name('.reset');
     });
 });
