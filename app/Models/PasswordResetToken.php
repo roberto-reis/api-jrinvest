@@ -16,7 +16,7 @@ class PasswordResetToken extends Model
     protected $keyType = 'string';
     protected $icrementing = false;
 
-    public $timestamps = false;
+    const UPDATED_AT = null;
 
     protected $fillable = [
         'email',
