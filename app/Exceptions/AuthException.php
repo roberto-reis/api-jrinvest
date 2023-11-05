@@ -4,6 +4,6 @@ namespace App\Exceptions;
 
 use Exception;
 
-class UserException extends Exception
+class AuthException extends Exception
 {
 }
