@@ -17,6 +17,7 @@ use App\Http\Requests\Auth\ResetRequest;
 use App\Http\Requests\Auth\ForgotRequest;
 use App\Http\Requests\Auth\UpdateRequest;
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Interfaces\Repositories\IAuthRepository;
 
 class AuthController extends Controller
 {
@@ -125,7 +126,6 @@ class AuthController extends Controller
                 $e->getCode()
             );
         } catch (\Exception $e) {
-            dd($e);
             send_log('Erro ao fazer forgot para usuário', [], 'error', $e);
             return response_api(
                 'Erro ao fazer forgot para usuário',
@@ -148,7 +148,6 @@ class AuthController extends Controller
                 $e->getCode()
             );
         } catch (\Exception $e) {
-            dd($e);
             send_log('Erro ao resetar senha', [], 'error', $e);
             return response_api(
                 'Erro ao resetar senha',
@@ -157,5 +156,43 @@ class AuthController extends Controller
             );
         }
     }
+
     // TODO: Falta Implementar Delete User
+    public function delete(string $userUid, IAuthRepository $authRepository): JsonResponse
+    {
+        try {
+
+            $authRepository->delete($userUid);
+            return response_api('Usuário deletado com sucesso', [], 200);
+
+        } catch (AuthException $e) {
+            return response_api(
+                $e->getMessage(),
+                [],
+                $e->getCode()
+            );
+        } catch (\Exception $e) {
+            send_log('Erro ao deletar usuário', [], 'error', $e);
+            return response_api(
+                'Erro ao deletar usuário',
+                [],
+                $e->getCode()
+            );
+        }
+
+    }
+
+    private function preparaParametros(array $parametros): string
+    {
+        $parametrosToString = '';
+
+        // dd($parametros);
+
+        foreach ($parametros as $key => $parametro) {
+            if (empty($parametro)) continue;
+
+            $parametrosToString .= "{$key}:$parametro ";
+        }
+        dd(rtrim($parametrosToString));
+    }
 }

@@ -53,4 +53,24 @@ class AuthRepository implements IAuthRepository
     {
         return PasswordResetToken::where('email', $email)->delete();
     }
+
+    public function delete(string $userUid): bool
+    {
+        $user = $this->model::find($userUid);
+
+        if (!$user) {
+            throw new AuthException('User não encontrado', 404);
+        }
+
+        $user->tokens()->delete();
+
+        $user->carteira()->delete();
+        $user->operacoes()->delete();
+        $user->proventos()->delete();
+        $user->rebalanceamentoClasses()->delete();
+        $user->rebalanceamentoAtivos()->delete();
+
+
+        return $user->delete();
+    }
 }

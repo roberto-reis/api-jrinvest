@@ -11,4 +11,5 @@ interface IAuthRepository
     public function update(string $uid, UserDto $dto): array;
     public function storePasswordResetToken(array $dados): array;
     public function deleteToken(string $email): bool;
+    public function delete(string $userUid): bool;
 }
