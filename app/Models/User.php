@@ -7,6 +7,8 @@ use App\Traits\UuidTrait;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -51,4 +53,30 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    // Casteiras
+    public function carteira(): HasMany
+    {
+        return $this->hasMany(Carteira::class, 'user_uid', 'uid');
+    }
+
+    public function operacoes(): HasMany
+    {
+        return $this->hasMany(Operacao::class, 'user_uid', 'uid');
+    }
+
+    public function proventos(): HasMany
+    {
+        return $this->hasMany(Provento::class, 'user_uid', 'uid');
+    }
+
+    public function rebalanceamentoClasses(): HasMany
+    {
+        return $this->hasMany(RebalanceamentoClasse::class, 'user_uid', 'uid');
+    }
+
+    public function rebalanceamentoAtivos(): HasMany
+    {
+        return $this->hasMany(RebalanceamentoAtivo::class, 'user_uid', 'uid');
+    }
 }
