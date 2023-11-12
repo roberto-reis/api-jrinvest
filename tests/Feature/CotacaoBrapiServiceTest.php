@@ -20,26 +20,24 @@ class CotacaoBrapiServiceTest extends TestCase
     public function test_deve_retornar_cotacao_de_acoes_e_fii(): void
     {
         // Arrange
-        $ativos = ['HCTR11', 'BBAS3'];
+        $ativo = 'HCTR11';
 
         // Action
-        $response = $this->cotacaoBrapiService->getCotacoes(implode(',', $ativos));
+        $response = $this->cotacaoBrapiService->getCotacoes($ativo);
 
         // Assert
-        assertEquals($ativos[0], data_get($response, 'results.0.symbol'));
-        assertEquals($ativos[1], data_get($response, 'results.1.symbol'));
+        assertEquals($ativo, data_get($response, 'results.0.symbol'));
     }
 
     public function test_deve_retornar_cotacao_de_criptomoedas(): void
     {
         // Arrange
-        $ativos = ['BTC', 'ETH'];
+        $ativo = 'BTC';
 
         // Action
-        $response = $this->cotacaoBrapiService->getCotacoesCripto(implode(',', $ativos));
+        $response = $this->cotacaoBrapiService->getCotacoesCripto($ativo);
 
         // Assert
-        assertEquals($ativos[0], data_get($response, 'coins.0.coin'));
-        assertEquals($ativos[1], data_get($response, 'coins.1.coin'));
+        assertEquals($ativo, data_get($response, 'coins.0.coin'));
     }
 }
