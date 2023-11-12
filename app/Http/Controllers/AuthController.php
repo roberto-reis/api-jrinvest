@@ -181,18 +181,4 @@ class AuthController extends Controller
         }
 
     }
-
-    private function preparaParametros(array $parametros): string
-    {
-        $parametrosToString = '';
-
-        // dd($parametros);
-
-        foreach ($parametros as $key => $parametro) {
-            if (empty($parametro)) continue;
-
-            $parametrosToString .= "{$key}:$parametro ";
-        }
-        dd(rtrim($parametrosToString));
-    }
 }
