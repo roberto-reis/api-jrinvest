@@ -5,7 +5,7 @@ namespace App\Actions\Portfolio;
 use App\Interfaces\Repositories\ICotacaoRepository;
 use App\Interfaces\Repositories\ICarteiraRepository;
 
-class PosicaoAtualAction
+class ListarPortifolioAction
 {
     public function __construct(
         private ICarteiraRepository $carteiraRepository,
@@ -15,6 +15,8 @@ class PosicaoAtualAction
 
     public function execute(): array
     {
+        $portfolio = collect();
+
         $carteira = $this->carteiraRepository->getAll();
         $cotacoes = $this->cotacaoRepository->getAll();
 
@@ -31,10 +33,19 @@ class PosicaoAtualAction
 
         $patrimonioTotal = $carteiraPatrimonio->sum('patrimonio');
 
-        $portfolio = $carteiraPatrimonio->map(function ($ativo) use ($patrimonioTotal) {
-            $ativo->percentual = ($ativo->patrimonio / $patrimonioTotal) * 100;
-            return $ativo;
-        });
+        foreach ($carteiraPatrimonio->groupBy('classe_ativo') as $ativosPorClasse) {
+            $somaTotalPorClasse = $ativosPorClasse->sum('patrimonio');
+
+            // Calcular percentual na carteira e por classe
+            $carteiraPatrimonio = $ativosPorClasse->map(function ($ativo) use ($patrimonioTotal, $somaTotalPorClasse) {
+                $ativo->percentual_na_carteira = ($ativo->patrimonio / $patrimonioTotal) * 100;
+                $ativo->percentual_classe = ($ativo->patrimonio / $somaTotalPorClasse) * 100;
+
+                return $ativo;
+            });
+
+            $portfolio->push(...$carteiraPatrimonio);
+        }
 
         return [
             "ativos" => $portfolio,
