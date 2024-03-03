@@ -157,7 +157,6 @@ class AuthController extends Controller
         }
     }
 
-    // TODO: Falta Implementar Delete User
     public function delete(string $userUid, IAuthRepository $authRepository): JsonResponse
     {
         try {
@@ -179,6 +178,7 @@ class AuthController extends Controller
                 $e->getCode()
             );
         }
-
     }
+
+    // TODO: Implementar metodo de refresh-token
 }

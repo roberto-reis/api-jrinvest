@@ -2,11 +2,10 @@
 
 namespace App\Actions\Portfolio;
 
-use Illuminate\Support\Collection;
 use App\Interfaces\Repositories\ICotacaoRepository;
 use App\Interfaces\Repositories\ICarteiraRepository;
 
-class ListAllAction
+class PosicaoAtualAction
 {
     public function __construct(
         private ICarteiraRepository $carteiraRepository,
@@ -14,12 +13,12 @@ class ListAllAction
     )
     {}
 
-    public function execute(): Collection
+    public function execute(): array
     {
         $portfolio = collect();
 
         $carteira = $this->carteiraRepository->getAll();
-        $cotacoes = $this->cotacaoRepository->getAll(now());
+        $cotacoes = $this->cotacaoRepository->getAll();
 
         if ($cotacoes->isEmpty()) throw new \Exception("Sem dados de cotações");
 
@@ -27,7 +26,8 @@ class ListAllAction
         $carteiraPatrimonio = $carteira->map(function ($ativo) use ($cotacoes) {
             $cotacao = $cotacoes->firstWhere('ativo_uid', $ativo->ativo_uid);
             $ativo->patrimonio = $ativo->quantidade * $cotacao->preco;
-            $ativo->preco_atual = $cotacao->preco;
+            $ativo->cotacao_atual = $cotacao->preco;
+
             return $ativo;
         });
 
@@ -36,7 +36,7 @@ class ListAllAction
         foreach ($carteiraPatrimonio->groupBy('classe_ativo') as $ativosPorClasse) {
             $somaTotalPorClasse = $ativosPorClasse->sum('patrimonio');
 
-            // Calcular percentual
+            // Calcular percentual na carteira e por classe
             $carteiraPatrimonio = $ativosPorClasse->map(function ($ativo) use ($patrimonioTotal, $somaTotalPorClasse) {
                 $ativo->percentual_na_carteira = ($ativo->patrimonio / $patrimonioTotal) * 100;
                 $ativo->percentual_classe = ($ativo->patrimonio / $somaTotalPorClasse) * 100;
@@ -47,6 +47,9 @@ class ListAllAction
             $portfolio->push(...$carteiraPatrimonio);
         }
 
-        return $portfolio;
+        return [
+            "ativos" => $portfolio,
+            "valor_total_carteira" => $patrimonioTotal,
+        ];
     }
 }
