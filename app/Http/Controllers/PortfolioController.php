@@ -6,11 +6,29 @@ use Illuminate\Http\JsonResponse;
 use App\Actions\Portfolio\PosicaoAtualAction;
 use App\Actions\Portfolio\PosicaoIdealAction;
 use App\Actions\Portfolio\PosicaoAjusteAction;
+use App\Actions\Portfolio\ListarPortifolioAction;
 use App\Actions\Portfolio\PosicaoAtualPorClasseAction;
 use App\Actions\Portfolio\PosicaoIdealPorClasseAction;
 
 class PortfolioController extends Controller
 {
+    public function listar(ListarPortifolioAction $action): JsonResponse
+    {
+        try {
+            $portifolio = $action->execute();
+            return response_api('Dados retornados com sucesso', $portifolio);
+
+        } catch (\Exception $e) {
+            send_log('Erro ao listar portifolio', [], 'error', $e);
+
+            return response_api(
+                $e->getMessage(),
+            [],
+            $e->getCode()
+            );
+        }
+    }
+
     public function posicaoAtual(PosicaoAtualAction $action): JsonResponse
     {
         try {
@@ -79,7 +97,6 @@ class PortfolioController extends Controller
         }
     }
 
-    // TODO: Implementar metodo posicaoAtualPorClasse
     public function posicaoIdealPorClasse(PosicaoIdealPorClasseAction $action): JsonResponse
     {
         try {
