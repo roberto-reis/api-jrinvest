@@ -6,10 +6,8 @@ use Illuminate\Http\JsonResponse;
 use App\Actions\Portfolio\PosicaoAtualAction;
 use App\Actions\Portfolio\PosicaoIdealAction;
 use App\Actions\Portfolio\PosicaoAjusteAction;
-use App\Actions\Portfolio\ListPortifolioAction;
-use App\Http\Requests\Portfolio\PosicaoIdealRequest;
-use App\Http\Requests\Portfolio\ListPortfolioRequest;
-use App\Actions\Portfolio\RebalanceamentoPortifolioPorAtivoAction;
+use App\Actions\Portfolio\PosicaoAtualPorClasseAction;
+use App\Actions\Portfolio\PosicaoIdealPorClasseAction;
 
 class PortfolioController extends Controller
 {
@@ -47,7 +45,7 @@ class PortfolioController extends Controller
         }
     }
 
-    public function posicaoAjuste(PosicaoIdealRequest $request, PosicaoAjusteAction $action): JsonResponse
+    public function posicaoAjuste(PosicaoAjusteAction $action): JsonResponse
     {
         try {
             $portifolioAjuste = $action->execute();
@@ -64,6 +62,38 @@ class PortfolioController extends Controller
         }
     }
 
+    public function posicaoAtualPorClasse(PosicaoAtualPorClasseAction $action): JsonResponse
+    {
+        try {
+            $portifolioAtualPorClasse = $action->execute();
+            return response_api('Dados retornados com sucesso', $portifolioAtualPorClasse);
+
+        } catch (\Exception $e) {
+            send_log('Erro ao listar Ajuste de Posição da carteira por ativo', [], 'error', $e);
+
+            return response_api(
+                $e->getMessage(),
+            [],
+            $e->getCode()
+            );
+        }
+    }
+
     // TODO: Implementar metodo posicaoAtualPorClasse
-    // TODO: Implementar metodo posicaoAtualPorClasse
+    public function posicaoIdealPorClasse(PosicaoIdealPorClasseAction $action): JsonResponse
+    {
+        try {
+            $portifolioAtualPorClasse = $action->execute();
+            return response_api('Dados retornados com sucesso', $portifolioAtualPorClasse);
+
+        } catch (\Exception $e) {
+            send_log('Erro ao listar Ajuste de Posição da carteira por ativo', [], 'error', $e);
+
+            return response_api(
+                $e->getMessage(),
+            [],
+            $e->getCode()
+            );
+        }
+    }
 }

@@ -31,7 +31,10 @@ class ListAllRebalanceamentoClasseTest extends TestCase
         RebalanceamentoClasse::factory(3)->create(['user_uid' => $user->uid]);
         $perPage = 2;
 
-        $response = $this->get(route('rebalanceamento-classes.listAll', ['perPage' => $perPage]));
+        $response = $this->get(route('rebalanceamento-classes.listAll', [
+            'withPaginate' => true,
+            'perPage' => $perPage
+        ]));
 
         $response->assertStatus(200)
                 ->assertJsonCount($perPage, 'data.data');

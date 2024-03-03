@@ -13,7 +13,7 @@ class ListAllAction
 
     public function execute(array $filters = []): array
     {
-        $rebalanceamentoAtivos = $this->repository->listAll($filters);
+        $rebalanceamentoAtivos = $this->repository->getAll($filters);
         return $rebalanceamentoAtivos;
     }
 }
