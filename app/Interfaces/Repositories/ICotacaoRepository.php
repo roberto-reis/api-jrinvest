@@ -7,5 +7,5 @@ use Illuminate\Support\Collection;
 
 interface ICotacaoRepository
 {
-    public function getAll(Carbon $data, $rangeDays = 3): Collection;
+    public function getAll(Carbon $data = null, $rangeDays = 3): Collection;
 }

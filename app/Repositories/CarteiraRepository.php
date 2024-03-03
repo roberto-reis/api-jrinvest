@@ -19,7 +19,7 @@ class CarteiraRepository implements ICarteiraRepository
 
     public function getAll(): Collection
     {
-        $carteira = $this->model::select('carteiras.*', 'ativos.codigo AS codigo_ativo', 'classes_ativos.nome AS classe_ativo')
+        $carteira = $this->model::query()->select('carteiras.*', 'ativos.codigo AS codigo_ativo', 'classes_ativos.nome AS classe_ativo')
                         ->join('ativos', 'ativos.uid', '=', 'carteiras.ativo_uid')
                         ->join('classes_ativos', 'classes_ativos.uid', '=', 'ativos.classe_ativo_uid')
                         ->where('user_uid', Auth::user()->uid);

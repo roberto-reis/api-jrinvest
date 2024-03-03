@@ -69,7 +69,6 @@ class RebalanceamentoAtivoController extends Controller
             );
 
         } catch (\Exception $e) {
-            dd($e);
             send_log('Erro ao cadastrar rebalanceamento por ativo', [], 'error', $e);
             return response_api(
                 'Erro ao cadastrar rebalanceamento por ativo',

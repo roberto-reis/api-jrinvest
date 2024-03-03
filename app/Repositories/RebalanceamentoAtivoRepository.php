@@ -19,13 +19,10 @@ class RebalanceamentoAtivoRepository implements IRebalanceamentoAtivoRepository
         $this->model = app(RebalanceamentoAtivo::class);
     }
 
-    public function getAll(array $filters): array
+    public function getAll(array $filters = []): array
     {
         $rebalanceamentoQuery = $this->model::query()
-                                    ->select([
-                                        'rebalanceamento_ativos.*',
-                                        'ativos.codigo as codigo_ativo'
-                                    ])
+                                    ->select(['rebalanceamento_ativos.*', 'ativos.codigo as codigo_ativo'])
                                     ->join('ativos', 'rebalanceamento_ativos.ativo_uid', '=', 'ativos.uid')
                                     ->where('user_uid', Auth::user()->uid);
 
@@ -41,11 +38,11 @@ class RebalanceamentoAtivoRepository implements IRebalanceamentoAtivoRepository
             $rebalanceamentoQuery->orderBy($filters['sort'], $filters['direction'] ?? 'asc');
         }
 
-        if (isset($filters['withPaginate']) && !(bool)$filters['withPaginate']) {
-            return $rebalanceamentoQuery->get()->toArray();
+        if (isset($filters['withPaginate']) && (bool)$filters['withPaginate']) {
+            return $rebalanceamentoQuery->paginate($filters['perPage'] ?? $this->perPage)->toArray();
         }
 
-        return $rebalanceamentoQuery->paginate($filters['perPage'] ?? $this->perPage)->toArray();
+        return $rebalanceamentoQuery->get()->toArray();
     }
 
     public function find(string $uid, array $with = []): array
